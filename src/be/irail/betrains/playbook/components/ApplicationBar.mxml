@@ -8,6 +8,10 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	<fx:Metadata>
+		[Event(name="selectedIndexChange",type="flash.events.Event")]
+	</fx:Metadata>
+
 	<fx:Script>
 		<![CDATA[
 			// ----------------------------
@@ -16,17 +20,33 @@
 
 			private var _selectectedIndex:int;
 
-			[Bindable(event="selectectedIndexChange")]
-			public function get selectectedIndex():int {
+			[Bindable(event="selectedIndexChange")]
+			public function get selectedIndex():int {
 				return _selectectedIndex;
 			}
 
-			public function set selectectedIndex(value:int):void {
+			public function set selectedIndex(value:int):void {
 				if (value != _selectectedIndex) {
 					_selectectedIndex = value;
-					dispatchEvent(new Event("selectectedIndexChange"));
+					dispatchEvent(new Event("selectedIndexChange"));
 				}
 			}
 		]]>
 	</fx:Script>
+	<s:Group left="80"
+			 right="80"
+			 top="0"
+			 bottom="0">
+		<s:layout>
+			<s:TileLayout columnAlign="justifyUsingGap"
+						  rowAlign="justifyUsingHeight"
+						  orientation="columns"
+						  verticalAlign="middle"
+						  requestedRowCount="1"/>
+		</s:layout>
+		<s:Button id="recent"/>
+		<s:Button id="favourites"/>
+		<s:Button id="bla"/>
+		<s:Button id="chat"/>
+	</s:Group>
 </s:SkinnableContainer>
