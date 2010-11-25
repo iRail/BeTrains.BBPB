@@ -33,6 +33,22 @@
 
 	<!--- Defines the appearance of the SkinnableContainer class's background. -->
 
+	<s:Rect id="shadow"
+			left="0"
+			right="0"
+			top="-10"
+			bottom="0">
+		<s:fill>
+			<!--- @private -->
+			<!--<s:SolidColor id="bgFill"
+						  color="#0"/>-->
+			<s:BitmapFill source="@Embed(source='shadow.png')"
+						  fillMode="repeat"
+						  rotation="180"
+						  smooth="true"/>
+		</s:fill>
+	</s:Rect>
+
 	<s:Rect id="background"
 			left="0"
 			right="0"
@@ -40,8 +56,12 @@
 			bottom="0">
 		<s:fill>
 			<!--- @private -->
-			<s:SolidColor id="bgFill"
-						  color="#0"/>
+			<!--<s:SolidColor id="bgFill"
+						  color="#0"/>-->
+			<s:BitmapFill id="bgFill"
+						  source="@Embed(source='barBg.png')"
+						  fillMode="repeat"
+						  smooth="true"/>
 		</s:fill>
 	</s:Rect>
 	<s:Rect id="yellow"

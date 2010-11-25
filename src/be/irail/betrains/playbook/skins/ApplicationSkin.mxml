@@ -1,11 +1,11 @@
 <!--
 
-	 ADOBE SYSTEMS INCORPORATED
-	 Copyright 2009 Adobe Systems Incorporated
-	 All Rights Reserved.
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2009 Adobe Systems Incorporated
+	All Rights Reserved.
 
-	 NOTICE: Adobe permits you to use, modify, and distribute this file
-	 in accordance with the terms of the license agreement accompanying it.
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
 
 -->
 <!--- A skin class for the Spark WindowedApplication and Window containers.
@@ -56,9 +56,11 @@
 			top="0"
 			bottom="0">
 		<s:fill>
-			<!--- @private -->
-			<s:SolidColor id="backgroundFill"
-						  color="#3F3C37"/>
+			<!--<s:SolidColor id="backgroundFill"
+						  color="red"/>-->
+			<s:BitmapFill id="backgroundFill"
+						  fillMode="repeat"
+						  source="@Embed(source='bg.png')"/>
 		</s:fill>
 	</s:Rect>
 
@@ -77,42 +79,6 @@
 				 height="100%"
 				 minHeight="0"
 				 minWidth="0"/>
-
-		<!-- status bar -->
-		<!--- @copy spark.components.WindowedApplication#statusBar -->
-		<!--<s:Group id="statusBar"
-			 width="100%"
-			 minHeight="24">-->
-
-		<!-- status bar fill -->
-		<!--<s:Rect left="0"
-			 right="0"
-			 top="0"
-			 bottom="0">
-			 <s:fill>
-			 <s:LinearGradient rotation="90">
-			 <s:GradientEntry color="0xE2E2E2"/>
-			 <s:GradientEntry color="0xD9D9D9"/>
-			 </s:LinearGradient>
-			 </s:fill>
-			 </s:Rect>-->
-
-		<!-- status bar highlight -->
-		<!-- <s:Rect left="1" right="1" top="1" bottom="0" >
-			 <s:stroke>
-			 <s:LinearGradientStroke rotation="90" weight="1">
-			 <s:GradientEntry color="0xEAEAEA" />
-			 <s:GradientEntry color="0xBEBEBE" />
-			 </s:LinearGradientStroke>
-			 </s:stroke>
-			 </s:Rect>-->
-
-		<!-- status text -->
-		<!--- @copy spark.components.WindowedApplication#statusText -->
-		<!--<components:NikoTextLabel id="statusText" top="2" bottom="2" left="10" right="10" verticalAlign="middle"
-			 fontSize="10" color="0x585858" width="100%" maxDisplayedLines="1" />-->
-
-		<!--</s:Group>-->
 	</s:Group>
 
 </s:SparkSkin>

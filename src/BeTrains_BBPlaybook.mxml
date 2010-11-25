@@ -7,6 +7,7 @@
 					   width="1024"
 					   height="600"
 					   skinClass="be.irail.betrains.playbook.skins.ApplicationSkin"
+					   applicationComplete="applicationCompleteHandler()"
 					   creationComplete="creationCompleteHandler()"
 					   xmlns:components="be.irail.betrains.playbook.components.*">
 	<fx:Declarations>
@@ -14,7 +15,55 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import mx.resources.ResourceManager;
+
+			import org.springextensions.actionscript.context.support.FlexXMLApplicationContext;
+
+			private var _context:FlexXMLApplicationContext = new FlexXMLApplicationContext();
+			private var _supportedLanguagesLocale:Array = ["en_US"];
+
 			protected function creationCompleteHandler():void {
+				NativeApplication.nativeApplication.addEventListener(Event.EXITING, onApplicationExiting);
+
+				setupApplicationContext();
+				_context.load();
+			}
+
+			private function onApplicationExiting(event:Event):void {
+
+			}
+
+			private function setupResourceManager():void {
+				// default locale chain (first defined language in _supportedLanguagesLocale)
+				ResourceManager.getInstance().localeChain = [_supportedLanguagesLocale[0]];
+			}
+
+			private function setupApplicationContext():void {
+				//Resource Bundles
+				for each (var code:String in _supportedLanguagesLocale) {
+					_context.addResourceBundleLocation("/bundles/" + code + "/resources.properties", "resources", code);
+				}
+
+				_context.addEventListener(Event.COMPLETE, applicationContext_completeHandler);
+				_context.addEventListener(IOErrorEvent.IO_ERROR, appContext_ioErrorHandler);
+			}
+
+			private function applicationContext_completeHandler(event:Event):void {
+				_context.removeEventListener(Event.COMPLETE, applicationContext_completeHandler);
+				_context.removeEventListener(IOErrorEvent.IO_ERROR, appContext_ioErrorHandler);
+
+				setupResourceManager();
+			}
+
+			private function appContext_ioErrorHandler(event:IOErrorEvent):void {
+				throw event;
+			}
+
+			protected function applicationCompleteHandler():void {
+				loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError);
+			}
+
+			private function onUncaughtError(event:UncaughtErrorEvent):void {
 			}
 		]]>
 	</fx:Script>

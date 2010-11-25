@@ -4,39 +4,125 @@
 					  xmlns:mx="library://ns.adobe.com/flex/mx"
 					  width="100%"
 					  height="80"
-					  skinClass="be.irail.betrains.playbook.skins.ApplicationBarSkin">
+					  skinClass="be.irail.betrains.playbook.skins.ApplicationBarSkin"
+					  xmlns:components="be.irail.betrains.playbook.components.*"
+					  creationComplete="creationCompleteHandler()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<fx:Metadata>
-		[Event(name="selectedIndexChange",type="flash.events.Event")]
+		[Event(name="change",type="spark.events.IndexChangeEvent")]
 	</fx:Metadata>
 
 	<fx:Script>
 		<![CDATA[
+			import mx.core.IVisualElement;
+
+			import spark.events.IndexChangeEvent;
+			private var _created:Boolean;
 			// ----------------------------
-			// selectectedIndex
+			// selectedIndex
 			// ----------------------------
 
-			private var _selectectedIndex:int;
+			private var _selectedIndex:int = -1;
 
-			[Bindable(event="selectedIndexChange")]
+			[Bindable(event="change")]
 			public function get selectedIndex():int {
-				return _selectectedIndex;
+				return _selectedIndex;
 			}
 
 			public function set selectedIndex(value:int):void {
-				if (value != _selectectedIndex) {
-					_selectectedIndex = value;
-					dispatchEvent(new Event("selectedIndexChange"));
+				if (value != _selectedIndex) {
+					var oldIndex:int = _selectedIndex;
+					_selectedIndex = value;
+					applySelectedIndex();
+					dispatchEvent(new IndexChangeEvent(IndexChangeEvent.CHANGE, false, false, oldIndex, value));
+				}
+			}
+
+			private function applySelectedIndex():void {
+				if (_created) {
+					unselectAll();
+					if (_selectedIndex == -1) {
+						_selectedIndex = 0;
+						dispatchEvent(new IndexChangeEvent(IndexChangeEvent.CHANGE, false, false, -1, 0));
+					}
+					getButtonByIndex(_selectedIndex).selected = true;
+				}
+			}
+
+			private function getButtonByIndex(index:int):ApplicationBarButton {
+				var i:int = 0, count:int = 0, element:IVisualElement;
+				for (i = 0; i < buttons.numElements; i++) {
+					element = buttons.getElementAt(i);
+					if (element is ApplicationBarButton) {
+						if (count == index) {
+							return ApplicationBarButton(element);
+						}
+						count++;
+					}
+				}
+				return null;
+			}
+
+			private function getButtonIndex(btn:ApplicationBarButton):int {
+				var i:int = 0, count:int = 0, element:IVisualElement;
+				for (i = 0; i < buttons.numElements; i++) {
+					element = buttons.getElementAt(i);
+					if (element is ApplicationBarButton) {
+						if (element === btn) {
+							return count;
+						}
+						count++;
+					}
+				}
+				return -1;
+			}
+
+			private function getSelectedButtonIndex():int {
+				var i:int = 0, count:int = 0, element:IVisualElement;
+				for (i = 0; i < buttons.numElements; i++) {
+					element = buttons.getElementAt(i);
+					if (element is ApplicationBarButton) {
+						if (ApplicationBarButton(element).selected) {
+							return count;
+						}
+						count++;
+					}
+				}
+				return 0;
+			}
+
+			private function unselectAll():void {
+				var i:int = 0, count:int = 0, element:IVisualElement;
+				for (i = 0; i < buttons.numElements; i++) {
+					element = buttons.getElementAt(i);
+					if (element is ApplicationBarButton) {
+						ApplicationBarButton(element).selected = false;
+					}
+				}
+			}
+
+			private function creationCompleteHandler():void {
+				_created = true;
+				applySelectedIndex();
+			}
+
+			protected function changeHandler(event:Event):void {
+				var btn:ApplicationBarButton = ApplicationBarButton(event.target);
+				var index:int = getButtonIndex(btn);
+				if (index == selectedIndex) {
+					btn.selected = true;
+				} else {
+					selectedIndex = index;
 				}
 			}
 		]]>
 	</fx:Script>
-	<s:Group left="80"
-			 right="80"
-			 top="0"
-			 bottom="0">
+	<s:Group id="buttons"
+			 horizontalCenter="0"
+			 width="80%"
+			 top="2">
 		<s:layout>
 			<s:TileLayout columnAlign="justifyUsingGap"
 						  rowAlign="justifyUsingHeight"
@@ -44,9 +130,27 @@
 						  verticalAlign="middle"
 						  requestedRowCount="1"/>
 		</s:layout>
-		<s:Button id="recent"/>
-		<s:Button id="favourites"/>
-		<s:Button id="bla"/>
-		<s:Button id="chat"/>
+
+		<components:ApplicationBarButton id="recents"
+										 label="{resourceManager.getString('resources','application.controlbar.recent')}"
+										 image="@Embed(source='icons/recent.png')"
+										 change="changeHandler(event)"/>
+		<components:ApplicationBarButton id="favs"
+										 label="{resourceManager.getString('resources','application.controlbar.favs')}"
+										 image="@Embed(source='icons/favs.png')"
+										 change="changeHandler(event)"/>
+		<components:ApplicationBarButton id="schedule"
+										 label="{resourceManager.getString('resources','application.controlbar.scheduler')}"
+										 image="@Embed(source='icons/schedule.png')"
+										 change="changeHandler(event)"/>
+		<components:ApplicationBarButton id="stations"
+										 label="{resourceManager.getString('resources','application.controlbar.stations')}"
+										 image="@Embed(source='icons/stations.png')"
+										 change="changeHandler(event)"/>
+		<components:ApplicationBarButton id="chat"
+										 label="{resourceManager.getString('resources','application.controlbar.chat')}"
+										 image="@Embed(source='icons/chat.png')"
+										 change="changeHandler(event)"
+										 enabled="false"/>
 	</s:Group>
 </s:SkinnableContainer>
