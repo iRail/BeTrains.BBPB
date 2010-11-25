@@ -57,19 +57,6 @@
 		</s:fill>
 	</s:Rect>
 
-	<s:Rect left="0"
-			right="0"
-			top="0"
-			bottom="0"
-			radiusX="4"
-			radiusY="4"
-			includeIn="selectedStates">
-		<s:fill>
-			<s:SolidColor color="white"
-						  alpha=".3"/>
-		</s:fill>
-	</s:Rect>
-
 	<s:VGroup gap="5"
 			  minWidth="50"
 			  horizontalCenter="0"

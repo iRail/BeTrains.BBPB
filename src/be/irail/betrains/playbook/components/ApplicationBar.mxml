@@ -16,6 +16,11 @@
 
 	<fx:Script>
 		<![CDATA[
+			import com.greensock.TweenLite;
+			import com.greensock.easing.Expo;
+			import com.greensock.easing.Quad;
+			import com.greensock.easing.Quart;
+
 			import mx.core.IVisualElement;
 
 			import spark.events.IndexChangeEvent;
@@ -43,11 +48,19 @@
 			private function applySelectedIndex():void {
 				if (_created) {
 					unselectAll();
+					var isFirst:Boolean;
 					if (_selectedIndex == -1) {
 						_selectedIndex = 0;
+						isFirst = true;
 						dispatchEvent(new IndexChangeEvent(IndexChangeEvent.CHANGE, false, false, -1, 0));
 					}
-					getButtonByIndex(_selectedIndex).selected = true;
+					var btn:ApplicationBarButton = getButtonByIndex(_selectedIndex);
+					if (!isFirst) {
+						TweenLite.to(indicator, .6, {x: btn.x, ease: Expo.easeOut, onComplete: function():void {
+											 btn.selected = true;
+										 }
+									 });
+					}
 				}
 			}
 
@@ -119,6 +132,8 @@
 			}
 		]]>
 	</fx:Script>
+
+
 	<s:Group id="buttons"
 			 horizontalCenter="0"
 			 width="80%"
@@ -130,6 +145,17 @@
 						  verticalAlign="middle"
 						  requestedRowCount="1"/>
 		</s:layout>
+		<s:Rect id="indicator"
+				width="80"
+				height="72"
+				radiusX="4"
+				radiusY="4"
+				includeInLayout="false">
+			<s:fill>
+				<s:SolidColor color="white"
+							  alpha=".3"/>
+			</s:fill>
+		</s:Rect>
 
 		<components:ApplicationBarButton id="recents"
 										 label="{resourceManager.getString('resources','application.controlbar.recent')}"
