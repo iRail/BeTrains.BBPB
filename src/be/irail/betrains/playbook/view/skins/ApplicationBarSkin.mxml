@@ -24,7 +24,7 @@
 		xmlns:s="library://ns.adobe.com/flex/spark"
 		xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
 		alpha.disabled="0.5">
-	<fx:Metadata>[HostComponent("be.irail.betrains.playbook.components.ApplicationBar")]</fx:Metadata>
+	<fx:Metadata>[HostComponent("be.irail.betrains.playbook.view.components.ApplicationBar")]</fx:Metadata>
 
 	<s:states>
 		<s:State name="normal"/>

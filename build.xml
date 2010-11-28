@@ -1,0 +1,15 @@
+<project name="playbook_betrains"
+		 basedir="."
+		 default="copyResources">
+
+	<target name="copyResources">
+
+		<copy todir="bin-debug">
+			<fileset dir="assets">
+				<include name="**/resources.properties"/>
+			</fileset>
+		</copy>
+
+
+	</target>
+</project>

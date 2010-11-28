@@ -3,9 +3,9 @@
 					  xmlns:s="library://ns.adobe.com/flex/spark"
 					  xmlns:mx="library://ns.adobe.com/flex/mx"
 					  width="100%"
-					  height="80"
-					  skinClass="be.irail.betrains.playbook.skins.ApplicationBarSkin"
-					  xmlns:components="be.irail.betrains.playbook.components.*"
+					  height="54"
+					  skinClass="be.irail.betrains.playbook.view.skins.ApplicationBarSkin"
+					  xmlns:components="be.irail.betrains.playbook.view.components.*"
 					  creationComplete="creationCompleteHandler()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -18,8 +18,6 @@
 		<![CDATA[
 			import com.greensock.TweenLite;
 			import com.greensock.easing.Expo;
-			import com.greensock.easing.Quad;
-			import com.greensock.easing.Quart;
 
 			import mx.core.IVisualElement;
 
@@ -54,12 +52,19 @@
 						isFirst = true;
 						dispatchEvent(new IndexChangeEvent(IndexChangeEvent.CHANGE, false, false, -1, 0));
 					}
-					var btn:ApplicationBarButton = getButtonByIndex(_selectedIndex);
+					var btn:ApplicationBarButton = getButtonByIndex(_selectedIndex),
+						newX:int = btn.x,
+						newW:int = btn.width;
+
 					if (!isFirst) {
-						TweenLite.to(indicator, .6, {x: btn.x, ease: Expo.easeOut, onComplete: function():void {
+						TweenLite.to(indicator, .6, {x: newX, ease: Expo.easeOut, onComplete: function():void {
 											 btn.selected = true;
 										 }
 									 });
+					} else {
+						indicator.x = newX;
+						indicator.width = newW;
+						indicator.visible = true;
 					}
 				}
 			}
@@ -133,38 +138,48 @@
 		]]>
 	</fx:Script>
 
-
 	<s:Group id="buttons"
 			 horizontalCenter="0"
-			 width="80%"
-			 top="2">
+			 minWidth="600"
+			 maxWidth="1024"
+			 top="1">
 		<s:layout>
-			<s:TileLayout columnAlign="justifyUsingGap"
+			<s:TileLayout columnAlign="justifyUsingWidth"
 						  rowAlign="justifyUsingHeight"
 						  orientation="columns"
 						  verticalAlign="middle"
 						  requestedRowCount="1"/>
 		</s:layout>
+
 		<s:Rect id="indicator"
-				width="80"
-				height="72"
-				radiusX="4"
-				radiusY="4"
-				includeInLayout="false">
+				height="{buttons.height}"
+				topLeftRadiusX="4"
+				topLeftRadiusY="4"
+				topRightRadiusX="4"
+				topRightRadiusY="4"
+				includeInLayout="false"
+				visible="false">
 			<s:fill>
 				<s:SolidColor color="white"
-							  alpha=".3"/>
+							  alpha=".6"/>
 			</s:fill>
+			<s:filters>
+				<s:DropShadowFilter inner="true"
+									blurX="2"
+									blurY="2"
+									color="0"
+									distance="1"
+									angle="90"/>
+			</s:filters>
 		</s:Rect>
-
-		<components:ApplicationBarButton id="recents"
+		<!--<components:ApplicationBarButton id="recents"
 										 label="{resourceManager.getString('resources','application.controlbar.recent')}"
 										 image="@Embed(source='icons/recent.png')"
-										 change="changeHandler(event)"/>
-		<components:ApplicationBarButton id="favs"
+										 change="changeHandler(event)"/>-->
+		<!--<components:ApplicationBarButton id="favs"
 										 label="{resourceManager.getString('resources','application.controlbar.favs')}"
 										 image="@Embed(source='icons/favs.png')"
-										 change="changeHandler(event)"/>
+										 change="changeHandler(event)"/>-->
 		<components:ApplicationBarButton id="schedule"
 										 label="{resourceManager.getString('resources','application.controlbar.scheduler')}"
 										 image="@Embed(source='icons/schedule.png')"
@@ -173,10 +188,10 @@
 										 label="{resourceManager.getString('resources','application.controlbar.stations')}"
 										 image="@Embed(source='icons/stations.png')"
 										 change="changeHandler(event)"/>
-		<components:ApplicationBarButton id="chat"
+		<!--<components:ApplicationBarButton id="chat"
 										 label="{resourceManager.getString('resources','application.controlbar.chat')}"
 										 image="@Embed(source='icons/chat.png')"
 										 change="changeHandler(event)"
-										 enabled="false"/>
+										 enabled="false"/>-->
 	</s:Group>
 </s:SkinnableContainer>

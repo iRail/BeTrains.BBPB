@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:mx="library://ns.adobe.com/flex/mx"
+					  width="100%"
+					  height="100%"
+					  xmlns:stations="be.irail.api.data.stations.*">
+	<fx:Script>
+		<![CDATA[
+			import be.irail.api.data.stations.IRStation;
+
+			// ----------------------------
+			// stationFrom
+			// ----------------------------
+
+			private var _stationFrom:IRStation;
+
+			[Bindable(event="stationFromChange")]
+			public function get stationFrom():IRStation {
+				return _stationFrom;
+			}
+
+			public function set stationFrom(value:IRStation):void {
+				if (value != _stationFrom) {
+					_stationFrom = value;
+					dispatchEvent(new Event("stationFromChange"));
+				}
+			}
+
+			// ----------------------------
+			// stationTo
+			// ----------------------------
+
+			private var _stationTo:IRStation;
+
+			[Bindable(event="stationToChange")]
+			public function get stationTo():IRStation {
+				return _stationTo;
+			}
+
+			public function set stationTo(value:IRStation):void {
+				if (value != _stationTo) {
+					_stationTo = value;
+					dispatchEvent(new Event("stationToChange"));
+				}
+			}
+
+			protected function selectStation_clickHandler(event:MouseEvent):void {
+				// TODO Auto-generated method stub
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+	</fx:Declarations>
+	<s:VGroup horizontalCenter="0"
+			  width="500">
+		<s:HGroup width="100%">
+			<s:Label text="{resourceManager.getString('resources','scheduler.station1.label')}"
+					 textAlign="left"
+					 width="100%"/>
+			<s:Label id="station1Lbl"
+					 text="{stationFrom.formattedName}"
+					 width="100%"/>
+			<s:Button id="selectStation1"
+					  click="selectStation_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup width="100%">
+			<s:Label text="{resourceManager.getString('resources','scheduler.station2.label')}"
+					 width="100%"/>
+			<s:Label id="station2Lbl"
+					 text="{stationFrom.formattedName}"
+					 width="100%"/>
+			<s:Button id="selectStation2"
+					  click="selectStation_clickHandler(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:SkinnableContainer>
