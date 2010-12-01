@@ -16,6 +16,8 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+
+
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.stations.IRStation;
@@ -65,7 +67,6 @@
 			}
 
 			private function readStations():void {
-				_file = new File();
 				_file = File.applicationDirectory.resolvePath("data/stations.dat");
 				var stream:FileStream = new FileStream();
 
@@ -79,6 +80,7 @@
 				var ba:ByteArray = new ByteArray();
 				stream.readBytes(ba, 0, stream.bytesAvailable);
 				stream.close();
+				_file = null;
 
 				var data:Object = SerializeUtil.deserialize(ba);
 				_model.stations = new ArrayCollection((data.data) as Array);
@@ -135,7 +137,8 @@
 				  width="100%"
 				  height="100%">
 		<s:NavigatorContent>
-			<scheduler:SchedulerView id="scheduler"/>
+			<scheduler:SchedulerView id="scheduler"
+									 title="{resourceManager.getString('resources','scheduler.title')}"/>
 		</s:NavigatorContent>
 		<s:NavigatorContent>
 			<stations:StationsView id="stations"/>

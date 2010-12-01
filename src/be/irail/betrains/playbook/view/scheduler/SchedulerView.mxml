@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
-					  xmlns:s="library://ns.adobe.com/flex/spark"
-					  xmlns:mx="library://ns.adobe.com/flex/mx"
-					  width="100%"
-					  height="100%"
-					  xmlns:stations="be.irail.api.data.stations.*">
+<components:MainViewItem xmlns:fx="http://ns.adobe.com/mxml/2009"
+						 xmlns:s="library://ns.adobe.com/flex/spark"
+						 xmlns:mx="library://ns.adobe.com/flex/mx"
+						 xmlns:stations="be.irail.api.data.stations.*"
+						 xmlns:components="be.irail.betrains.playbook.view.components.*"
+						 width="100%"
+						 height="100%">
+
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.stations.IRStation;
+			import be.irail.betrains.playbook.view.components.StationListPopUp;
+
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+
+			import spark.components.Application;
+
+			private var _popup:StationListPopUp;
 
 			// ----------------------------
 			// stationFrom
@@ -18,6 +29,14 @@
 			[Bindable(event="stationFromChange")]
 			public function get stationFrom():IRStation {
 				return _stationFrom;
+			}
+
+			[Bindable(event="stationFromChange")]
+			public function get stationFromName():String {
+				if (!_stationFrom) {
+					return "";
+				}
+				return _stationFrom.formattedName;
 			}
 
 			public function set stationFrom(value:IRStation):void {
@@ -38,6 +57,14 @@
 				return _stationTo;
 			}
 
+			[Bindable(event="stationToChange")]
+			public function get stationToName():String {
+				if (!_stationTo) {
+					return "";
+				}
+				return _stationTo.formattedName;
+			}
+
 			public function set stationTo(value:IRStation):void {
 				if (value != _stationTo) {
 					_stationTo = value;
@@ -45,34 +72,165 @@
 				}
 			}
 
-			protected function selectStation_clickHandler(event:MouseEvent):void {
+			protected function selectFromStation_clickHandler(event:MouseEvent):void {
+				if (_popup) {
+					_popup.close();
+				}
+				_popup = new StationListPopUp();
+
+				var mainApp:Application = FlexGlobals.topLevelApplication as Application;
+				PopUpManager.addPopUp(_popup, mainApp as DisplayObject, true);
+
+				_popup.x = (mainApp.width / 2) - (_popup.width / 2);
+				_popup.y = (mainApp.height / 2) - (_popup.height / 2) - 100;
+
+				_popup.addEventListener(CloseEvent.CLOSE, onFromStationsClose);
+			}
+
+			private function onFromStationsClose(event:CloseEvent):void {
+				if (event.detail == StationListPopUp.OK) {
+					this.stationFrom = _popup.selectedStation;
+				}
+				_popup = null;
+			}
+
+			protected function selectToStation_clickHandler(event:MouseEvent):void {
+				if (_popup) {
+					_popup.close();
+				}
+				_popup = new StationListPopUp();
+
+				var mainApp:Application = FlexGlobals.topLevelApplication as Application;
+				PopUpManager.addPopUp(_popup, mainApp as DisplayObject, true);
+
+				_popup.x = (mainApp.width / 2) - (_popup.width / 2);
+				_popup.y = (mainApp.height / 2) - (_popup.height / 2) - 100;
+
+				_popup.addEventListener(CloseEvent.CLOSE, onToStationsClose);
+			}
+
+			private function onToStationsClose(event:CloseEvent):void {
+				if (event.detail == StationListPopUp.OK) {
+					this.stationTo = _popup.selectedStation;
+				}
+				_popup = null;
+			}
+
+			protected function searchBtn_clickHandler(event:MouseEvent):void {
 				// TODO Auto-generated method stub
+			}
+
+			protected function onSwapClick(event:MouseEvent):void {
+				var from:IRStation = this.stationFrom;
+				var to:IRStation = this.stationTo;
+
+				this.stationTo = from;
+				this.stationFrom = to;
 			}
 		]]>
 	</fx:Script>
 
 	<fx:Declarations>
 	</fx:Declarations>
-	<s:VGroup horizontalCenter="0"
-			  width="500">
-		<s:HGroup width="100%">
-			<s:Label text="{resourceManager.getString('resources','scheduler.station1.label')}"
-					 textAlign="left"
-					 width="100%"/>
-			<s:Label id="station1Lbl"
-					 text="{stationFrom.formattedName}"
-					 width="100%"/>
-			<s:Button id="selectStation1"
-					  click="selectStation_clickHandler(event)"/>
+	<s:VGroup width="100%"
+			  height="100%"
+			  horizontalAlign="center">
+
+		<s:HGroup width="90%">
+
+			<s:Group width="100%"
+					 height="30">
+				<s:Rect width="100%"
+						height="100%"
+						radiusX="4"
+						radiusY="4">
+					<s:filters>
+						<s:DropShadowFilter blurX="6"
+											blurY="6"
+											strength=".4"
+											quality="3"
+											angle="80"
+											distance="3"/>
+					</s:filters>
+					<s:fill>
+						<s:SolidColor color="white"/>
+					</s:fill>
+				</s:Rect>
+
+				<s:HGroup width="100%"
+						  height="100%"
+						  paddingLeft="5"
+						  paddingRight="5"
+						  paddingTop="5"
+						  paddingBottom="5">
+					<s:Label text="{resourceManager.getString('resources','scheduler.station1.label')}"
+							 textAlign="left"
+							 width="100%"
+							 height="100%"
+							 verticalAlign="middle"/>
+					<s:Label id="station1Lbl"
+							 text="{stationFromName}"
+							 width="100%"
+							 height="100%"
+							 verticalAlign="middle"/>
+					<s:Button id="selectStation1"
+							  click="selectFromStation_clickHandler(event)"/>
+				</s:HGroup>
+			</s:Group>
+			<s:Group mouseChildren="false"
+					 click="onSwapClick(event)">
+				<s:BitmapImage source="@Embed(source='swap.png')"
+							   width="30"
+							   height="30"
+							   smooth="true"/>
+			</s:Group>
+
+			<s:Group width="100%"
+					 height="30">
+				<s:Rect width="100%"
+						height="100%"
+						radiusX="4"
+						radiusY="4">
+					<s:filters>
+						<s:DropShadowFilter blurX="6"
+											blurY="6"
+											strength=".4"
+											quality="3"
+											angle="80"
+											distance="3"/>
+					</s:filters>
+					<s:fill>
+						<s:SolidColor color="white"/>
+					</s:fill>
+				</s:Rect>
+
+				<s:HGroup width="100%"
+						  height="100%"
+						  paddingLeft="5"
+						  paddingRight="5"
+						  paddingTop="5"
+						  paddingBottom="5">
+					<s:Label text="{resourceManager.getString('resources','scheduler.station2.label')}"
+							 width="100%"
+							 height="100%"
+							 verticalAlign="middle"/>
+					<s:Label id="station2Lbl"
+							 text="{stationToName}"
+							 width="100%"
+							 height="100%"
+							 verticalAlign="middle"/>
+					<s:Button id="selectStation2"
+							  click="selectToStation_clickHandler(event)"/>
+				</s:HGroup>
+			</s:Group>
 		</s:HGroup>
-		<s:HGroup width="100%">
-			<s:Label text="{resourceManager.getString('resources','scheduler.station2.label')}"
-					 width="100%"/>
-			<s:Label id="station2Lbl"
-					 text="{stationFrom.formattedName}"
-					 width="100%"/>
-			<s:Button id="selectStation2"
-					  click="selectStation_clickHandler(event)"/>
-		</s:HGroup>
+
+		<s:Group width="100%"
+				 height="30">
+			<s:Button id="searchBtn"
+					  width="200"
+					  horizontalCenter="0"
+					  click="searchBtn_clickHandler(event)"/>
+		</s:Group>
 	</s:VGroup>
-</s:SkinnableContainer>
+</components:MainViewItem>
