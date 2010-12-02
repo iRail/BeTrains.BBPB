@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:TouchButton xmlns:fx="http://ns.adobe.com/mxml/2009"
+						xmlns:s="library://ns.adobe.com/flex/spark"
+						xmlns:mx="library://ns.adobe.com/flex/mx"
+						xmlns:components="be.irail.betrains.playbook.view.components.*"
+						minHeight="30">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+			// ----------------------------
+			// date
+			// ----------------------------
+
+			private var _date:Date = new Date();
+
+			[Bindable(event="dateChange")]
+			public function get date():Date {
+				return _date;
+			}
+
+			public function set date(value:Date):void {
+				if (value != _date) {
+					_date = value;
+					dispatchEvent(new Event("dateChange"));
+				}
+			}
+
+
+			[Bindable(event="dateChange")]
+			public function get dateText():String {
+				if (!date) {
+					return "";
+				}
+
+				return _date.toDateString() + " " + _date.toTimeString();
+			}
+		]]>
+	</fx:Script>
+
+	<s:HGroup width="100%"
+			  height="100%"
+			  paddingLeft="5"
+			  paddingRight="5"
+			  paddingTop="5"
+			  paddingBottom="5"
+			  gap="10">
+		<s:HGroup width="50%"
+				  height="100%">
+
+			<s:BitmapImage source="@Embed(source='icons/calendar.png')"
+						   smooth="true"
+						   width="20"
+						   height="20"
+						   verticalCenter="0"/>
+
+			<s:Label styleName="infoLabel"
+					 maxWidth="100"
+					 text="{resourceManager.getString('resources','scheduler.date.label')}"
+					 width="100%"
+					 height="100%"/>
+
+			<s:Label text="{dateText}"
+					 verticalAlign="middle"
+					 width="100%"
+					 height="100%"/>
+		</s:HGroup>
+		<mx:Spacer width="60"/>
+		<s:Label styleName="infoLabel"
+				 text="{resourceManager.getString('resources','scheduler.arrdepart.label')}"
+				 height="100%"/>
+		<s:ToggleButton id="depArr"/>
+
+	</s:HGroup>
+	<!--<s:Group height="100%">
+
+	</s:Group>-->
+</components:TouchButton>

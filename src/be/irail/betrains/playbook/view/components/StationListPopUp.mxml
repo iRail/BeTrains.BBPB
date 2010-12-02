@@ -4,7 +4,7 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   width="400"
 			   height="300"
-			   skinClass="be.irail.betrains.playbook.view.skins.StationPopupSkin"
+			   skinClass="be.irail.betrains.playbook.view.components.skins.StationPopupSkin"
 			   xmlns:stations="be.irail.api.data.stations.*"
 			   creationComplete="titlewindow1_creationCompleteHandler(event)">
 	<s:layout>

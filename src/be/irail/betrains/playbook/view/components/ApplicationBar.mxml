@@ -4,7 +4,7 @@
 					  xmlns:mx="library://ns.adobe.com/flex/mx"
 					  width="100%"
 					  height="54"
-					  skinClass="be.irail.betrains.playbook.view.skins.ApplicationBarSkin"
+					  skinClass="be.irail.betrains.playbook.view.components.skins.ApplicationBarSkin"
 					  xmlns:components="be.irail.betrains.playbook.view.components.*"
 					  creationComplete="creationCompleteHandler()">
 	<fx:Declarations>

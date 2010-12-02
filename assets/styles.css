@@ -1,7 +1,6 @@
 /* CSS file */
 @namespace s "library://ns.adobe.com/flex/spark";
 
-
 /* --------------------------------------------------------------------
 
    Embedded fonts
@@ -10,7 +9,7 @@
 
 /*-------------- PlaybookFont --------------*/
 /* Regular */
-@font-face {
+/*@font-face {
 	src: local("Helvetica");
 	antiAliasType:"normal";
 	fontFamily: PlaybookFont;
@@ -20,7 +19,6 @@
 	unicodeRange:	U+0000-U+FFFF; 
 }
 
-/* Bold */
 @font-face {
 	src: local("Helvetica");
 	fontFamily: PlaybookFont;
@@ -30,7 +28,6 @@
 	unicodeRange:	U+0000-U+FFFF; 
 }
 
-/* Italic */
 @font-face {
 	src: local("Helvetica");
 	fontFamily: PlaybookFont;
@@ -39,8 +36,6 @@
 	embed-as-cff:true;
 	unicodeRange: U+0000-U+FFFF; 
 }
-
-/* Bold Italic */
 @font-face {
 	src: local("Helvetica");
 	fontFamily: PlaybookFont;
@@ -49,7 +44,7 @@
 	embed-as-cff:true;
 	antiAliasType:"normal";
 	unicodeRange: U+0000-U+FFFF; 
-}
+}*/
 /*--------------------------------------------------------------------
   
    		Application Components
@@ -63,20 +58,22 @@ global{
 }
 
 s|WindowedApplication{
-	font-family:PlaybookFont;
 }
 
-s|TextArea{
-	font-family:PlaybookFont;
+/*s|TextArea{
 	focus-alpha:0;
 	content-background-alpha:0;
 	border-visible:false;
-}
+}*/
 
 s|Label {
-	font-family:PlaybookFont;
 }
 
 s|RichEditableText{
-	font-family:PlaybookFont;
+}
+
+.infoLabel{
+	color:#2B281E;
+	fontStyle:italic;
+	vertical-align:middle;
 }

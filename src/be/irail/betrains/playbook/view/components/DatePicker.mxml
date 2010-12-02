@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 width="420"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:components="spark.components.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+
+			[Bindable]
+			public var day:int;
+
+			[Bindable]
+			public var month:int;
+
+			[Bindable]
+			public var year:int;
+
+			[Bindable]
+			public var hour:int;
+
+			[Bindable]
+			public var minute:int;
+
+			private var _currentDate:Date;
+
+			[Bindable]
+			public function get currentDate():Date {
+				return _currentDate;
+			}
+
+			public function set currentDate(value:Date):void {
+				var today:Date = new Date(),
+					timeCompare:int = compare(value, today);
+
+				if (timeCompare < 0) {
+					_currentDate = today
+				} else {
+					_currentDate = value;
+				}
+
+				updateDateParts();
+			}
+
+			private function compare(date1:Date, date2:Date):int {
+				if (!date1 || !date2) {
+					return -1;
+				}
+
+				var date1Timestamp:Number = date1.getTime();
+				var date2Timestamp:Number = date2.getTime();
+
+				var result:int = -1;
+
+				if (date1Timestamp == date2Timestamp) {
+					result = 0;
+				} else if (date1Timestamp > date2Timestamp) {
+					result = 1;
+				}
+
+				return result;
+			}
+
+			private function updateDateParts():void {
+				day = currentDate.date;
+				month = currentDate.month;
+				year = currentDate.fullYear;
+				hour = currentDate.hours;
+				minute = currentDate.minutes;
+			}
+
+			private function incrementDate(type:String):void {
+				updateDate(type, 1);
+			}
+
+			private function decrementDate(type:String):void {
+				updateDate(type, -1);
+			}
+
+			private function updateDate(type:String, value:int):void {
+				var tmpDate:Date = new Date(year, month, day, hour, minute);
+
+				switch (type) {
+					case 'day':
+						tmpDate.setDate(tmpDate.getDate() + value);
+						break;
+					case 'month':
+						tmpDate.setMonth(tmpDate.getMonth() + value);
+						break;
+					case 'year':
+						tmpDate.setFullYear(tmpDate.getFullYear() + value);
+						break;
+					case 'hour':
+						tmpDate.setHours(tmpDate.getHours() + value);
+						break;
+					case 'minute':
+						tmpDate.setMinutes(tmpDate.getMinutes() + value);
+						break;
+				}
+
+				currentDate = tmpDate;
+			}
+
+			private function setDate():void {
+				var dpe:DatePickerEvent = new DatePickerEvent(DatePickerEvent.DATE_PICKER_SET);
+				dpe.date = currentDate;
+				dispatchEvent(dpe);
+			}
+
+			private function cancelDate():void {
+				var dpe:DatePickerEvent = new DatePickerEvent(DatePickerEvent.DATE_PICKER_CANCEL);
+				dispatchEvent(dpe);
+			}
+		]]>
+	</fx:Script>
+
+	<s:BorderContainer backgroundColor="0x444444"
+					   width="100%"
+					   borderColor="0xcccccc"
+					   borderWeight="4"
+					   cornerRadius="10">
+
+		<s:VGroup width="100%"
+				  gap="10"
+				  paddingBottom="15"
+				  paddingLeft="15"
+				  paddingRight="15"
+				  paddingTop="15">
+			<s:Label text="{currentDate.toLocaleDateString()+' ' + currentDate.toLocaleTimeString()}"
+					 width="100%"
+					 fontSize="40"/>
+			<s:Line width="100%">
+				<s:stroke>
+					<s:SolidColorStroke color="0xcccccc"
+										weight="2"/>
+				</s:stroke>
+			</s:Line>
+			<s:HGroup width="100%">
+				<s:VGroup gap="10"
+						  width="90">
+					<s:Button label="+"
+							  click="incrementDate('day')"
+							  width="100%"/>
+					<s:Label text="{day}"
+							 width="100%"
+							 textAlign="center"
+							 fontSize="40"/>
+					<s:Button label="-"
+							  click="decrementDate('day')"
+							  width="100%"/>
+				</s:VGroup>
+				<s:VGroup gap="10"
+						  width="90">
+					<s:Button label="+"
+							  click="incrementDate('month')"
+							  width="100%"/>
+					<s:Label text="{month+1}"
+							 width="100%"
+							 textAlign="center"
+							 fontSize="40"/>
+					<s:Button label="-"
+							  click="decrementDate('month')"
+							  width="100%"/>
+				</s:VGroup>
+				<s:VGroup gap="10"
+						  width="190">
+					<s:Button label="+"
+							  click="incrementDate('year')"
+							  width="100%"/>
+					<s:Label text="{year}"
+							 width="100%"
+							 textAlign="center"
+							 fontSize="40"/>
+					<s:Button label="-"
+							  click="decrementDate('year')"
+							  width="100%"/>
+				</s:VGroup>
+			</s:HGroup>
+
+			<!-- Time -->
+
+			<s:HGroup width="100%">
+				<s:VGroup gap="10"
+						  width="90">
+					<s:Button label="+"
+							  click="incrementDate('hour')"
+							  width="100%"/>
+					<s:Label text="{hour}"
+							 width="100%"
+							 textAlign="center"
+							 fontSize="40"/>
+					<s:Button label="-"
+							  click="decrementDate('hour')"
+							  width="100%"/>
+				</s:VGroup>
+				<s:VGroup gap="10"
+						  width="90">
+					<s:Button label="+"
+							  click="incrementDate('minute')"
+							  width="100%"/>
+					<s:Label text="{minute}"
+							 width="100%"
+							 textAlign="center"
+							 fontSize="40"/>
+					<s:Button label="-"
+							  click="decrementDate('minute')"
+							  width="100%"/>
+				</s:VGroup>
+			</s:HGroup>
+
+
+			<s:BorderContainer backgroundColor="0xcccccc"
+							   width="100%">
+				<!--<s:HGroup width="100%"
+						  verticalAlign="middle"
+						  paddingTop="15"
+						  paddingBottom="15"
+						  paddingLeft="10"
+						  paddingRight="10">
+					<s:Button width="100%"
+							  label="Set"
+							  click="setDate()"/>
+					<s:Button width="100%"
+							  label="Cancel"
+							  click="cancelDate()"/>
+				</s:HGroup>-->
+			</s:BorderContainer>
+		</s:VGroup>
+	</s:BorderContainer>
+
+</s:Group>

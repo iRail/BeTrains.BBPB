@@ -5,7 +5,8 @@
 						 xmlns:stations="be.irail.api.data.stations.*"
 						 xmlns:components="be.irail.betrains.playbook.view.components.*"
 						 width="100%"
-						 height="100%">
+						 height="100%"
+						 xmlns:components1="be.irail.betrains.playbook.view.scheduler.components.*">
 
 	<fx:Script>
 		<![CDATA[
@@ -31,14 +32,6 @@
 				return _stationFrom;
 			}
 
-			[Bindable(event="stationFromChange")]
-			public function get stationFromName():String {
-				if (!_stationFrom) {
-					return "";
-				}
-				return _stationFrom.formattedName;
-			}
-
 			public function set stationFrom(value:IRStation):void {
 				if (value != _stationFrom) {
 					_stationFrom = value;
@@ -55,14 +48,6 @@
 			[Bindable(event="stationToChange")]
 			public function get stationTo():IRStation {
 				return _stationTo;
-			}
-
-			[Bindable(event="stationToChange")]
-			public function get stationToName():String {
-				if (!_stationTo) {
-					return "";
-				}
-				return _stationTo.formattedName;
 			}
 
 			public function set stationTo(value:IRStation):void {
@@ -136,101 +121,40 @@
 			  height="100%"
 			  horizontalAlign="center">
 
-		<s:HGroup width="90%">
-
-			<s:Group width="100%"
-					 height="30">
-				<s:Rect width="100%"
-						height="100%"
-						radiusX="4"
-						radiusY="4">
-					<s:filters>
-						<s:DropShadowFilter blurX="6"
-											blurY="6"
-											strength=".4"
-											quality="3"
-											angle="80"
-											distance="3"/>
-					</s:filters>
-					<s:fill>
-						<s:SolidColor color="white"/>
-					</s:fill>
-				</s:Rect>
-
-				<s:HGroup width="100%"
-						  height="100%"
-						  paddingLeft="5"
-						  paddingRight="5"
-						  paddingTop="5"
-						  paddingBottom="5">
-					<s:Label text="{resourceManager.getString('resources','scheduler.station1.label')}"
-							 textAlign="left"
-							 width="100%"
-							 height="100%"
-							 verticalAlign="middle"/>
-					<s:Label id="station1Lbl"
-							 text="{stationFromName}"
-							 width="100%"
-							 height="100%"
-							 verticalAlign="middle"/>
-					<s:Button id="selectStation1"
-							  click="selectFromStation_clickHandler(event)"/>
-				</s:HGroup>
-			</s:Group>
+		<s:HGroup width="90%"
+				  id="components">
+			<components1:ChooseStationButton id="fromStation"
+											 width="100%"
+											 height="30"
+											 infoLabel="{resourceManager.getString('resources','scheduler.station1.label')}"
+											 station="{stationFrom}"
+											 click="selectFromStation_clickHandler(event)"/>
 			<s:Group mouseChildren="false"
 					 click="onSwapClick(event)">
-				<s:BitmapImage source="@Embed(source='swap.png')"
+				<s:BitmapImage source="@Embed(source='icons/swap.png')"
 							   width="30"
 							   height="30"
 							   smooth="true"/>
 			</s:Group>
 
-			<s:Group width="100%"
-					 height="30">
-				<s:Rect width="100%"
-						height="100%"
-						radiusX="4"
-						radiusY="4">
-					<s:filters>
-						<s:DropShadowFilter blurX="6"
-											blurY="6"
-											strength=".4"
-											quality="3"
-											angle="80"
-											distance="3"/>
-					</s:filters>
-					<s:fill>
-						<s:SolidColor color="white"/>
-					</s:fill>
-				</s:Rect>
-
-				<s:HGroup width="100%"
-						  height="100%"
-						  paddingLeft="5"
-						  paddingRight="5"
-						  paddingTop="5"
-						  paddingBottom="5">
-					<s:Label text="{resourceManager.getString('resources','scheduler.station2.label')}"
-							 width="100%"
-							 height="100%"
-							 verticalAlign="middle"/>
-					<s:Label id="station2Lbl"
-							 text="{stationToName}"
-							 width="100%"
-							 height="100%"
-							 verticalAlign="middle"/>
-					<s:Button id="selectStation2"
-							  click="selectToStation_clickHandler(event)"/>
-				</s:HGroup>
-			</s:Group>
+			<components1:ChooseStationButton width="100%"
+											 height="30"
+											 infoLabel="{resourceManager.getString('resources','scheduler.station2.label')}"
+											 station="{stationTo}"
+											 click="selectToStation_clickHandler(event)"/>
 		</s:HGroup>
 
-		<s:Group width="100%"
-				 height="30">
+		<s:HGroup width="90%"
+				  height="30">
+			<components:DateTimeButton width="100%"/>
 			<s:Button id="searchBtn"
-					  width="200"
+					  width="100"
+					  height="100%"
 					  horizontalCenter="0"
 					  click="searchBtn_clickHandler(event)"/>
-		</s:Group>
+		</s:HGroup>
+
+
+
 	</s:VGroup>
 </components:MainViewItem>

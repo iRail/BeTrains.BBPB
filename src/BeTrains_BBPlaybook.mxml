@@ -6,7 +6,7 @@
 					   backgroundFrameRate="12"
 					   width="1024"
 					   height="600"
-					   skinClass="be.irail.betrains.playbook.view.skins.ApplicationSkin"
+					   skinClass="be.irail.betrains.playbook.view.components.skins.ApplicationSkin"
 					   preinitialize="preinitializeApplication()"
 					   applicationComplete="applicationCompleteHandler()"
 					   creationComplete="creationCompleteHandler()"
@@ -17,6 +17,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 
+	<fx:Style source="styles.css"/>
 
 	<fx:Script>
 		<![CDATA[
@@ -27,6 +28,7 @@
 			import be.irail.betrains.playbook.utils.SerializeUtil;
 
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
 			import mx.resources.ResourceManager;
 
 			import org.springextensions.actionscript.context.support.FlexXMLApplicationContext;
@@ -45,6 +47,12 @@
 
 				setupApplicationContext();
 				_context.load();
+
+			/* Alert.show(
+				"Supports touch events: " + Multitouch.supportsTouchEvents + "\n" +
+				"Maximum supported touch points: " + Multitouch.maxTouchPoints + "\n\n" +
+				"Supports gesture events: " + Multitouch.supportsGestureEvents + "\n" +
+				"Supported gestures: " + Multitouch.supportedGestures, "The BlackBerry Playbook: Multitouch support"); */
 			}
 
 			private function preinitializeApplication():void {

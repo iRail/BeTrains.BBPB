@@ -49,9 +49,19 @@
 			 height="50">
 		<s:Rect width="100%"
 				height="100%">
+			<s:filters>
+				<s:DropShadowFilter blurX="4"
+									blurY="4"
+									strength=".2"
+									quality="3"
+									angle="-90"
+									distance="3"/>
+			</s:filters>
 			<s:fill>
-				<s:SolidColor id="bgTitleFill"
-							  color="0xFF0000"/>
+				<s:BitmapFill id="bgFill"
+							  source="@Embed(source='barBg.png')"
+							  fillMode="repeat"
+							  smooth="true"/>
 			</s:fill>
 		</s:Rect>
 
