@@ -40,15 +40,14 @@
 			  paddingLeft="5"
 			  paddingRight="5"
 			  paddingTop="5"
-			  paddingBottom="5">
+			  paddingBottom="5"
+			  verticalAlign="middle">
 		<s:Label text="{infoLabel}"
 				 styleName="infoLabel"
 				 width="100%"
-				 height="100%"
 				 verticalAlign="middle"/>
 		<s:Label text="{stationName}"
 				 width="100%"
-				 height="100%"
 				 verticalAlign="middle"/>
 		<s:BitmapImage source="@Embed(source='icons/magnifyingglass.png')"
 					   width="20"

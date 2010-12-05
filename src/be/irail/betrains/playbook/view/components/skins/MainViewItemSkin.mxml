@@ -69,6 +69,7 @@
 				 text="{hostComponent.title}"
 				 color="white"
 				 fontSize="14"
+				 fontWeight="bold"
 				 horizontalCenter="0"
 				 verticalCenter="0"/>
 	</s:Group>
@@ -82,7 +83,7 @@
 	<s:Group id="contentGroup"
 			 left="0"
 			 right="0"
-			 top="{titleBar.height+10}"
+			 top="{titleBar.height+0}"
 			 bottom="0"
 			 minWidth="0"
 			 minHeight="0">

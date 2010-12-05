@@ -27,6 +27,11 @@
 					dispatchEvent(new Event("imageChange"));
 				}
 			}
+
+			override public function set label(value:String):void {
+				trace("AppButton", value)
+				super.label = value;
+			}
 		]]>
 	</fx:Script>
 

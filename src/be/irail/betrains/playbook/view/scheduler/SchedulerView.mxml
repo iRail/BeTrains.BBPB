@@ -6,7 +6,8 @@
 						 xmlns:components="be.irail.betrains.playbook.view.components.*"
 						 width="100%"
 						 height="100%"
-						 xmlns:components1="be.irail.betrains.playbook.view.scheduler.components.*">
+						 xmlns:components1="be.irail.betrains.playbook.view.scheduler.components.*"
+						 creationComplete="mainviewitem1_creationCompleteHandler(event)">
 
 	<fx:Script>
 		<![CDATA[
@@ -14,12 +15,23 @@
 			import be.irail.betrains.playbook.view.components.StationListPopUp;
 
 			import mx.core.FlexGlobals;
+			import mx.core.UIComponent;
 			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
+
+			import qnx.locale.LocaleManager;
+			import qnx.ui.buttons.IconButton;
+			import qnx.ui.buttons.ToggleSwitch;
+			import qnx.ui.data.DataProvider;
+			import qnx.ui.picker.Picker;
 
 			import spark.components.Application;
 
 			private var _popup:StationListPopUp;
+
+			[Bindable]
+			private var _locale:LocaleManager = LocaleManager.localeManager;
 
 			// ----------------------------
 			// stationFrom
@@ -101,8 +113,18 @@
 				_popup = null;
 			}
 
+			private function createSearchBtn():void {
+				var btn:IconButton = new IconButton();
+				btn.setIcon("icons/magnifyingglass.png");
+				btn.width = searchBtnGroup.width;
+				btn.height = searchBtnGroup.height;
+
+				searchBtnGroup.addChild(btn);
+			}
+
 			protected function searchBtn_clickHandler(event:MouseEvent):void {
-				// TODO Auto-generated method stub
+
+
 			}
 
 			protected function onSwapClick(event:MouseEvent):void {
@@ -112,49 +134,81 @@
 				this.stationTo = from;
 				this.stationFrom = to;
 			}
+
+			protected function mainviewitem1_creationCompleteHandler(event:FlexEvent):void {
+				createSearchBtn();
+			}
 		]]>
 	</fx:Script>
 
 	<fx:Declarations>
 	</fx:Declarations>
-	<s:VGroup width="100%"
+
+	<s:Rect left="0"
+			right="0"
+			top="0"
+			height="150">
+		<s:fill>
+			<s:SolidColor color="white"/>
+		</s:fill>
+		<s:filters>
+			<s:DropShadowFilter blurX="6"
+								blurY="6"
+								strength=".4"
+								quality="3"
+								angle="90"
+								distance="3"/>
+		</s:filters>
+	</s:Rect>
+	<s:VGroup top="10"
+			  id="dataCont"
+			  width="100%"
 			  height="100%"
 			  horizontalAlign="center">
 
 		<s:HGroup width="90%"
-				  id="components">
+				  id="components"
+				  verticalAlign="middle"
+				  horizontalCenter="0"
+				  gap="5">
+			<s:BitmapImage source="@Embed(source='icons/calendar.png')"
+						   smooth="true"
+						   width="20"
+						   height="20"/>
+			<mx:Spacer width="5"/>
 			<components1:ChooseStationButton id="fromStation"
 											 width="100%"
-											 height="30"
-											 infoLabel="{resourceManager.getString('resources','scheduler.station1.label')}"
+											 height="60"
+											 infoLabel="{_locale.getResource('scheduler.station1.label')}"
 											 station="{stationFrom}"
 											 click="selectFromStation_clickHandler(event)"/>
 			<s:Group mouseChildren="false"
-					 click="onSwapClick(event)">
+					 click="onSwapClick(event)"
+					 height="100%">
 				<s:BitmapImage source="@Embed(source='icons/swap.png')"
 							   width="30"
 							   height="30"
+							   verticalCenter="0"
 							   smooth="true"/>
 			</s:Group>
 
 			<components1:ChooseStationButton width="100%"
-											 height="30"
-											 infoLabel="{resourceManager.getString('resources','scheduler.station2.label')}"
+											 height="60"
+											 infoLabel="{_locale.getResource('scheduler.station2.label')}"
 											 station="{stationTo}"
 											 click="selectToStation_clickHandler(event)"/>
 		</s:HGroup>
 
 		<s:HGroup width="90%"
-				  height="30">
-			<components:DateTimeButton width="100%"/>
-			<s:Button id="searchBtn"
-					  width="100"
-					  height="100%"
-					  horizontalCenter="0"
-					  click="searchBtn_clickHandler(event)"/>
+				  verticalAlign="middle"
+				  horizontalCenter="0"
+				  gap="5">
+			<components:DateTimeButton width="100%"
+									   height="100%"/>
+			<mx:UIComponent id="searchBtnGroup"
+							width="70"
+							height="70"
+							horizontalCenter="0"/>
 		</s:HGroup>
-
-
-
 	</s:VGroup>
 </components:MainViewItem>

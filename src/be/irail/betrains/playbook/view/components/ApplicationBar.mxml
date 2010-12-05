@@ -21,7 +21,13 @@
 
 			import mx.core.IVisualElement;
 
+			import qnx.locale.LocaleManager;
+
 			import spark.events.IndexChangeEvent;
+
+			[Bindable]
+			private var _locale:LocaleManager = LocaleManager.localeManager;
+
 			private var _created:Boolean;
 			// ----------------------------
 			// selectedIndex
@@ -173,23 +179,23 @@
 			</s:filters>
 		</s:Rect>
 		<!--<components:ApplicationBarButton id="recents"
-										 label="{resourceManager.getString('resources','application.controlbar.recent')}"
+										 label="{LocaleManager.localeManager.getResource('application.controlbar.recent')}"
 										 image="@Embed(source='icons/recent.png')"
 										 change="changeHandler(event)"/>-->
 		<!--<components:ApplicationBarButton id="favs"
-										 label="{resourceManager.getString('resources','application.controlbar.favs')}"
+										 label="{LocaleManager.localeManager.getResource('application.controlbar.favs')}"
 										 image="@Embed(source='icons/favs.png')"
 										 change="changeHandler(event)"/>-->
 		<components:ApplicationBarButton id="schedule"
-										 label="{resourceManager.getString('resources','application.controlbar.scheduler')}"
+										 label="{_locale.getResource('application.controlbar.scheduler')}"
 										 image="@Embed(source='icons/schedule.png')"
 										 change="changeHandler(event)"/>
 		<components:ApplicationBarButton id="stations"
-										 label="{resourceManager.getString('resources','application.controlbar.stations')}"
+										 label="{_locale.getResource('application.controlbar.stations')}"
 										 image="@Embed(source='icons/stations.png')"
 										 change="changeHandler(event)"/>
 		<!--<components:ApplicationBarButton id="chat"
-										 label="{resourceManager.getString('resources','application.controlbar.chat')}"
+										 label="{LocaleManager.localeManager.getResource('application.controlbar.chat')}"
 										 image="@Embed(source='icons/chat.png')"
 										 change="changeHandler(event)"
 										 enabled="false"/>-->

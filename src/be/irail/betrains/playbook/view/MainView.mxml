@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:scheduler="be.irail.betrains.playbook.view.scheduler.*"
+		 xmlns:components="be.irail.betrains.playbook.view.components.*"
+		 xmlns:stations="be.irail.betrains.playbook.view.stations.*"
+		 width="100%"
+		 height="100%">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import qnx.locale.LocaleManager;
+
+			import spark.events.IndexChangeEvent;
+
+			private function applicationBar_changeHandler(event:IndexChangeEvent):void {
+				vs.selectedIndex = event.newIndex;
+			}
+		]]>
+	</fx:Script>
+
+	<mx:ViewStack id="vs"
+				  width="100%"
+				  height="100%">
+		<s:NavigatorContent>
+			<scheduler:SchedulerView id="scheduler"
+									 title="{LocaleManager.localeManager.getResource('scheduler.title')}"/>
+		</s:NavigatorContent>
+		<s:NavigatorContent>
+			<stations:StationsView id="stations"/>
+		</s:NavigatorContent>
+	</mx:ViewStack>
+
+	<components:ApplicationBar id="applicationBar"
+							   left="0"
+							   right="0"
+							   bottom="0"
+							   change="applicationBar_changeHandler(event)">
+	</components:ApplicationBar>
+</s:Group>

@@ -69,11 +69,11 @@
 
 		<s:Label id="labelDisplay"
 				 y="35"
+				 fontWeight="bold"
 				 paddingLeft="0"
 				 paddingRight="0"
 				 maxDisplayedLines="1"
 				 textAlign="center"
-				 fontWeight="bold"
 				 color="white"/>
 	</s:Group>
 

@@ -6,7 +6,7 @@
 
 		<copy todir="bin-debug">
 			<fileset dir="assets">
-				<include name="**/resources.properties"/>
+				<include name="**/resource.properties"/>
 			</fileset>
 		</copy>
 

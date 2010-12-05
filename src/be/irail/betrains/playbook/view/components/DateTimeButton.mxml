@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<components:TouchButton xmlns:fx="http://ns.adobe.com/mxml/2009"
-						xmlns:s="library://ns.adobe.com/flex/spark"
-						xmlns:mx="library://ns.adobe.com/flex/mx"
-						xmlns:components="be.irail.betrains.playbook.view.components.*"
-						minHeight="30">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 minHeight="60"
+		 creationComplete="touchbutton1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 
 	<fx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
+
+			import qnx.locale.LocaleManager;
+			import qnx.ui.buttons.ToggleSwitch;
+			import qnx.ui.data.DataProvider;
+			import qnx.ui.picker.Picker;
+			import qnx.ui.skins.SkinStates;
+			import qnx.ui.skins.picker.PickerListBackgroundBlack;
+
+			[Bindable]
+			private var _locale:LocaleManager = LocaleManager.localeManager;
+
+			private var currentYear:Number = new Date().getFullYear();
+
 			// ----------------------------
 			// date
 			// ----------------------------
@@ -17,11 +31,11 @@
 			private var _date:Date = new Date();
 
 			[Bindable(event="dateChange")]
-			public function get date():Date {
+			public function get selectedDate():Date {
 				return _date;
 			}
 
-			public function set date(value:Date):void {
+			public function set selectedDate(value:Date):void {
 				if (value != _date) {
 					_date = value;
 					dispatchEvent(new Event("dateChange"));
@@ -31,11 +45,175 @@
 
 			[Bindable(event="dateChange")]
 			public function get dateText():String {
-				if (!date) {
+				if (!selectedDate) {
 					return "";
 				}
 
 				return _date.toDateString() + " " + _date.toTimeString();
+			}
+
+			protected function touchbutton1_creationCompleteHandler(event:FlexEvent):void {
+				createPicker();
+				createTimePicker();
+				createSwitch();
+
+				parseDateForPicker(selectedDate.date, selectedDate.month, selectedDate.fullYear, selectedDate.hours, selectedDate.minutes);
+			}
+
+			private function createPicker():void {
+				// Create the picker and add the main DataProvider
+
+				var picker:Picker = new Picker();
+				picker.setListBackgroundSkin(PickerListBackgroundBlack);
+				picker.name = "datePicker";
+				picker.width = pickerContainer.width;
+				picker.height = pickerContainer.height;
+
+				var arrDay:Array = [];
+				var arrYear:Array = [];
+
+				// Populate the month array and create the
+				// day DataProvider 
+
+				for (var i:int = 1; i < 32; i++) {
+					arrDay.push({label: i.toString(), value: i});
+				}
+
+				var months:Array = [
+					{label: _locale.getResource('system.months.january'), value: 0},
+					{label: _locale.getResource('system.months.february'), value: 1},
+					{label: _locale.getResource('system.months.march'), value: 2},
+					{label: _locale.getResource('system.months.april'), value: 3},
+					{label: _locale.getResource('system.months.may'), value: 4},
+					{label: _locale.getResource('system.months.june'), value: 5},
+					{label: _locale.getResource('system.months.july'), value: 6},
+					{label: _locale.getResource('system.months.august'), value: 7},
+					{label: _locale.getResource('system.months.september'), value: 8},
+					{label: _locale.getResource('system.months.october'), value: 9},
+					{label: _locale.getResource('system.months.november'), value: 10},
+					{label: _locale.getResource('system.months.december'), value: 11}
+					];
+
+				var dayDP:DataProvider = new DataProvider(arrDay);
+				var monthDP:DataProvider = new DataProvider(months);
+
+				// Create the year DataProvider
+				var currentYear:Number = new Date().getFullYear();
+				for (var l:int = currentYear; l < currentYear + 10; l++) {
+					arrYear.push({label: l.toString(), value: l});
+				}
+
+				var yearDP:DataProvider = new DataProvider(arrYear);
+
+				var dpp:Array = new Array();
+
+				dpp.push(dayDP);
+				dpp.push(monthDP);
+				dpp.push(yearDP);
+
+				picker.dataProvider = new DataProvider(dpp);
+
+				pickerContainer.addChild(picker);
+
+				picker.setListWidth(0, 100);
+				picker.setListWidth(1, 300);
+				picker.setListWidth(2, 200);
+
+				picker.addEventListener(Event.SELECT, handleSelect);
+			}
+
+			private function createTimePicker():void {
+				var picker:Picker = new Picker();
+				picker.setListBackgroundSkin(PickerListBackgroundBlack);
+				picker.name = "timePicker";
+				picker.width = timePickerContainer.width;
+				picker.height = timePickerContainer.height;
+
+				var hours:Array = [];
+				var minutes:Array = [];
+
+				for (var i:int = 0; i < 24; i++) {
+					hours.push({label: i.toString(), value: i});
+				}
+
+				for (var j:int = 0; j < 60; j++) {
+					minutes.push({label: j.toString(), value: j});
+				}
+
+				var dayDP:DataProvider = new DataProvider(hours);
+				var monthDP:DataProvider = new DataProvider(minutes);
+				var dpp:Array = new Array();
+
+				dpp.push(dayDP);
+				dpp.push(monthDP);
+
+				picker.dataProvider = new DataProvider(dpp);
+
+				timePickerContainer.addChild(picker);
+
+				picker.setListWidth(0, 200);
+				picker.setListWidth(1, 200);
+
+				picker.addEventListener(Event.SELECT, handleSelect);
+
+			}
+
+			private function createSwitch():void {
+				var switchButton:ToggleSwitch = new ToggleSwitch();
+				switchButton.defaultLabel = _locale.getResource("scheduler.arrdepart.arrival");
+				switchButton.selectedLabel = _locale.getResource("scheduler.arrdepart.depart");
+				switchButton.width = arrDepToggleSwitchContainer.width;
+
+				arrDepToggleSwitchContainer.height = switchButton.height;
+
+				switchButton.selected = true;
+
+				var selectedTxtFormat:TextFormat = switchButton.getTextFormatForState(SkinStates.SELECTED);
+				selectedTxtFormat.color = 0xFFFFFF;
+				switchButton.setTextFormatForState(selectedTxtFormat, SkinStates.SELECTED);
+
+				arrDepToggleSwitchContainer.addChild(switchButton);
+			}
+
+			private function parseDateForPicker(day:int, month:int, year:int, hours:int = 0, minutes:int = 0):void {
+				var picker:Picker = pickerContainer.getChildByName("datePicker") as Picker,
+					timePicker:Picker = timePickerContainer.getChildByName("timePicker") as Picker;
+
+				if (!picker || !timePicker) {
+					return;
+				}
+
+				var tmp:Date = this.selectedDate;
+				tmp.setDate(day);
+				tmp.setMonth(month);
+				tmp.setFullYear(year);
+				tmp.setHours(hours);
+				tmp.setMinutes(minutes);
+
+				this.selectedDate = tmp;
+
+				var dayIndex:int = selectedDate.date - 1,
+					monthIndex:int = selectedDate.getMonth(),
+					yearIndex:int = selectedDate.fullYear - currentYear,
+					hoursIndex:int = selectedDate.hours,
+					minutesIndex:int = selectedDate.minutes;
+
+				picker.selectedIndices = [dayIndex, monthIndex, yearIndex];
+				timePicker.selectedIndices = [hoursIndex, minutesIndex];
+			}
+
+
+			private function handleSelect(e:Event):void {
+				var picker:Picker = pickerContainer.getChildByName("datePicker") as Picker,
+					timePicker:Picker = timePickerContainer.getChildByName("timePicker") as Picker,
+
+					day:int = picker.selectedIndices[0] + 1,
+					month:int = picker.selectedIndices[1],
+					year:int = picker.selectedIndices[2] + currentYear,
+					hours:int = timePicker.selectedIndices[0],
+					minutes:int = timePicker.selectedIndices[1];
+
+				parseDateForPicker(day, month, year, hours, minutes);
 			}
 		]]>
 	</fx:Script>
@@ -46,35 +224,28 @@
 			  paddingRight="5"
 			  paddingTop="5"
 			  paddingBottom="5"
-			  gap="10">
-		<s:HGroup width="50%"
-				  height="100%">
-
-			<s:BitmapImage source="@Embed(source='icons/calendar.png')"
-						   smooth="true"
-						   width="20"
-						   height="20"
-						   verticalCenter="0"/>
-
-			<s:Label styleName="infoLabel"
-					 maxWidth="100"
-					 text="{resourceManager.getString('resources','scheduler.date.label')}"
-					 width="100%"
-					 height="100%"/>
-
-			<s:Label text="{dateText}"
-					 verticalAlign="middle"
-					 width="100%"
-					 height="100%"/>
-		</s:HGroup>
-		<mx:Spacer width="60"/>
-		<s:Label styleName="infoLabel"
-				 text="{resourceManager.getString('resources','scheduler.arrdepart.label')}"
-				 height="100%"/>
-		<s:ToggleButton id="depArr"/>
-
+			  gap="0"
+			  verticalAlign="middle">
+		<s:BitmapImage source="@Embed(source='icons/calendar.png')"
+					   smooth="true"
+					   width="20"
+					   height="20"/>
+		<mx:Spacer width="15"/>
+		<mx:UIComponent id="arrDepToggleSwitchContainer"
+						width="130"/>
+		<s:Label text="{LocaleManager.localeManager.getResource('scheduler.arrdepart.at')}"
+				 width="40"
+				 height="100%"
+				 verticalAlign="middle"
+				 textAlign="center"
+				 fontSize="16"/>
+		<mx:UIComponent id="pickerContainer"
+						height="50"
+						width="406"/>
+		<mx:Spacer width="10"/>
+		<mx:UIComponent id="timePickerContainer"
+						height="50"
+						width="206"/>
+		<mx:Spacer width="20"/>
 	</s:HGroup>
-	<!--<s:Group height="100%">
-
-	</s:Group>-->
-</components:TouchButton>
+</s:Group>

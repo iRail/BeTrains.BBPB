@@ -9,10 +9,7 @@
 					   skinClass="be.irail.betrains.playbook.view.components.skins.ApplicationSkin"
 					   preinitialize="preinitializeApplication()"
 					   applicationComplete="applicationCompleteHandler()"
-					   creationComplete="creationCompleteHandler()"
-					   xmlns:components="be.irail.betrains.playbook.view.components.*"
-					   xmlns:scheduler="be.irail.betrains.playbook.view.scheduler.*"
-					   xmlns:stations="be.irail.betrains.playbook.view.stations.*">
+					   creationComplete="creationCompleteHandler()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -26,16 +23,12 @@
 			import be.irail.api.methodgroup.Stations;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.utils.SerializeUtil;
+			import be.irail.betrains.playbook.view.MainView;
 
 			import mx.collections.ArrayCollection;
-			import mx.controls.Alert;
-			import mx.resources.ResourceManager;
 
-			import org.springextensions.actionscript.context.support.FlexXMLApplicationContext;
+			import qnx.locale.LocaleManager;
 
-			import spark.events.IndexChangeEvent;
-
-			private var _context:FlexXMLApplicationContext = new FlexXMLApplicationContext();
 			private var _supportedLanguagesLocale:Array = ["en_US"];
 
 			private var _model:ModelLocator = ModelLocator.getInstance();
@@ -44,10 +37,7 @@
 
 			private function creationCompleteHandler():void {
 				NativeApplication.nativeApplication.addEventListener(Event.EXITING, onApplicationExiting);
-
-				setupApplicationContext();
-				_context.load();
-
+				createMainView();
 			/* Alert.show(
 				"Supports touch events: " + Multitouch.supportsTouchEvents + "\n" +
 				"Maximum supported touch points: " + Multitouch.maxTouchPoints + "\n\n" +
@@ -55,9 +45,11 @@
 				"Supported gestures: " + Multitouch.supportedGestures, "The BlackBerry Playbook: Multitouch support"); */
 			}
 
+
 			private function preinitializeApplication():void {
 				registerClassAlias("irail.IRStation", IRStation);
 				readStations();
+				setupResourceManager();
 			}
 
 			private function storeStationData():void {
@@ -103,29 +95,12 @@
 			}
 
 			private function setupResourceManager():void {
-				// default locale chain (first defined language in _supportedLanguagesLocale)
-				ResourceManager.getInstance().localeChain = [_supportedLanguagesLocale[0]];
-			}
-
-			private function setupApplicationContext():void {
-				//Resource Bundles
-				for each (var code:String in _supportedLanguagesLocale) {
-					_context.addResourceBundleLocation("/bundles/" + code + "/resources.properties", "resources", code);
+				var deviceLocale:String = LocaleManager.localeManager.getDeviceLocale();
+				if (_supportedLanguagesLocale.indexOf(deviceLocale) > -1) {
+					LocaleManager.localeManager.setLocale(deviceLocale);
+				} else {
+					LocaleManager.localeManager.setLocale("en_US");
 				}
-
-				_context.addEventListener(Event.COMPLETE, applicationContext_completeHandler);
-				_context.addEventListener(IOErrorEvent.IO_ERROR, appContext_ioErrorHandler);
-			}
-
-			private function applicationContext_completeHandler(event:Event):void {
-				_context.removeEventListener(Event.COMPLETE, applicationContext_completeHandler);
-				_context.removeEventListener(IOErrorEvent.IO_ERROR, appContext_ioErrorHandler);
-
-				setupResourceManager();
-			}
-
-			private function appContext_ioErrorHandler(event:IOErrorEvent):void {
-				throw event;
 			}
 
 			protected function applicationCompleteHandler():void {
@@ -135,28 +110,11 @@
 			private function onUncaughtError(event:UncaughtErrorEvent):void {
 			}
 
-			private function applicationBar_changeHandler(event:IndexChangeEvent):void {
-				vs.selectedIndex = event.newIndex;
+			private function createMainView():void {
+				var mv:MainView = new MainView();
+				this.addElement(mv);
 			}
 		]]>
 	</fx:Script>
 
-	<mx:ViewStack id="vs"
-				  width="100%"
-				  height="100%">
-		<s:NavigatorContent>
-			<scheduler:SchedulerView id="scheduler"
-									 title="{resourceManager.getString('resources','scheduler.title')}"/>
-		</s:NavigatorContent>
-		<s:NavigatorContent>
-			<stations:StationsView id="stations"/>
-		</s:NavigatorContent>
-	</mx:ViewStack>
-
-	<components:ApplicationBar id="applicationBar"
-							   left="0"
-							   right="0"
-							   bottom="0"
-							   change="applicationBar_changeHandler(event)">
-	</components:ApplicationBar>
 </s:WindowedApplication>
