@@ -59,7 +59,7 @@
 			</s:filters>
 			<s:fill>
 				<s:BitmapFill id="bgFill"
-							  source="@Embed(source='barBg.png')"
+							  source="@Embed(source='images/barBg.png')"
 							  fillMode="repeat"
 							  smooth="true"/>
 			</s:fill>

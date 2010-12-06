@@ -60,7 +60,7 @@
 						  color="red"/>-->
 			<s:BitmapFill id="backgroundFill"
 						  fillMode="repeat"
-						  source="@Embed(source='bg.png')"/>
+						  source="@Embed(source='images/appbg.png')"/>
 		</s:fill>
 	</s:Rect>
 

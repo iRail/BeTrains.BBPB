@@ -67,13 +67,16 @@ s|WindowedApplication{
 }*/
 
 s|Label {
+	font-size:16;
 }
 
 s|RichEditableText{
+	font-size:16;
 }
 
 .infoLabel{
 	color:#2B281E;
+	font-size:16;
 	fontStyle:italic;
 	vertical-align:middle;
 }

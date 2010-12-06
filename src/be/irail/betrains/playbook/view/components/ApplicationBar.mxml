@@ -180,23 +180,23 @@
 		</s:Rect>
 		<!--<components:ApplicationBarButton id="recents"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.recent')}"
-										 image="@Embed(source='icons/recent.png')"
+										 image="@Embed(source='images/recent.png')"
 										 change="changeHandler(event)"/>-->
 		<!--<components:ApplicationBarButton id="favs"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.favs')}"
-										 image="@Embed(source='icons/favs.png')"
+										 image="@Embed(source='images/favs.png')"
 										 change="changeHandler(event)"/>-->
 		<components:ApplicationBarButton id="schedule"
 										 label="{_locale.getResource('application.controlbar.scheduler')}"
-										 image="@Embed(source='icons/schedule.png')"
+										 image="@Embed(source='images/schedule.png')"
 										 change="changeHandler(event)"/>
 		<components:ApplicationBarButton id="stations"
 										 label="{_locale.getResource('application.controlbar.stations')}"
-										 image="@Embed(source='icons/stations.png')"
+										 image="@Embed(source='images/stations.png')"
 										 change="changeHandler(event)"/>
 		<!--<components:ApplicationBarButton id="chat"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.chat')}"
-										 image="@Embed(source='icons/chat.png')"
+										 image="@Embed(source='images/chat.png')"
 										 change="changeHandler(event)"
 										 enabled="false"/>-->
 	</s:Group>

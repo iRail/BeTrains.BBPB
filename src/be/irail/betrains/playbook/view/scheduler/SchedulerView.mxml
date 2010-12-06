@@ -7,12 +7,15 @@
 						 width="100%"
 						 height="100%"
 						 xmlns:components1="be.irail.betrains.playbook.view.scheduler.components.*"
-						 creationComplete="mainviewitem1_creationCompleteHandler(event)">
+						 creationComplete="mainviewitem1_creationCompleteHandler(event)"
+						 xmlns:scheduler="be.irail.betrains.playbook.view.scheduler.*"
+						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.view.components.StationListPopUp;
+			import be.irail.betrains.playbook.view.scheduler.components.itemRenderer.SchedulerItem;
 
 			import mx.core.FlexGlobals;
 			import mx.core.UIComponent;
@@ -22,9 +25,6 @@
 
 			import qnx.locale.LocaleManager;
 			import qnx.ui.buttons.IconButton;
-			import qnx.ui.buttons.ToggleSwitch;
-			import qnx.ui.data.DataProvider;
-			import qnx.ui.picker.Picker;
 
 			import spark.components.Application;
 
@@ -115,16 +115,19 @@
 
 			private function createSearchBtn():void {
 				var btn:IconButton = new IconButton();
-				btn.setIcon("icons/magnifyingglass.png");
+				btn.setIcon("images/magnifyingglass.png");
 				btn.width = searchBtnGroup.width;
 				btn.height = searchBtnGroup.height;
+
+				btn.addEventListener(MouseEvent.CLICK, searchBtn_clickHandler);
 
 				searchBtnGroup.addChild(btn);
 			}
 
 			protected function searchBtn_clickHandler(event:MouseEvent):void {
-
-
+				if (validateGUI()) {
+					presentationModel.getSchedule(stationFrom, stationTo, dateSelector.selectedDate, dateSelector.arrDep);
+				}
 			}
 
 			protected function onSwapClick(event:MouseEvent):void {
@@ -138,77 +141,123 @@
 			protected function mainviewitem1_creationCompleteHandler(event:FlexEvent):void {
 				createSearchBtn();
 			}
+
+			private function validateGUI():Boolean {
+				return stationFrom != null && stationTo != null && (dateSelector && dateSelector.selectedDate);
+			}
 		]]>
 	</fx:Script>
 
 	<fx:Declarations>
+		<scheduler:SchedulerPresentationModel id="presentationModel"/>
 	</fx:Declarations>
 
-	<s:Rect left="0"
-			right="0"
+	<s:List id="resultList"
 			top="0"
-			height="150">
+			bottom="0"
+			right="0"
+			width="595"
+			borderVisible="false"
+			contentBackgroundAlpha="0"
+			allowMultipleSelection="false"
+			visible="{presentationModel.hasConnections}"
+			includeInLayout="{presentationModel.hasConnections}"
+			dataProvider="{presentationModel.connections}"
+			itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.SchedulerItem">
+		<s:layout>
+			<s:VerticalLayout clipAndEnableScrolling="true"
+							  useVirtualLayout="true"
+							  gap="0"
+							  variableRowHeight="false"/>
+		</s:layout>
+	</s:List>
+
+	<s:Group top="0"
+			 bottom="0"
+			 right="0"
+			 visible="{presentationModel.isLoading}"
+			 includeInLayout="{presentationModel.isLoading}"
+			 width="595"
+			 show="loadingSpinner.play();"
+			 hide="loadingSpinner.stop();">
+		<controls:Spinner id="loadingSpinner"
+						  horizontalCenter="0"
+						  verticalCenter="0"
+						  tickColor="#ffffff"/>
+	</s:Group>
+
+	<s:Rect left="0"
+			bottom="0"
+			top="0"
+			width="430">
 		<s:fill>
-			<s:SolidColor color="white"/>
+			<s:BitmapFill source="@Embed(source='images/bg.png')"
+						  fillMode="scale"
+						  smooth="true"/>
 		</s:fill>
 		<s:filters>
 			<s:DropShadowFilter blurX="6"
 								blurY="6"
 								strength=".4"
 								quality="3"
-								angle="90"
+								angle="45"
 								distance="3"/>
 		</s:filters>
 	</s:Rect>
-	<s:VGroup top="10"
-			  id="dataCont"
-			  width="100%"
-			  height="100%"
-			  horizontalAlign="center">
 
-		<s:HGroup width="90%"
+	<s:VGroup top="10"
+			  bottom="0"
+			  id="dataCont"
+			  width="430"
+			  horizontalAlign="center">
+		<!--Stations-->
+		<s:VGroup width="90%"
 				  id="components"
 				  verticalAlign="middle"
 				  horizontalCenter="0"
-				  gap="5">
-			<s:BitmapImage source="@Embed(source='icons/calendar.png')"
-						   smooth="true"
-						   width="20"
-						   height="20"/>
-			<mx:Spacer width="5"/>
+				  gap="10">
 			<components1:ChooseStationButton id="fromStation"
 											 width="100%"
 											 height="60"
 											 infoLabel="{_locale.getResource('scheduler.station1.label')}"
 											 station="{stationFrom}"
 											 click="selectFromStation_clickHandler(event)"/>
-			<s:Group mouseChildren="false"
-					 click="onSwapClick(event)"
-					 height="100%">
-				<s:BitmapImage source="@Embed(source='icons/swap.png')"
-							   width="30"
-							   height="30"
-							   verticalCenter="0"
-							   smooth="true"/>
-			</s:Group>
 
 			<components1:ChooseStationButton width="100%"
 											 height="60"
 											 infoLabel="{_locale.getResource('scheduler.station2.label')}"
 											 station="{stationTo}"
 											 click="selectToStation_clickHandler(event)"/>
-		</s:HGroup>
+		</s:VGroup>
 
-		<s:HGroup width="90%"
+
+		<mx:Spacer height="20"/>
+
+		<!--Date Selector-->
+		<s:VGroup width="90%"
 				  verticalAlign="middle"
 				  horizontalCenter="0"
-				  gap="5">
-			<components:DateTimeButton width="100%"
+				  gap="20">
+			<components:DateTimeButton id="dateSelector"
+									   width="100%"
 									   height="100%"/>
 			<mx:UIComponent id="searchBtnGroup"
-							width="70"
+							width="100%"
 							height="70"
 							horizontalCenter="0"/>
-		</s:HGroup>
+		</s:VGroup>
 	</s:VGroup>
+
+	<s:Group x="65"
+			 y="60"
+			 width="30"
+			 height="30"
+			 click="onSwapClick(event)">
+		<s:BitmapImage source="@Embed(source='images/swap.png')"
+					   width="30"
+					   height="30"
+					   rotation="90"
+					   smooth="true"/>
+	</s:Group>
+
 </components:MainViewItem>

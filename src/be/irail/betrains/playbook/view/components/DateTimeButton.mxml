@@ -24,6 +24,8 @@
 
 			private var currentYear:Number = new Date().getFullYear();
 
+			private var arrDepSwitch:ToggleSwitch;
+
 			// ----------------------------
 			// date
 			// ----------------------------
@@ -40,6 +42,17 @@
 					_date = value;
 					dispatchEvent(new Event("dateChange"));
 				}
+			}
+
+			// ----------------------------
+			// arrDep (read-only)
+			// ----------------------------
+
+			private var _arrDep:String;
+
+			[Bindable(event="dateChange")]
+			public function get arrDep():String {
+				return (arrDepSwitch && arrDepSwitch.selected) ? "depart" : "arrival";
 			}
 
 
@@ -159,20 +172,20 @@
 			}
 
 			private function createSwitch():void {
-				var switchButton:ToggleSwitch = new ToggleSwitch();
-				switchButton.defaultLabel = _locale.getResource("scheduler.arrdepart.arrival");
-				switchButton.selectedLabel = _locale.getResource("scheduler.arrdepart.depart");
-				switchButton.width = arrDepToggleSwitchContainer.width;
+				arrDepSwitch = new ToggleSwitch();
+				arrDepSwitch.defaultLabel = _locale.getResource("scheduler.arrdepart.arrival");
+				arrDepSwitch.selectedLabel = _locale.getResource("scheduler.arrdepart.depart");
+				arrDepSwitch.width = arrDepToggleSwitchContainer.width;
 
-				arrDepToggleSwitchContainer.height = switchButton.height;
+				arrDepToggleSwitchContainer.height = arrDepSwitch.height;
 
-				switchButton.selected = true;
+				arrDepSwitch.selected = true;
 
-				var selectedTxtFormat:TextFormat = switchButton.getTextFormatForState(SkinStates.SELECTED);
+				var selectedTxtFormat:TextFormat = arrDepSwitch.getTextFormatForState(SkinStates.SELECTED);
 				selectedTxtFormat.color = 0xFFFFFF;
-				switchButton.setTextFormatForState(selectedTxtFormat, SkinStates.SELECTED);
+				arrDepSwitch.setTextFormatForState(selectedTxtFormat, SkinStates.SELECTED);
 
-				arrDepToggleSwitchContainer.addChild(switchButton);
+				arrDepToggleSwitchContainer.addChild(arrDepSwitch);
 			}
 
 			private function parseDateForPicker(day:int, month:int, year:int, hours:int = 0, minutes:int = 0):void {
@@ -218,34 +231,36 @@
 		]]>
 	</fx:Script>
 
-	<s:HGroup width="100%"
+	<s:VGroup width="100%"
 			  height="100%"
 			  paddingLeft="5"
 			  paddingRight="5"
 			  paddingTop="5"
 			  paddingBottom="5"
-			  gap="0"
-			  verticalAlign="middle">
-		<s:BitmapImage source="@Embed(source='icons/calendar.png')"
-					   smooth="true"
-					   width="20"
-					   height="20"/>
-		<mx:Spacer width="15"/>
-		<mx:UIComponent id="arrDepToggleSwitchContainer"
-						width="130"/>
-		<s:Label text="{LocaleManager.localeManager.getResource('scheduler.arrdepart.at')}"
-				 width="40"
-				 height="100%"
-				 verticalAlign="middle"
-				 textAlign="center"
-				 fontSize="16"/>
+			  gap="0">
+		<s:HGroup verticalAlign="middle">
+			<s:BitmapImage source="@Embed(source='images/calendar.png')"
+						   smooth="true"
+						   width="20"
+						   height="20"/>
+			<mx:Spacer width="15"/>
+			<mx:UIComponent id="arrDepToggleSwitchContainer"
+							width="130"/>
+			<s:Label text="{LocaleManager.localeManager.getResource('scheduler.arrdepart.at')}"
+					 width="40"
+					 height="100%"
+					 verticalAlign="middle"
+					 textAlign="center"
+					 fontSize="16"/>
+		</s:HGroup>
+		<mx:Spacer height="20"/>
 		<mx:UIComponent id="pickerContainer"
 						height="50"
-						width="406"/>
-		<mx:Spacer width="10"/>
+						width="100%"/>
+		<mx:Spacer height="10"/>
 		<mx:UIComponent id="timePickerContainer"
 						height="50"
 						width="206"/>
 		<mx:Spacer width="20"/>
-	</s:HGroup>
+	</s:VGroup>
 </s:Group>
