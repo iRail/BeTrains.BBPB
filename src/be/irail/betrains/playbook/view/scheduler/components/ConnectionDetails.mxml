@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:mx="library://ns.adobe.com/flex/mx"
+					  xmlns:scheduler="be.irail.api.data.scheduler.*"
+					  width="400"
+					  height="500">
+	<fx:Declarations>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import be.irail.api.data.scheduler.IRConnection;
+			import be.irail.api.data.scheduler.gate.ViaIRGate;
+			import be.irail.api.data.stations.IRStation;
+			import be.irail.api.data.vehicle.IRVehicle;
+			import be.irail.api.data.vehicle.IRVehicleInformation;
+			import be.irail.api.data.vehicle.VehicleStop;
+			import be.irail.api.event.IRailResultEvent;
+			import be.irail.api.methodgroup.Vehicles;
+			import be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem;
+
+			import flash.utils.setTimeout;
+
+			import mx.collections.ArrayCollection;
+
+			import org.as3commons.lang.ArrayUtils;
+
+			import qnx.locale.LocaleManager;
+
+			private var _service:Vehicles = new Vehicles();
+
+			private var _vehicleStops:Dictionary = new Dictionary();
+
+			// ----------------------------
+			// connection
+			// ----------------------------
+
+			private var _connection:IRConnection;
+
+			[Bindable(event="connectionChange")]
+			public function get connection():IRConnection {
+				return _connection;
+			}
+
+			public function set connection(value:IRConnection):void {
+				if (value != _connection) {
+					_connection = value;
+
+					parseConnection(value);
+
+					dispatchEvent(new Event("connectionChange"));
+				}
+			}
+
+			[Bindable(event="connectionChange")]
+			public function get connectionTitle():String {
+				return LocaleManager.localeManager.getResource("scheduler.details.title", connection.departure.station.formattedName, connection.arrival.station.formattedName);
+			}
+
+			private function parseConnection(conn:IRConnection):void {
+				_vehicleStops = new Dictionary();
+
+				_vehicleStops[conn.departure.vehicle.vehicleCode] = null;
+
+				for each (var via:ViaIRGate in conn.vias) {
+					_vehicleStops[via.vehicle.vehicleCode] = null;
+				}
+
+				_vehicleStops[conn.arrival.vehicle.vehicleCode] = null;
+				getConnectionInfo();
+			}
+
+			private function getConnectionInfo():void {
+				_service.addEventListener(IRailResultEvent.VEHICLE_INFO_RESULT, onResultEvent);
+
+				for (var vehicleCode:String in _vehicleStops) {
+					_service.getVehicleInformationByVehicleCode(vehicleCode);
+				}
+			}
+
+
+			private function onResultEvent(event:IRailResultEvent):void {
+				var info:IRVehicleInformation = (event.result.data as IRVehicleInformation);
+				_vehicleStops[info.vehicle.vehicleCode] = info.stops;
+
+				if (allDataLoaded) {
+					_service.removeEventListener(IRailResultEvent.VEHICLE_INFO_RESULT, onResultEvent);
+					filterTrainStops();
+				}
+			}
+
+			private function getVehiculeStopsById(id:String):IRVehicle {
+				return _vehicleStops[id];
+			}
+
+			private function get allDataLoaded():Boolean {
+				for (var code:String in _vehicleStops) {
+					if (_vehicleStops[code] == null) {
+						return false;
+					}
+				}
+				return true;
+			}
+
+			private function filterTrainStops():void {
+				var allStops:Array = [],
+					depStation1:IRStation = connection.departure.station,
+					depStation2:IRStation,
+					arrStation1:IRStation,
+					arrStation2:IRStation = connection.arrival.station;
+
+				if (connection.vias.length > 0) {
+					depStation2 = connection.vias[0].station;
+					arrStation1 = connection.vias[connection.vias.length - 1].station;
+				} else {
+					depStation2 = connection.arrival.station;
+					arrStation1 = connection.departure.station;
+				}
+
+				var depTrainStops:Array = filterStops(_vehicleStops[connection.departure.vehicle.vehicleCode], depStation1, depStation2);
+
+				allStops = merge(allStops, depTrainStops);
+
+				var lastStation:IRStation = null;
+				for each (var via:ViaIRGate in connection.vias) {
+					if (lastStation) {
+						allStops = merge(allStops, filterStops(_vehicleStops[via.vehicle.vehicleCode], lastStation, via.station));
+					}
+					lastStation = via.station;
+				}
+
+				var arrTrainStops:Array = filterStops(_vehicleStops[connection.arrival.vehicle.vehicleCode], arrStation1, arrStation2);
+				allStops = merge(allStops, arrTrainStops);
+
+				allStops = removeDoubleStops(filterStops(allStops, depStation1, arrStation2));
+
+				connections.dataProvider = new ArrayCollection(allStops);
+
+				setTimeout(refreshStationsView, 100);
+			}
+
+
+			private function refreshStationsView():void {
+				for (var i:int = 0; i < connections.dataGroup.numElements; i++) {
+					var item:ConnectionDetailItem = ConnectionDetailItem(connections.dataGroup.getElementAt(i));
+					if (item) {
+						item.isEssentialStation = isEssentialStation(item.station);
+					}
+				}
+			}
+
+			private function filterStops(list:Array, first:IRStation, last:IRStation):Array {
+				if (first.id == last.id) {
+					return list;
+				}
+
+				var tmp:Array = ArrayUtils.clone(list),
+					numListItems:int = tmp.length,
+					firstIndex:int, firstIndexSet:Boolean,
+					lastIndex:int, lastIndexSet:Boolean,
+					i:int = 0;
+
+				for (i = 0; i < numListItems; i++) {
+
+					if (VehicleStop(tmp[i]).station.id == last.id) {
+						lastIndex = i;
+						lastIndexSet = true;
+					} else if (VehicleStop(tmp[i]).station.id == first.id) {
+						firstIndex = i;
+						firstIndexSet = true;
+					}
+
+				}
+
+				var diff:Array;
+
+				if (firstIndexSet) {
+					if (!lastIndexSet) {
+						lastIndex = tmp.length - 1;
+					}
+					diff = tmp.splice(firstIndex, (lastIndex - firstIndex) + 1);
+				} else {
+					diff = tmp;
+				}
+
+				return diff;
+			}
+
+			private function merge(a1:Array, a2:Array):Array {
+				var result:Array = [],
+					i1:int = 0, i2:int = 0,
+					num1:int = a1.length, num2:int = a2.length;
+
+				for (i1 = 0; i1 < num1; i1++) {
+					result.push(a1[i1]);
+				}
+
+				for (i2 = 0; i2 < num2; i2++) {
+					result.push(a2[i2]);
+				}
+
+				return result;
+			}
+
+			private function removeDoubleStops(ac:Array):Array {
+				var tmp:Array = [],
+					numAc:int = ac.length,
+					i:int, j:int;
+
+				for (i = 0; i < numAc; i++) {
+					var stop:VehicleStop = ac[i] as VehicleStop,
+						alreadyStored:Boolean = false;
+
+					for (j = 0; j < tmp.length; j++) {
+						if (tmp[j].station.id == stop.station.id) {
+							alreadyStored = true;
+							break;
+						}
+					}
+
+					if (!alreadyStored) {
+						tmp.push(stop);
+					}
+
+				}
+
+				return tmp;
+			}
+
+			private function containsStation(lst:Array, station:IRStation):Boolean {
+				var numItems:int = lst.length;
+
+				while (--numItems > -1) {
+					if (lst[numItems].id == station.id) {
+						return true;
+					}
+				}
+				return false;
+			}
+
+			private function isEssentialStation(station:IRStation):Boolean {
+				if (station.id == connection.departure.station.id || station.id == connection.arrival.station.id) {
+					return true;
+				}
+
+				for each (var via:ViaIRGate in connection.vias) {
+					if (via.station.id == station.id) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+		]]>
+	</fx:Script>
+	<s:Rect radiusX="4"
+			radiusY="4"
+			width="100%"
+			height="100%">
+		<s:fill>
+			<s:SolidColor color="white"/>
+		</s:fill>
+		<s:filters>
+			<s:DropShadowFilter blurX="6"
+								blurY="6"
+								strength=".4"
+								quality="3"
+								angle="45"
+								distance="3"/>
+		</s:filters>
+	</s:Rect>
+
+	<s:Label id="title"
+			 y="5"
+			 left="5"
+			 right="5"
+			 fontWeight="bold"
+			 text="{connectionTitle}"
+			 maxDisplayedLines="{NaN}"/>
+
+	<s:List id="connections"
+			borderVisible="false"
+			contentBackgroundAlpha="0"
+			allowMultipleSelection="false"
+			width="500"
+			bottom="5"
+			top="50"
+			left="10"
+			right="5"
+			horizontalCenter="0"
+			changing="refreshStationsView()"
+			itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem">
+		<s:layout>
+			<s:VerticalLayout rowHeight="50"
+							  gap="0"/>
+		</s:layout>
+	</s:List>
+</s:SkinnableContainer>

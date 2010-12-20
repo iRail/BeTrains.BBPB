@@ -135,6 +135,26 @@
 			public function get numVias():String {
 				return LocaleManager.localeManager.getResource("scheduler.results.change", _connection.vias.length);
 			}
+
+			[Bindable(event="connectionChange")]
+			public function get arrivalDelay():String {
+				return "" + FormatUtil.secondsToHoursMinutes(_connection.arrival.delay);
+			}
+
+			[Bindable(event="connectionChange")]
+			public function get hasArrivalDelay():Boolean {
+				return connection.arrival.delay > 0;
+			}
+
+			[Bindable(event="connectionChange")]
+			public function get departureDelay():String {
+				return "" + FormatUtil.secondsToHoursMinutes(_connection.departure.delay);
+			}
+
+			[Bindable(event="connectionChange")]
+			public function get hasDepartureDelay():Boolean {
+				return connection.departure.delay > 0;
+			}
 		]]>
 	</fx:Script>
 
@@ -158,12 +178,24 @@
 		<s:VGroup id="fromToTime"
 				  width="100%"
 				  height="100%">
-			<s:Label id="startTime"
-					 text="{departureTime}"
-					 fontSize="12"
-					 color="0"
-					 height="100%"
-					 verticalAlign="middle"/>
+			<s:HGroup gap="5"
+					  height="100%">
+				<s:Label id="startTime"
+						 text="{departureTime}"
+						 fontSize="12"
+						 color="0"
+						 height="100%"
+						 verticalAlign="middle"/>
+				<s:Label id="startDelay"
+						 text="{'+ '+departureDelay}"
+						 fontSize="12"
+						 color="red"
+						 fontWeight="bold"
+						 height="100%"
+						 verticalAlign="middle"
+						 visible="{hasDepartureDelay}"
+						 includeInLayout="{hasDepartureDelay}"/>
+			</s:HGroup>
 			<s:HGroup gap="0">
 				<mx:Spacer width="10"/>
 				<s:BitmapImage id="arrowDown"
@@ -173,12 +205,24 @@
 							   source="@Embed(source='images/arroworange.png')"
 							   smooth="true"/>
 			</s:HGroup>
-			<s:Label id="stopTime"
-					 text="{arrivalTime}"
-					 fontSize="12"
-					 color="0"
-					 height="100%"
-					 verticalAlign="middle"/>
+			<s:HGroup gap="5"
+					  height="100%">
+				<s:Label id="stopTime"
+						 text="{arrivalTime}"
+						 fontSize="12"
+						 color="0"
+						 height="100%"
+						 verticalAlign="middle"/>
+				<s:Label id="stopDelay"
+						 text="{'+ ' + arrivalDelay}"
+						 fontSize="12"
+						 fontWeight="bold"
+						 color="red"
+						 height="100%"
+						 verticalAlign="middle"
+						 visible="{hasArrivalDelay}"
+						 includeInLayout="{hasArrivalDelay}"/>
+			</s:HGroup>
 		</s:VGroup>
 
 		<s:VGroup width="100%"

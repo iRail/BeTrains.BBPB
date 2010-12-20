@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				autoDrawBackground="false"
+				height="50"
+				width="95%">
+	<s:states>
+		<s:State name="stop"/>
+		<s:State name="first"/>
+		<s:State name="last"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import be.irail.api.data.stations.IRStation;
+			import be.irail.api.data.vehicle.VehicleStop;
+
+			import spark.components.DataGroup;
+
+			override public function set data(value:Object):void {
+				super.data = value;
+				stop = value as VehicleStop;
+				checkState();
+			}
+
+			// ----------------------------
+			// stop
+			// ----------------------------
+
+			private var _stop:VehicleStop;
+
+			[Bindable(event="stopChange")]
+			public function get stop():VehicleStop {
+				return _stop;
+			}
+
+			public function set stop(value:VehicleStop):void {
+				if (value != _stop) {
+					_stop = value;
+					dispatchEvent(new Event("stopChange"));
+				}
+			}
+
+			// ----------------------------
+			// stationName (read-only)
+			// ----------------------------
+
+			[Bindable(event="stopChange")]
+			public function get station():IRStation {
+				return stop.station;
+			}
+
+			// ----------------------------
+			// stationName (read-only)
+			// ----------------------------
+
+			[Bindable(event="stopChange")]
+			public function get stationName():String {
+				return station.formattedName;
+			}
+
+			// ----------------------------
+			// isEssentialStation
+			// ----------------------------
+
+			private var _isEssentialStation:Boolean;
+
+			[Bindable(event="isEssentialStationChange")]
+			public function get isEssentialStation():Boolean {
+				return _isEssentialStation;
+			}
+
+			public function set isEssentialStation(value:Boolean):void {
+				if (value !== _isEssentialStation) {
+					_isEssentialStation = value;
+					dispatchEvent(new Event("isEssentialStationChange"));
+				}
+			}
+
+			private function checkState():void {
+				if (this.itemIndex == 0) {
+					this.currentState = "first";
+				}
+
+				var lastItem:int = DataGroup(this.parent).dataProvider.length - 1;
+
+				if (this.itemIndex == lastItem) {
+					this.currentState = "last";
+				}
+			}
+
+			override protected function getCurrentRendererState():String {
+				return this.currentState;
+			}
+		]]>
+	</fx:Script>
+
+	<s:Rect radiusX="4"
+			radiusY="4"
+			left="0"
+			right="0"
+			top="2"
+			bottom="2">
+		<s:fill>
+			<s:SolidColor color="white"/>
+		</s:fill>
+		<s:filters>
+			<s:DropShadowFilter blurX="6"
+								blurY="6"
+								strength=".4"
+								quality="3"
+								angle="45"
+								distance="3"/>
+		</s:filters>
+	</s:Rect>
+
+	<s:Line x="25"
+			top="0"
+			top.first="{this.height/2}"
+			bottom="0"
+			bottom.last="{this.height/2}">
+		<s:stroke>
+			<s:SolidColorStroke color="0"
+								weight="1"/>
+		</s:stroke>
+	</s:Line>
+
+	<s:Group width="50"
+			 height="50">
+
+		<s:Ellipse width.first="30"
+				   height.first="30"
+				   width.last="30"
+				   height.last="30"
+				   width="20"
+				   height="20"
+				   y.last="0"
+				   y.first="{this.height-50}"
+				   horizontalCenter="0"
+				   verticalCenter="0">
+			<s:fill>
+				<s:SolidColor color="white"/>
+			</s:fill>
+			<s:stroke>
+				<s:SolidColorStroke color="0"
+									alpha=".8"
+									weight="{isEssentialStation ? 2 : 1}"
+									weight.first="2"
+									weight.last="2"/>
+			</s:stroke>
+		</s:Ellipse>
+
+	</s:Group>
+
+	<s:Label x="120"
+			 fontWeight="{isEssentialStation? 'bold' : 'normal'}"
+			 text="{stationName}"
+			 verticalCenter="0"/>
+
+</s:ItemRenderer>
