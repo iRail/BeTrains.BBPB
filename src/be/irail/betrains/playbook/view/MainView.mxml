@@ -6,7 +6,8 @@
 		 xmlns:components="be.irail.betrains.playbook.view.components.*"
 		 xmlns:stations="be.irail.betrains.playbook.view.stations.*"
 		 width="100%"
-		 height="100%">
+		 height="100%"
+		 xmlns:recent="be.irail.betrains.playbook.view.recent.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -26,11 +27,16 @@
 				  width="100%"
 				  height="100%">
 		<s:NavigatorContent>
+			<recent:RecentSchedulerQueries id="recent"
+										   title="{LocaleManager.localeManager.getResource('recent.title')}"/>
+		</s:NavigatorContent>
+		<s:NavigatorContent>
 			<scheduler:SchedulerView id="scheduler"
 									 title="{LocaleManager.localeManager.getResource('scheduler.title')}"/>
 		</s:NavigatorContent>
 		<s:NavigatorContent>
-			<stations:StationsView id="stations"/>
+			<stations:StationsView id="stations"
+								   title="{LocaleManager.localeManager.getResource('liveboard.title')}"/>
 		</s:NavigatorContent>
 	</mx:ViewStack>
 

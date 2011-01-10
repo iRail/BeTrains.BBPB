@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%"
+		 height="100%"
+		 xmlns:liveboard="be.irail.api.data.liveboard.*"
+		 creationComplete="group1_creationCompleteHandler(event)">
+	<fx:Declarations>
+	</fx:Declarations>
+	<fx:Metadata>
+	[Event(name="returnToInput",type="flash.events.Event")]
+</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import be.irail.api.data.liveboard.Liveboard;
+			import be.irail.betrains.playbook.utils.FormatUtil;
+
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+
+			import qnx.locale.LocaleManager;
+
+			// ----------------------------
+			// time
+			// ----------------------------
+
+			[Bindable(event="timeChange")]
+			public function get time():String {
+				return FormatUtil.formatTime(new Date());
+			}
+
+			// ----------------------------
+			// liveBoard
+			// ----------------------------
+
+			private var _liveBoard:Liveboard;
+
+			[Bindable(event="liveBoardChange")]
+			public function get liveBoard():Liveboard {
+				return _liveBoard;
+			}
+
+			public function set liveBoard(value:Liveboard):void {
+				if (value != _liveBoard) {
+					_liveBoard = value;
+					liveboardItems.dataProvider = new ArrayCollection(liveBoard.departures);
+					evalDate();
+					dispatchEvent(new Event("liveBoardChange"));
+				}
+			}
+
+			// ----------------------------
+			// stationName (read-only)
+			// ----------------------------
+
+			[Bindable(event="liveBoardChange")]
+			public function get stationName():String {
+				return liveBoard.station.name.toUpperCase();
+			}
+
+			[Bindable(event="liveBoardChange")]
+			public function get title():String {
+				return LocaleManager.localeManager.getResource("liveboard.departTitle");
+			}
+
+			private var _t:Timer;
+
+			protected function group1_creationCompleteHandler(event:FlexEvent):void {
+				dispatchEvent(new Event("timeChange"));
+
+				_t = new Timer(10000);
+				_t.addEventListener(TimerEvent.TIMER, onTimer);
+				_t.start();
+			}
+
+			private function onTimer(event:TimerEvent):void {
+				evalDate();
+				dispatchEvent(new Event("timeChange"));
+			}
+
+			private function evalDate():void {
+				var numLBItems:int = liveboardItems.dataGroup.numElements,
+					i:int = 0;
+
+				var evalDate:Date = new Date();
+
+				for (i = 0; i < numLBItems; i++) {
+					var item:LiveboardDepartureItemRenderer = LiveboardDepartureItemRenderer(liveboardItems.dataGroup.getElementAt(i));
+					if (item) {
+						item.evaluateIsPast(evalDate);
+					}
+				}
+			}
+
+			protected function group2_clickHandler(event:MouseEvent):void {
+				dispatchEvent(new Event("returnToInput"));
+			}
+		]]>
+	</fx:Script>
+
+	<s:Rect left="0"
+			right="0"
+			top="0"
+			height="75">
+		<s:fill>
+			<s:SolidColor color="0x1B76F8"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:Label color="0xFFFFFF"
+			 text="{title}"
+			 top="20"
+			 paddingLeft="10"
+			 paddingRight="10"
+			 width="100%"
+			 textAlign="center"
+			 fontSize="50"
+			 verticalAlign="bottom"
+			 maxDisplayedLines="1"/>
+
+	<s:Label color="0xFFFFFF"
+			 text="{time}"
+			 top="20"
+			 paddingBottom="10"
+			 paddingLeft="10"
+			 paddingRight="10"
+			 textAlign="center"
+			 fontSize="50"
+			 verticalAlign="bottom"
+			 maxDisplayedLines="1"/>
+
+	<s:Label color="0xFFFFFF"
+			 text="{stationName}"
+			 right="0"
+			 top="35"
+			 paddingLeft="10"
+			 paddingRight="10"
+			 textAlign="right"
+			 fontSize="30"
+			 verticalAlign="bottom"
+			 maxDisplayedLines="1"/>
+
+	<s:Group left="0"
+			 right="0"
+			 top="0"
+			 height="75"
+			 click="group2_clickHandler(event)"
+			 mouseChildren="false"/>
+
+	<s:List id="liveboardItems"
+			top="75"
+			bottom="0"
+			left="0"
+			right="0"
+			borderVisible="false"
+			contentBackgroundAlpha="1"		
+			contentBackgroundColor="0"
+			itemRenderer="be.irail.betrains.playbook.view.stations.LiveboardDepartureItemRenderer">
+		<s:layout>
+			<s:VerticalLayout gap="0"/>
+		</s:layout>
+	</s:List>
+
+</s:Group>

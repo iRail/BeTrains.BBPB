@@ -175,8 +175,8 @@
 			visible="{presentationModel.hasConnections}"
 			includeInLayout="{presentationModel.hasConnections}"
 			dataProvider="{presentationModel.connections}"
-			itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.SchedulerItem"
-			change="resultList_changeHandler(event)">
+			itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.SchedulerItem">
+		<!--change="resultList_changeHandler(event)"-->
 		<s:layout>
 			<s:VerticalLayout clipAndEnableScrolling="true"
 							  useVirtualLayout="true"

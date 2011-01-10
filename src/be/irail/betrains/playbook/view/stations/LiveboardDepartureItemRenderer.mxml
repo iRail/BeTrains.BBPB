@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				autoDrawBackground="false"
+				width="100%"
+				height="50">
+
+	<fx:Script>
+		<![CDATA[
+			import be.irail.api.data.liveboard.LiveboardDeparture;
+			import be.irail.betrains.playbook.utils.FormatUtil;
+
+			import org.as3commons.lang.DateUtils;
+
+			import qnx.locale.LocaleManager;
+
+			[Bindable]
+			private var _itemAlpha:Number = 1;
+
+			override public function set data(value:Object):void {
+				super.data = value;
+				liveboardItem = value as LiveboardDeparture;
+			}
+
+
+			// ----------------------------
+			// liveboardItem
+			// ----------------------------
+
+			private var _liveboardItem:LiveboardDeparture;
+
+			[Bindable(event="liveboardItemChange")]
+			public function get liveboardItem():LiveboardDeparture {
+				return _liveboardItem;
+			}
+
+			public function set liveboardItem(value:LiveboardDeparture):void {
+				if (value != _liveboardItem) {
+					_liveboardItem = value;
+					dispatchEvent(new Event("liveboardItemChange"));
+				}
+			}
+
+			// ----------------------------
+			// hour (read-only)
+			// ----------------------------
+
+			[Bindable(event="liveboardItemChange")]
+			public function get hour():String {
+				if (!liveboardItem) {
+					return "";
+				}
+
+				return FormatUtil.formatTime(liveboardItem.dateTime);
+			}
+
+			// ----------------------------
+			// destination (read-only)
+			// ----------------------------
+			[Bindable(event="liveboardItemChange")]
+			public function get destination():String {
+				if (!liveboardItem) {
+					return "";
+				}
+				return liveboardItem.station.name.toUpperCase();
+			}
+
+			// ----------------------------
+			// trainType (read-only)
+			// ----------------------------
+
+			[Bindable(event="liveboardItemChange")]
+			public function get trainType():String {
+				if (!liveboardItem || !liveboardItem.vehicle) {
+					return "";
+				}
+				var tCodeArray:Array = liveboardItem.vehicle.vehicleCode.split(".");
+				return (tCodeArray.length > 0) ? tCodeArray[tCodeArray.length - 1] : "";
+			}
+
+			// ----------------------------
+			// platformNo (read-only)
+			// ----------------------------
+
+			[Bindable(event="liveboardItemChange")]
+			public function get platformNo():String {
+				if (!liveboardItem || !liveboardItem.platform) {
+					return "";
+				}
+
+				return (liveboardItem.platform.platformNo > 0) ? "" + liveboardItem.platform.platformNo : LocaleManager.localeManager.getResource("iveboard.unknown");
+			}
+
+			// ----------------------------
+			// delay (read-only)
+			// ----------------------------
+
+			[Bindable(event="liveboardItemChange")]
+			public function get delay():Number {
+				if (!liveboardItem) {
+					return 0;
+				}
+				return liveboardItem.delay;
+			}
+
+			[Bindable(event="liveboardItemChange")]
+			public function get formattedDelay():String {
+				if (!liveboardItem) {
+					return "";
+				}
+
+				if (liveboardItem.delay == 0) {
+					return "-";
+				}
+
+				return "+" + convertSecondsToHHMM(liveboardItem.delay);
+			}
+
+			private function convertSecondsToHHMM(intSecondsToConvert:Number):String {
+				var hours:int = convertHours(intSecondsToConvert),
+					minutes:int = getRemainingMinutes(intSecondsToConvert),
+					seconds:int = getRemainingSeconds(intSecondsToConvert);
+				return ((hours < 10) ? '0' + hours : hours) + ":" + ((minutes == 60) ? "00" : (minutes < 10) ? '0' + minutes : minutes);
+			}
+
+			private function convertHours(intSeconds:int):int {
+				var minutes:int = convertMinutes(intSeconds);
+				var hours:int = Math.floor(minutes / 60);
+				return hours;
+			}
+
+			private function convertMinutes(intSeconds:int):int {
+				return Math.floor(intSeconds / 60);
+			}
+
+			private function getRemainingSeconds(intTotalSeconds:int):int {
+				return (intTotalSeconds % 60);
+			}
+
+			private function getRemainingMinutes(intSeconds:Number):Number {
+				var intTotalMinutes:int = convertMinutes(intSeconds);
+				return (intTotalMinutes % 60);
+			}
+
+			public function evaluateIsPast(date:Date):void {
+				var byeDate:Date = DateUtils.addSeconds(liveboardItem.dateTime, delay);
+				if (byeDate.getTime() < date.getTime()) {
+					this.enabled = false;
+				} else {
+					this.enabled = true;
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<s:Rect left="0"
+			right="0"
+			top="0"
+			bottom="0">
+		<s:fill>
+			<s:SolidColor color="{(itemIndex%2==0) ? 0 : 0x53669B}"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:HGroup left="0"
+			  right="0"
+			  top="0"
+			  bottom="0"
+			  verticalAlign="middle">
+		<s:Label text="{hour}"
+				 width="120"
+				 textAlign="center"
+				 fontWeight="bold"
+				 fontSize="20"
+				 color="#FFFF00"/>
+		<s:Label text="{destination}"
+				 width="100%"
+				 textAlign="center"
+				 fontWeight="bold"
+				 fontSize="20"
+				 color="#FFFF00"/>
+		<s:Label text="{trainType}"
+				 width="100"
+				 textAlign="center"
+				 fontWeight="bold"
+				 fontSize="20"
+				 color="#FFFF00"/>
+		<s:Label text="{platformNo}"
+				 width="100"
+				 textAlign="center"
+				 fontWeight="bold"
+				 fontSize="20"
+				 color="#FFFF00"/>
+		<s:Label text="{formattedDelay}"
+				 width="100"
+				 textAlign="center"
+				 fontWeight="bold"
+				 fontSize="20"
+				 color="{delay>0 ? 0xFF0000 : 0xFFFF00}"/>
+	</s:HGroup>
+
+</s:ItemRenderer>

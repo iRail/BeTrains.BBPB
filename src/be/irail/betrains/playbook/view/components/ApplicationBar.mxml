@@ -29,6 +29,7 @@
 			private var _locale:LocaleManager = LocaleManager.localeManager;
 
 			private var _created:Boolean;
+
 			// ----------------------------
 			// selectedIndex
 			// ----------------------------
@@ -178,10 +179,10 @@
 									angle="90"/>
 			</s:filters>
 		</s:Rect>
-		<!--<components:ApplicationBarButton id="recents"
+		<components:ApplicationBarButton id="recents"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.recent')}"
 										 image="@Embed(source='images/recent.png')"
-										 change="changeHandler(event)"/>-->
+										 change="changeHandler(event)"/>
 		<!--<components:ApplicationBarButton id="favs"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.favs')}"
 										 image="@Embed(source='images/favs.png')"
