@@ -68,7 +68,7 @@
 		<s:Label id="title"
 				 text="{hostComponent.title}"
 				 color="white"
-				 fontSize="14"
+				 fontSize="18"
 				 fontWeight="bold"
 				 horizontalCenter="0"
 				 verticalCenter="0"/>

@@ -40,6 +40,14 @@
 			protected function stationLiveboard_returnToInputHandler(event:Event):void {
 				this.currentState = "inputName";
 			}
+
+			override public function refresh():void {
+				if (this.currentState == "inputName") {
+					if (inputNameView) {
+						inputNameView.refresh();
+					}
+				}
+			}
 		]]>
 	</fx:Script>
 

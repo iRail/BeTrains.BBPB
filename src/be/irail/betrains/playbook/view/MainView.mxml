@@ -13,19 +13,29 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import be.irail.betrains.playbook.view.components.MainViewItem;
+
+			import mx.events.IndexChangedEvent;
+
 			import qnx.locale.LocaleManager;
 
 			import spark.events.IndexChangeEvent;
 
+
 			private function applicationBar_changeHandler(event:IndexChangeEvent):void {
 				vs.selectedIndex = event.newIndex;
+			}
+
+			protected function vs_changeHandler(event:IndexChangedEvent):void {
+				MainViewItem(NavigatorContent(vs.selectedChild).getElementAt(0)).refresh();
 			}
 		]]>
 	</fx:Script>
 
 	<mx:ViewStack id="vs"
 				  width="100%"
-				  height="100%">
+				  height="100%"
+				  change="vs_changeHandler(event)">
 		<s:NavigatorContent>
 			<recent:RecentSchedulerQueries id="recent"
 										   title="{LocaleManager.localeManager.getResource('recent.title')}"/>

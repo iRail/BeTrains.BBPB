@@ -21,7 +21,9 @@
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.api.event.IRailResultEvent;
 			import be.irail.api.methodgroup.Stations;
+			import be.irail.betrains.playbook.controller.AppSettings;
 			import be.irail.betrains.playbook.controller.ModelLocator;
+			import be.irail.betrains.playbook.data.RecentQueriesCollection;
 			import be.irail.betrains.playbook.utils.SerializeUtil;
 			import be.irail.betrains.playbook.view.MainView;
 
@@ -47,8 +49,8 @@
 
 
 			private function preinitializeApplication():void {
-				registerClassAlias("irail.IRStation", IRStation);
 				readStations();
+				readRecents();
 				setupResourceManager();
 			}
 
@@ -59,7 +61,7 @@
 			}
 
 			private function onAllStationsResult(event:IRailResultEvent):void {
-				_file = File.desktopDirectory.resolvePath("stations.dat"); //File.applicationDirectory.resolvePath("data/stations.dat");
+				_file = File.desktopDirectory.resolvePath("stations.bpd");
 				var stream:FileStream = new FileStream();
 				var ba:ByteArray = SerializeUtil.serialize(event.result);
 				stream.openAsync(_file, FileMode.WRITE);
@@ -67,12 +69,33 @@
 			}
 
 			private function readStations():void {
-				_file = File.applicationDirectory.resolvePath("data/stations.dat");
+				_file = AppSettings.STATIONSLIST_STORAGE_LOCATION;
 				var stream:FileStream = new FileStream();
 
 				stream.openAsync(_file, FileMode.READ);
 				stream.addEventListener(Event.COMPLETE, stationDataReadHandler);
-				stream.addEventListener(IOErrorEvent.IO_ERROR, readIOErrorHandler);
+				stream.addEventListener(IOErrorEvent.IO_ERROR, readStationsIOErrorHandler);
+			}
+
+			private function readRecents():void {
+				_file = AppSettings.RECENT_STORAGE_LOCATION;
+
+				if (_file.exists) {
+					var stream:FileStream = new FileStream();
+					stream.openAsync(_file, FileMode.READ);
+					stream.addEventListener(Event.COMPLETE, recentDataReadHandler);
+					stream.addEventListener(IOErrorEvent.IO_ERROR, readRecentIOErrorHandler);
+				} else {
+					_model.recentSchedulerQueries = new RecentQueriesCollection();
+				}
+			}
+
+			private function writeRecents():void {
+				_file = AppSettings.RECENT_STORAGE_LOCATION;
+				var stream:FileStream = new FileStream();
+				var ba:ByteArray = SerializeUtil.serialize(_model.recentSchedulerQueries.toArray());
+				stream.openAsync(_file, FileMode.WRITE);
+				stream.writeBytes(ba);
 			}
 
 			private function stationDataReadHandler(event:Event):void {
@@ -86,12 +109,27 @@
 				_model.stations = new ArrayCollection((data.data) as Array);
 			}
 
-			private function readIOErrorHandler(event:IOErrorEvent):void {
-				throw new Error("data not cached")
+			private function recentDataReadHandler(event:Event):void {
+				var stream:FileStream = event.target as FileStream;
+				var ba:ByteArray = new ByteArray();
+				stream.readBytes(ba, 0, stream.bytesAvailable);
+				stream.close();
+				_file = null;
+
+				var data:Object = SerializeUtil.deserialize(ba);
+				_model.recentSchedulerQueries = new RecentQueriesCollection(data as Array);
+			}
+
+			private function readStationsIOErrorHandler(event:IOErrorEvent):void {
+				_model.stations = new ArrayCollection();
+			}
+
+			private function readRecentIOErrorHandler(event:IOErrorEvent):void {
+				_model.recentSchedulerQueries = new RecentQueriesCollection();
 			}
 
 			private function onApplicationExiting(event:Event):void {
-
+				writeRecents();
 			}
 
 			private function setupResourceManager():void {

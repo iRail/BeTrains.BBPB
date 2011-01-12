@@ -3,6 +3,8 @@ package be.irail.betrains.playbook.view.scheduler {
 	import be.irail.api.data.stations.IRStation;
 	import be.irail.api.event.IRailResultEvent;
 	import be.irail.api.methodgroup.Scheduler;
+	import be.irail.betrains.playbook.controller.ModelLocator;
+	import be.irail.betrains.playbook.data.SchedulerQuery;
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -12,6 +14,10 @@ package be.irail.betrains.playbook.view.scheduler {
 	[Event(name="connectionsChange", type="flash.events.Event")]
 	public class SchedulerPresentationModel extends EventDispatcher {
 		private var _schedule:Scheduler;
+
+		private var _model:ModelLocator = ModelLocator.getInstance();
+
+		private var _query:SchedulerQuery;
 
 		// ----------------------------
 		// connections (read-only)
@@ -41,7 +47,7 @@ package be.irail.betrains.playbook.view.scheduler {
 		}
 
 		public function set isLoading(value:Boolean):void {
-			if (value !== _isLoading) {
+			if (value != _isLoading) {
 				_isLoading = value;
 				dispatchEvent(new Event("isLoadingChange"));
 			}
@@ -54,15 +60,20 @@ package be.irail.betrains.playbook.view.scheduler {
 		public function getSchedule(from:IRStation, to:IRStation, when:Date, dateArrDep:String = "depart"):void {
 			_schedule.addEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
 			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"]);
+			_query = new SchedulerQuery(from, to, when, dateArrDep);
 			isLoading = true;
 		}
 
 		private function onSchedulerResult(event:IRailResultEvent):void {
 			_schedule.removeEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
-			_connections = new ArrayCollection(event.result.data as Array);
 			isLoading = false;
 
+			_connections = new ArrayCollection(event.result.data as Array);
+			_query.result = event.result;
+			_model.recentSchedulerQueries.addItem(_query);
+
 			dispatchEvent(new Event("connectionsChange"));
+			_query = null;
 		}
 
 	}

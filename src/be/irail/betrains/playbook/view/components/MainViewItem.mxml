@@ -8,4 +8,11 @@
 	<fx:Declarations>
 		<fx:String id="title"/>
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			public function refresh():void {
+				//to implement
+			}
+		]]>
+	</fx:Script>
 </s:SkinnableContainer>

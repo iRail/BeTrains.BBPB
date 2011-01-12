@@ -16,7 +16,7 @@
 			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
 
-			import qnx.system.QNXApplication;
+			import qnx.locale.LocaleManager;
 			import qnx.ui.text.TextInput;
 			import qnx.ui.text.TextInputIconMode;
 
@@ -54,6 +54,7 @@
 
 				input.x = 0;
 				input.y = 0;
+				input.prompt = LocaleManager.localeManager.getResource("liveboard.input.prompt");
 				input.width = inputContainer.width;
 				input.height = inputContainer.height;
 
@@ -91,10 +92,27 @@
 					input.height = inputContainer.height;
 				}
 			}
+
+			public function refresh():void {
+				var input:TextInput = TextInput(inputContainer.getChildByName("stationInputTxt"));
+				if (input) {
+					input.prompt = LocaleManager.localeManager.getResource("liveboard.input.prompt");
+				}
+			}
 		]]>
 	</fx:Script>
 
-	<mx:UIComponent top="100"
+	<s:Label id="nfo"
+			 text="{LocaleManager.localeManager.getResource('liveboard.input')}"
+			 left="20"
+			 right="20"
+			 top="80"
+			 alpha=".6"
+			 fontSize="20"
+			 fontWeight="bold"
+			 color="#0D0D0D"/>
+
+	<mx:UIComponent top="120"
 					left="20"
 					right="20"
 					height="50"

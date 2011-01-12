@@ -63,8 +63,8 @@
 			}
 
 			public function close(detail:uint = 0x0008):void {
-				PopUpManager.removePopUp(this);
 				stage.focus = null;
+				PopUpManager.removePopUp(this);
 				dispatchEvent(new CloseEvent(CloseEvent.CLOSE, false, false, detail));
 			}
 

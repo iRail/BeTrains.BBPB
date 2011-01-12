@@ -16,8 +16,8 @@
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.view.components.StationListPopUp;
-			import be.irail.betrains.playbook.view.scheduler.components.ConnectionDetails;
-			import be.irail.betrains.playbook.view.scheduler.components.itemRenderer.SchedulerItem;
+			import be.irail.betrains.playbook.view.components.ConnectionDetails;
+			import be.irail.betrains.playbook.view.components.itemrenderers.SchedulerItem;
 
 			import mx.core.FlexGlobals;
 			import mx.core.UIComponent;
@@ -164,26 +164,16 @@
 		<scheduler:SchedulerPresentationModel id="presentationModel"/>
 	</fx:Declarations>
 
-	<s:List id="resultList"
-			top="0"
-			bottom="0"
-			right="0"
-			width="595"
-			borderVisible="false"
-			contentBackgroundAlpha="0"
-			allowMultipleSelection="false"
-			visible="{presentationModel.hasConnections}"
-			includeInLayout="{presentationModel.hasConnections}"
-			dataProvider="{presentationModel.connections}"
-			itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.SchedulerItem">
+	<components:ConnectionsList id="resultList"
+								top="0"
+								bottom="0"
+								right="0"
+								width="595"
+								visible="{presentationModel.hasConnections}"
+								includeInLayout="{presentationModel.hasConnections}"
+								dataProvider="{presentationModel.connections}">
 		<!--change="resultList_changeHandler(event)"-->
-		<s:layout>
-			<s:VerticalLayout clipAndEnableScrolling="true"
-							  useVirtualLayout="true"
-							  gap="0"
-							  variableRowHeight="false"/>
-		</s:layout>
-	</s:List>
+	</components:ConnectionsList>
 
 	<s:Group top="0"
 			 bottom="0"
