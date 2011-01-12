@@ -49,7 +49,9 @@
 
 			override public function refresh():void {
 				this.recents = ModelLocator.getInstance().recentSchedulerQueries;
-				callLater(selectSelectedItem);
+				if (this.currentState == "recents") {
+					callLater(selectSelectedItem);
+				}
 			}
 
 			private function selectSelectedItem():void {
