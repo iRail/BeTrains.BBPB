@@ -31,8 +31,6 @@
 
 			import qnx.locale.LocaleManager;
 
-			private var _supportedLanguagesLocale:Array = ["en_US"];
-
 			private var _model:ModelLocator = ModelLocator.getInstance();
 
 			private var _file:File;
@@ -134,7 +132,7 @@
 
 			private function setupResourceManager():void {
 				var deviceLocale:String = LocaleManager.localeManager.getDeviceLocale();
-				if (_supportedLanguagesLocale.indexOf(deviceLocale) > -1) {
+				if (AppSettings.supportedLanguagesLocale.indexOf(deviceLocale) > -1) {
 					LocaleManager.localeManager.setLocale(deviceLocale);
 				} else {
 					LocaleManager.localeManager.setLocale("en_US");

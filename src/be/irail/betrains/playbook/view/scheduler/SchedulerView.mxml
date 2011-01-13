@@ -15,9 +15,8 @@
 		<![CDATA[
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.api.data.stations.IRStation;
-			import be.irail.betrains.playbook.view.components.StationListPopUp;
 			import be.irail.betrains.playbook.view.components.ConnectionDetails;
-			import be.irail.betrains.playbook.view.components.itemrenderers.SchedulerItem;
+			import be.irail.betrains.playbook.view.components.StationListPopUp;
 
 			import mx.core.FlexGlobals;
 			import mx.core.UIComponent;

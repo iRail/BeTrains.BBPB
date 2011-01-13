@@ -3,6 +3,8 @@ package be.irail.betrains.playbook.controller {
 	import flash.filesystem.File;
 
 	public class AppSettings {
+		public static const supportedLanguagesLocale:Array = ["en_US"];
+
 		// Cached stationslist location
 		public static const STATIONSLIST_STORAGE_LOCATION:File = File.applicationDirectory.resolvePath("data/stations.bpd");
 

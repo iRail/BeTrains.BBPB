@@ -104,9 +104,6 @@
 									  gap="0"
 									  variableRowHeight="false"/>
 				</s:layout>
-				<s:scroller>
-					<s:Scroller visible="false"/>
-				</s:scroller>
 			</s:List>
 
 			<components:ConnectionsList visible="{presentationModel.selectedQuery!=null}"

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:TouchButton xmlns:fx="http://ns.adobe.com/mxml/2009"
+						xmlns:s="library://ns.adobe.com/flex/spark"
+						xmlns:mx="library://ns.adobe.com/flex/mx"
+						xmlns:components="be.irail.betrains.playbook.view.components.*"
+						xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
+	<fx:Declarations>
+		<fx:String id="label"/>
+	</fx:Declarations>
+	<components:states>
+		<s:State name="normal"/>
+		<s:State name="busy"/>
+	</components:states>
+	<fx:Script>
+		<![CDATA[
+			// ----------------------------
+			// isBusy
+			// ----------------------------
+
+			public function get isBusy():Boolean {
+				return this.currentState != "busy";
+			}
+
+			public function set isBusy(value:Boolean):void {
+				if (value) {
+					this.currentState = "busy";
+					spinner.play();
+				} else {
+					if (this.currentState == "busy") {
+						spinner.stop();
+					}
+					this.currentState = "normal";
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<s:Label left="30"
+			 right="30"
+			 fontSize="20"
+			 fontWeight="bold"
+			 horizontalCenter="0"
+			 verticalCenter="0"
+			 maxDisplayedLines="1"
+			 text="{label}"/>
+	<s:BitmapImage id="arrowDown"
+				   width="10"
+				   height="10"
+				   verticalCenter="0"
+				   rotation="-90"
+				   source="@Embed(source='images/arroworange.png')"
+				   smooth="true"
+				   right="10"
+				   includeIn="normal"/>
+	<controls:Spinner verticalCenter="0"
+					  id="spinner"
+					  right="10"
+					  includeIn="busy"/>
+</components:TouchButton>

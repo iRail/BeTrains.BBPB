@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%"
+		 height="100%"
+		 xmlns:stations="be.irail.api.data.stations.*"
+		 xmlns:maps="com.google.maps.*"
+		 xmlns:components="be.irail.betrains.playbook.view.components.*"
+		 xmlns:stations1="be.irail.betrains.playbook.view.stations.*">
+	<s:states>
+		<s:State name="none"/>
+		<s:State name="details"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import be.irail.api.data.liveboard.Liveboard;
+			import be.irail.api.data.stations.IRStation;
+			import be.irail.api.event.IRailErrorEvent;
+			import be.irail.api.event.IRailResultEvent;
+			import be.irail.api.methodgroup.Liveboards;
+
+			import com.google.maps.LatLng;
+			import com.google.maps.MapEvent;
+			import com.google.maps.MapType;
+			import com.google.maps.overlays.Marker;
+
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+
+			import qnx.locale.LocaleManager;
+
+			private var _mapReady:Boolean;
+
+			private var service:Liveboards = new Liveboards();
+
+			// ----------------------------
+			// station
+			// ----------------------------
+
+			private var _station:IRStation;
+
+			[Bindable(event="stationChange")]
+			public function get station():IRStation {
+				return _station;
+			}
+
+			[Bindable(event="stationChange")]
+			public function get stationName():String {
+				if (!station) {
+					return "";
+				}
+				return station.formattedName;
+			}
+
+			public function set station(value:IRStation):void {
+				_station = value;
+				if (value) {
+					this.currentState = "details";
+				} else {
+					this.currentState = "none";
+				}
+				setMaps();
+				dispatchEvent(new Event("stationChange"));
+			}
+
+			protected function liveBoard_clickHandler(event:MouseEvent):void {
+				service.addEventListener(IRailResultEvent.LIVEBOARD_RESULT, onLiveboardResult);
+				service.addEventListener(IRailErrorEvent.API_ERROR, onError);
+				service.addEventListener(IRailErrorEvent.IO_ERROR, onError);
+				service.getStationLiveboardByStationName(stationName);
+				liveBoardBtn.isBusy = true;
+			}
+
+			private function onError(event:IRailErrorEvent):void {
+				liveBoardBtn.isBusy = false;
+			}
+
+			private function onLiveboardResult(event:IRailResultEvent):void {
+				service.removeEventListener(IRailResultEvent.LIVEBOARD_RESULT, onLiveboardResult);
+				liveBoardBtn.isBusy = false;
+
+				var stationsLiveboard:StationsLiveboardInfo = new StationsLiveboardInfo();
+				stationsLiveboard.liveBoard = (event.result.data as Liveboard);
+
+				PopUpManager.addPopUp(stationsLiveboard, FlexGlobals.topLevelApplication as DisplayObject, false);
+			}
+
+			protected function mapView_mapreadyHandler(event:MapEvent):void {
+				_mapReady = true;
+				setMaps();
+			}
+
+			private function setMaps():void {
+				if (_station && _mapReady) {
+					mapView.clearOverlays();
+
+					var latLng:LatLng = new LatLng(station.latitude, station.longitude);
+					mapView.addOverlay(new Marker(latLng));
+					mapView.setCenter(latLng, 16, MapType.NORMAL_MAP_TYPE);
+				}
+
+			}
+		]]>
+	</fx:Script>
+
+	<s:Label textAlign="center"
+			 left="10"
+			 top="10"
+			 fontSize="40"
+			 horizontalCenter="0"
+			 verticalCenter="0"
+			 verticalAlign="middle"
+			 color="#1F1F1F"
+			 alpha=".3"
+			 fontWeight="bold"
+			 includeIn="none"
+			 text="{LocaleManager.localeManager.getResource('station.profile.none')}"/>
+
+	<s:Group includeIn="details"
+			 top="10"
+			 width="100%"
+			 height="100%">
+		<s:Label textAlign="left"
+				 paddingLeft="10"
+				 width="{this.width}"
+				 fontSize="60"
+				 color="#1F1F1F"
+				 alpha=".6"
+				 fontWeight="bold"
+				 maxDisplayedLines="1"
+				 text="{stationName}"/>
+		<s:Label textAlign="left"
+				 paddingLeft="10"
+				 width="{this.width}"
+				 y="45"
+				 fontSize="30"
+				 color="#1F1F1F"
+				 alpha=".4"
+				 fontWeight="bold"
+				 text="{LocaleManager.localeManager.getResource('station.profile.type.station')}"/>
+
+		<stations1:StationDataButton id="liveBoardBtn"
+									 y="150"
+									 width="600"
+									 horizontalCenter="0"
+									 label="{LocaleManager.localeManager.getResource('station.profile.liveboardbtn')}"
+									 click="liveBoard_clickHandler(event)"/>
+	</s:Group>
+
+	<maps:Map id="mapView"
+			  language="en"
+			  width="600"
+			  height="200"
+			  horizontalCenter="0"
+			  y="280"
+			  sensor="false"
+			  visible="{this.currentState=='details'}"
+			  mapevent_mapready="mapView_mapreadyHandler(event)"
+			  url="http://joristimmerman.be"
+			  key="ABQIAAAAgOhxd4obsuQSg6_DD8ud_BRLHLSNl7ZqQWJZlWqK0xni3sXsYxTikWVKyrtj48RhKW6WJXCEB1DyGA"/>
+</s:Group>
