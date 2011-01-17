@@ -8,18 +8,11 @@
 						 xmlns:views="qnx.views.*"
 						 xmlns:stations="be.irail.betrains.playbook.view.stations.*"
 						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
-						 creationComplete="mainviewitem1_creationCompleteHandler(event)">
-	<fx:Script>
-		<![CDATA[
-			import spark.events.IndexChangeEvent;
-		]]>
-	</fx:Script>
+						 xmlns:ns="http://ns.renaun.com/mxml/2010"
+						 xmlns:text="qnx.ui.text.*">
 	<fx:Declarations>
 		<stations:StationsViewPresentationModel id="presentationModel"/>
 	</fx:Declarations>
-	<components:states>
-	</components:states>
-
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.stations.IRStation;
@@ -30,46 +23,46 @@
 			import org.as3commons.lang.StringUtils;
 
 			import qnx.locale.LocaleManager;
+			import qnx.ui.text.ReturnKeyType;
 			import qnx.ui.text.TextInput;
 			import qnx.ui.text.TextInputIconMode;
 
-			protected function mainviewitem1_creationCompleteHandler(event:FlexEvent):void {
-				createSearchInput();
+			import spark.events.IndexChangeEvent;
+
+			protected function mainvixewitem1_creationCompleteHandler(event:FlexEvent):void {
 				presentationModel.init();
 			}
 
-			private function createSearchInput():void {
-				var input:TextInput = new TextInput();
-				input.name = "searchInput";
-				input.clearIconMode = TextInputIconMode.ALWAYS;
-
-				var txtInputFormat:TextFormat = input.format;
-
-				input.x = 0;
-				input.y = 1;
-				input.prompt = LocaleManager.localeManager.getResource("station.search.prompt");
-				input.width = searchInputContainer.width;
-				input.height = searchInputContainer.height;
-
-				input.format = txtInputFormat;
-				input.addEventListener(Event.CHANGE, onSearchInputChange);
-
-				searchInputContainer.addChild(input);
-			}
-
-			private function onSearchInputChange(event:Event):void {
-				var input:TextInput = TextInput(searchInputContainer.getChildByName("searchInput"));
-				if (input) {
-					presentationModel.updateFilter(StringUtils.trim(input.text));
-					presentationModel.refreshList();
-				}
-				if (!stationsList.selectedItem) {
-					presentationModel.selectedStation = null;
+			private function onSearchInputChange(event:KeyboardEvent):void {
+				if (event.keyCode == Keyboard.ENTER) {
+					search();
 				}
 			}
 
 			private function stationsList_changeHandler(event:IndexChangeEvent):void {
 				presentationModel.selectedStation = stationsList.selectedItem as IRStation;
+
+			}
+
+			override public function refresh():void {
+				presentationModel.refreshList();
+			}
+
+			private function search():void {
+				presentationModel.updateFilter(StringUtils.trim(searchInput.text));
+				presentationModel.refreshList();
+
+				if (!stationsList.selectedItem) {
+					presentationModel.selectedStation = null;
+				}
+			}
+
+
+			protected function searchInput_changeHandler(event:Event):void {
+				if (searchInput.text.length == 0) {
+					search();
+					stationsList.selectedIndex = -1;
+				}
 			}
 		]]>
 	</fx:Script>
@@ -91,30 +84,36 @@
 			  paddingRight="2"
 			  paddingBottom="2">
 
-		<s:VGroup width="400"
-				  height="100%"
-				  gap="2">
-			<mx:UIComponent width="100%"
-							height="30"
-							id="searchInputContainer"/>
+		<s:Group width="400"
+				 height="100%">
+			<ns:QContainer id="searchInputContainer">
+				<text:TextInput id="searchInput"
+								width="400"
+								height="30"
+								prompt="{LocaleManager.localeManager.getResource('station.search.prompt')}"
+								returnKeyType="{ReturnKeyType.SEARCH}"
+								keyDown="onSearchInputChange(event)"
+								change="searchInput_changeHandler(event)"
+								clearIconMode="{TextInputIconMode.ALWAYS}"/>
+			</ns:QContainer>
 			<s:List id="stationsList"
+					y="32"
 					width="100%"
 					height="100%"
 					dataProvider="{presentationModel.stations}"
-					borderVisible="false"
 					contentBackgroundAlpha="0"
+					requireSelection="false"
 					change="stationsList_changeHandler(event)"
 					itemRenderer="be.irail.betrains.playbook.view.stations.itemrenderer.StationListItem"
 					allowMultipleSelection="false">
 				<s:layout>
 					<s:VerticalLayout useVirtualLayout="true"
-									  clipAndEnableScrolling="false"
 									  gap="0"
 									  variableRowHeight="false"/>
 				</s:layout>
 
 			</s:List>
-		</s:VGroup>
+		</s:Group>
 
 		<stations:StationProfile id="stationProfile"
 								 station="{presentationModel.selectedStation}"

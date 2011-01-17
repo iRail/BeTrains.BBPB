@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <application xmlns="http://ns.adobe.com/air/application/2.5">
 
-	<!-- Adobe AIR Application Descriptor File Template.
+<!-- Adobe AIR Application Descriptor File Template.
 
-		Specifies parameters for identifying, installing, and launching AIR applications.
+	Specifies parameters for identifying, installing, and launching AIR applications.
 
-		xmlns - The Adobe AIR namespace: http://ns.adobe.com/air/application/2.5
-				The last segment of the namespace specifies the version
-				of the AIR runtime required for this application to run.
-
-		minimumPatchLevel - The minimum patch level of the AIR runtime required to run
-				the application. Optional.
-	-->
+	xmlns - The Adobe AIR namespace: http://ns.adobe.com/air/application/2.5
+			The last segment of the namespace specifies the version 
+			of the AIR runtime required for this application to run.
+			
+	minimumPatchLevel - The minimum patch level of the AIR runtime required to run 
+			the application. Optional.
+-->
 
 	<!-- A universally unique application identifier. Must be unique across all AIR applications.
 	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-	<id>be.betrains.playbook</id>
+	<id>TestApp</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>BeTrains_BBPlaybook</filename>
+	<filename>TestApp</filename>
 
-	<!-- The name that is displayed in the AIR application installer.
+	<!-- The name that is displayed in the AIR application installer. 
 	May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<name>BeTrains</name>
-
-	<!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade.
+	<name>TestApp</name>
+	
+	<!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade. 
 	Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
 	An updated version of application must have a versionNumber value higher than the previous version. Required for namespace >= 2.5 . -->
 	<versionNumber>1.0.0</versionNumber>
-
+		         
 	<!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
 	<!-- <versionLabel></versionLabel> -->
 
@@ -47,7 +47,7 @@
 		<!-- The main SWF or HTML file of the application. Required. -->
 		<!-- Note: In Flash Builder, the SWF reference is set automatically. -->
 		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
-
+		
 		<!-- The title of the main window. Optional. -->
 		<!-- <title></title> -->
 
@@ -59,7 +59,6 @@
 
 		<!-- Whether the window is initially visible. Optional. Default false. -->
 		<!-- <visible></visible> -->
-		<visible>true</visible>
 
 		<!-- Whether the user can minimize the window. Optional. Default true. -->
 		<!-- <minimizable></minimizable> -->
@@ -117,7 +116,7 @@
 	of the AIR file (true), or the default AIR application installer handles the update (false).
 	Optional. Default false. -->
 	<!-- <customUpdateUI></customUpdateUI> -->
-
+	
 	<!-- Whether the application can be launched when the user clicks a link in a web browser.
 	Optional. Default false. -->
 	<!-- <allowBrowserInvocation></allowBrowserInvocation> -->
@@ -125,34 +124,34 @@
 	<!-- Listing of file types for which the application can register. Optional. -->
 	<!-- <fileTypes> -->
 
-	<!-- Defines one file type. Optional. -->
-	<!-- <fileType> -->
+		<!-- Defines one file type. Optional. -->
+		<!-- <fileType> -->
 
-	<!-- The name that the system displays for the registered file type. Required. -->
-	<!-- <name></name> -->
+			<!-- The name that the system displays for the registered file type. Required. -->
+			<!-- <name></name> -->
 
-	<!-- The extension to register. Required. -->
-	<!-- <extension></extension> -->
-
-	<!-- The description of the file type. Optional. -->
-	<!-- <description></description> -->
-
-	<!-- The MIME content type. -->
-	<!-- <contentType></contentType> -->
-
-	<!-- The icon to display for the file type. Optional. -->
-	<!-- <icon>
-		<image16x16></image16x16>
-		<image32x32></image32x32>
-		<image48x48></image48x48>
-		<image128x128></image128x128>
-	</icon> -->
-
-	<!-- </fileType> -->
+			<!-- The extension to register. Required. -->
+			<!-- <extension></extension> -->
+			
+			<!-- The description of the file type. Optional. -->
+			<!-- <description></description> -->
+			
+			<!-- The MIME content type. -->
+			<!-- <contentType></contentType> -->
+			
+			<!-- The icon to display for the file type. Optional. -->
+			<!-- <icon>
+				<image16x16></image16x16>
+				<image32x32></image32x32>
+				<image48x48></image48x48>
+				<image128x128></image128x128>
+			</icon> -->
+			
+		<!-- </fileType> -->
 	<!-- </fileTypes> -->
 
 	<!-- Specify Android specific tags that get passed to AndroidManifest.xml file. -->
-	<!--<android>
+	<!--<android> 
 		<manifestAdditions>
 		<![CDATA[
 			<manifest android:installLocation="auto">
@@ -172,7 +171,7 @@
 				</application>
 			</manifest>
 		]]>
-		</manifestAdditions>
+		</manifestAdditions> 
 	</android> -->
 	<!-- End of the schema for adding the android specific tags in AndroidManifest.xml file -->
 

@@ -57,8 +57,6 @@ global{
 	modal-transparency-color:#ffFFff;
 }
 
-s|WindowedApplication{
-}
 
 /*s|TextArea{
 	focus-alpha:0;

@@ -66,7 +66,10 @@ package be.irail.betrains.playbook.view.stations {
 		}
 
 		public function refreshList():void {
+			_stationList = new ArrayCollection(_model.stations.toArray());
+			_stationList.filterFunction = filterList;
 			_stationList.refresh();
+
 			dispatchEvent(new Event("stationListChange"));
 
 		}

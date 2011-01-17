@@ -19,7 +19,7 @@
 			import qnx.ui.data.DataProvider;
 			import qnx.ui.picker.Picker;
 			import qnx.ui.skins.SkinStates;
-			import qnx.ui.skins.picker.PickerListBackgroundBlack;
+			import qnx.ui.skins.picker.PickerListBackgroundWhite;
 
 			[Bindable]
 			private var _locale:LocaleManager = LocaleManager.localeManager;
@@ -79,13 +79,12 @@
 				// Create the picker and add the main DataProvider
 
 				var picker:Picker = new Picker();
-				picker.setListBackgroundSkin(PickerListBackgroundBlack);
+				picker.setListBackgroundSkin(PickerListBackgroundWhite);
 				picker.name = "datePicker";
-				picker.width = pickerContainer.width;
-				picker.height = pickerContainer.height;
+				picker.width = 200;
+				picker.height = 50;
 
 				var arrDay:Array = [];
-				var arrYear:Array = [];
 
 				// Populate the month array and create the
 				// day DataProvider 
@@ -112,37 +111,27 @@
 				var dayDP:DataProvider = new DataProvider(arrDay);
 				var monthDP:DataProvider = new DataProvider(months);
 
-				// Create the year DataProvider
-				var currentYear:Number = new Date().getFullYear();
-				for (var l:int = currentYear; l < currentYear + 10; l++) {
-					arrYear.push({label: l.toString(), value: l});
-				}
-
-				var yearDP:DataProvider = new DataProvider(arrYear);
-
 				var dpp:Array = new Array();
 
 				dpp.push(dayDP);
 				dpp.push(monthDP);
-				dpp.push(yearDP);
 
 				picker.dataProvider = new DataProvider(dpp);
 
 				pickerContainer.addChild(picker);
 
-				picker.setListWidth(0, 100);
+				picker.setListWidth(0, 200);
 				picker.setListWidth(1, 300);
-				picker.setListWidth(2, 200);
 
 				picker.addEventListener(Event.SELECT, handleSelect);
 			}
 
 			private function createTimePicker():void {
 				var picker:Picker = new Picker();
-				picker.setListBackgroundSkin(PickerListBackgroundBlack);
+				picker.setListBackgroundSkin(PickerListBackgroundWhite);
 				picker.name = "timePicker";
-				picker.width = timePickerContainer.width;
-				picker.height = timePickerContainer.height;
+				picker.width = 180;
+				picker.height = 50;
 
 				var hours:Array = [];
 				var minutes:Array = [];
@@ -164,10 +153,12 @@
 
 				picker.dataProvider = new DataProvider(dpp);
 
-				timePickerContainer.addChild(picker);
+				pickerContainer.addChild(picker);
 
 				picker.setListWidth(0, 200);
 				picker.setListWidth(1, 200);
+
+				picker.x = 202;
 
 				picker.addEventListener(Event.SELECT, handleSelect);
 
@@ -192,7 +183,7 @@
 
 			private function parseDateForPicker(day:int, month:int, year:int, hours:int = 0, minutes:int = 0):void {
 				var picker:Picker = pickerContainer.getChildByName("datePicker") as Picker,
-					timePicker:Picker = timePickerContainer.getChildByName("timePicker") as Picker;
+					timePicker:Picker = pickerContainer.getChildByName("timePicker") as Picker;
 
 				if (!picker || !timePicker) {
 					return;
@@ -205,26 +196,29 @@
 				tmp.setHours(hours);
 				tmp.setMinutes(minutes);
 
+				if (new Date().getTime() > tmp.getTime()) {
+					tmp.setFullYear(year + 1);
+				}
+
 				this.selectedDate = tmp;
 
 				var dayIndex:int = selectedDate.date - 1,
 					monthIndex:int = selectedDate.getMonth(),
-					yearIndex:int = selectedDate.fullYear - currentYear,
 					hoursIndex:int = selectedDate.hours,
 					minutesIndex:int = selectedDate.minutes;
 
-				picker.selectedIndices = [dayIndex, monthIndex, yearIndex];
+				picker.selectedIndices = [dayIndex, monthIndex];
 				timePicker.selectedIndices = [hoursIndex, minutesIndex];
 			}
 
 
 			private function handleSelect(e:Event):void {
 				var picker:Picker = pickerContainer.getChildByName("datePicker") as Picker,
-					timePicker:Picker = timePickerContainer.getChildByName("timePicker") as Picker,
+					timePicker:Picker = pickerContainer.getChildByName("timePicker") as Picker,
 
 					day:int = picker.selectedIndices[0] + 1,
 					month:int = picker.selectedIndices[1],
-					year:int = picker.selectedIndices[2] + currentYear,
+					year:int = currentYear,
 					hours:int = timePicker.selectedIndices[0],
 					minutes:int = timePicker.selectedIndices[1];
 
@@ -257,12 +251,6 @@
 		</s:HGroup>
 		<mx:Spacer height="20"/>
 		<mx:UIComponent id="pickerContainer"
-						height="50"
-						width="100%"/>
-		<mx:Spacer height="10"/>
-		<mx:UIComponent id="timePickerContainer"
-						height="50"
-						width="206"/>
-		<mx:Spacer width="20"/>
+						height="60"/>
 	</s:VGroup>
 </s:Group>

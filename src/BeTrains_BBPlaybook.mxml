@@ -3,13 +3,13 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark"
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   frameRate="30"
-					   backgroundFrameRate="12"
 					   width="1024"
 					   height="600"
 					   skinClass="be.irail.betrains.playbook.view.components.skins.ApplicationSkin"
-					   preinitialize="preinitializeApplication()"
+					   preinitialize="preinitializeHandler()"
 					   applicationComplete="applicationCompleteHandler()"
-					   creationComplete="creationCompleteHandler()">
+					   contentCreationComplete="creationCompleteHandler()"
+					   xmlns:view="be.irail.betrains.playbook.view.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -18,7 +18,6 @@
 
 	<fx:Script>
 		<![CDATA[
-			import be.irail.api.data.stations.IRStation;
 			import be.irail.api.event.IRailResultEvent;
 			import be.irail.api.methodgroup.Stations;
 			import be.irail.betrains.playbook.controller.AppSettings;
@@ -35,9 +34,14 @@
 
 			private var _file:File;
 
+			private function preinitializeHandler():void {
+				readStations();
+				readRecents();
+			}
+
 			private function creationCompleteHandler():void {
 				NativeApplication.nativeApplication.addEventListener(Event.EXITING, onApplicationExiting);
-				createMainView();
+				setupResourceManager();
 			/* Alert.show(
 				"Supports touch events: " + Multitouch.supportsTouchEvents + "\n" +
 				"Maximum supported touch points: " + Multitouch.maxTouchPoints + "\n\n" +
@@ -45,12 +49,6 @@
 				"Supported gestures: " + Multitouch.supportedGestures, "The BlackBerry Playbook: Multitouch support"); */
 			}
 
-
-			private function preinitializeApplication():void {
-				readStations();
-				readRecents();
-				setupResourceManager();
-			}
 
 			private function storeStationData():void {
 				var stationService:Stations = new Stations();
@@ -105,6 +103,7 @@
 
 				var data:Object = SerializeUtil.deserialize(ba);
 				_model.stations = new ArrayCollection((data.data) as Array);
+
 			}
 
 			private function recentDataReadHandler(event:Event):void {
@@ -116,6 +115,7 @@
 
 				var data:Object = SerializeUtil.deserialize(ba);
 				_model.recentSchedulerQueries = new RecentQueriesCollection(data as Array);
+
 			}
 
 			private function readStationsIOErrorHandler(event:IOErrorEvent):void {
@@ -137,6 +137,7 @@
 				} else {
 					LocaleManager.localeManager.setLocale("en_US");
 				}
+				LocaleManager.localeManager.dispatchEvent(new Event(Event.CHANGE));
 			}
 
 			protected function applicationCompleteHandler():void {
@@ -145,12 +146,7 @@
 
 			private function onUncaughtError(event:UncaughtErrorEvent):void {
 			}
-
-			private function createMainView():void {
-				var mv:MainView = new MainView();
-				this.addElement(mv);
-			}
 		]]>
 	</fx:Script>
-
+	<view:MainView id="mainView"/>
 </s:WindowedApplication>

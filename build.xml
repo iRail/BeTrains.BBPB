@@ -1,15 +1,13 @@
-<project name="playbook_betrains"
+<project name="bbplaybook_betrains"
 		 basedir="."
 		 default="copyResources">
 
 	<target name="copyResources">
-
 		<copy todir="bin-debug">
 			<fileset dir="assets">
-				<include name="**/resource.properties"/>
+				<include name="**/*"/>
 			</fileset>
 		</copy>
-
 
 	</target>
 </project>

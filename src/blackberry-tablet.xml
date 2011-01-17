@@ -1,0 +1,12 @@
+<qnx>
+	<initialWindow>
+		<systemChrome>none</systemChrome>
+		<transparent>false</transparent>
+	</initialWindow>
+	<category>core.Internet</category>
+	<publisher>Joris Timmerman</publisher>
+	<icon>
+		<image>blackberry-tablet-icon.png</image>
+	</icon>
+	<splashscreen>splash.png</splashscreen>
+</qnx>

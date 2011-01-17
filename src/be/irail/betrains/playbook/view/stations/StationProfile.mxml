@@ -2,12 +2,14 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:stations="be.irail.api.data.stations.*"
+		 xmlns:components="be.irail.betrains.playbook.view.components.*"
+		 xmlns:stations1="be.irail.betrains.playbook.view.stations.*"
 		 width="100%"
 		 height="100%"
-		 xmlns:stations="be.irail.api.data.stations.*"
-		 xmlns:maps="com.google.maps.*"
-		 xmlns:components="be.irail.betrains.playbook.view.components.*"
-		 xmlns:stations1="be.irail.betrains.playbook.view.stations.*">
+		 xmlns:ns="http://ns.renaun.com/mxml/2010"
+		 xmlns:yahoo="http://www.yahoo.com/2008/mxml"
+		 creationComplete="group1_creationCompleteHandler(event)">
 	<s:states>
 		<s:State name="none"/>
 		<s:State name="details"/>
@@ -20,12 +22,13 @@
 			import be.irail.api.event.IRailResultEvent;
 			import be.irail.api.methodgroup.Liveboards;
 
-			import com.google.maps.LatLng;
-			import com.google.maps.MapEvent;
-			import com.google.maps.MapType;
-			import com.google.maps.overlays.Marker;
+			import com.yahoo.maps.api.YahooMap;
+			import com.yahoo.maps.api.YahooMapEvent;
+			import com.yahoo.maps.api.core.location.LatLon;
+			import com.yahoo.maps.api.markers.SimpleMarker;
 
 			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 
 			import qnx.locale.LocaleManager;
@@ -33,6 +36,8 @@
 			private var _mapReady:Boolean;
 
 			private var service:Liveboards = new Liveboards();
+
+			private var mapComponent:YahooMap;
 
 			// ----------------------------
 			// station
@@ -53,6 +58,22 @@
 				return station.formattedName;
 			}
 
+			[Bindable(event="stationChange")]
+			public function get stationLng():Number {
+				if (!station) {
+					return 0;
+				}
+				return station.longitude;
+			}
+
+			[Bindable(event="stationChange")]
+			public function get stationLat():Number {
+				if (!station) {
+					return 0;
+				}
+				return station.latitude;
+			}
+
 			public function set station(value:IRStation):void {
 				_station = value;
 				if (value) {
@@ -60,8 +81,17 @@
 				} else {
 					this.currentState = "none";
 				}
-				setMaps();
+
+				addMarker();
+
 				dispatchEvent(new Event("stationChange"));
+			}
+
+			private function addMarker():void {
+				if (mapComponent && _mapReady) {
+					mapComponent.centerLatLon = new LatLon(stationLat, stationLng);
+					mapComponent.zoomLevel = 3;
+				}
 			}
 
 			protected function liveBoard_clickHandler(event:MouseEvent):void {
@@ -82,24 +112,24 @@
 
 				var stationsLiveboard:StationsLiveboardInfo = new StationsLiveboardInfo();
 				stationsLiveboard.liveBoard = (event.result.data as Liveboard);
-
 				PopUpManager.addPopUp(stationsLiveboard, FlexGlobals.topLevelApplication as DisplayObject, false);
 			}
 
-			protected function mapView_mapreadyHandler(event:MapEvent):void {
-				_mapReady = true;
-				setMaps();
+			protected function group1_creationCompleteHandler(event:FlexEvent):void {
+				mapComponent = new YahooMap();
+				mapComponent.init("Hc6WPw_V34Fs6FRv3XHq8vDAcXKBhZuS0gzHba0Sq8PKwD3n4NZQtS1pv7vuwsPa3I6unns4", mapComponentContainer.width, mapComponentContainer.height);
+
+				mapComponent.addEventListener(YahooMapEvent.MAP_INITIALIZE, onMapInitialize);
+				mapComponentContainer.addChild(mapComponent);
 			}
 
-			private function setMaps():void {
-				if (_station && _mapReady) {
-					mapView.clearOverlays();
+			private function onMapInitialize(event:YahooMapEvent):void {
+				mapComponent.removeEventListener(YahooMapEvent.MAP_INITIALIZE, onMapInitialize);
+				mapComponent.addPanControl();
+				mapComponent.addZoomWidget();
+				_mapReady = true;
 
-					var latLng:LatLng = new LatLng(station.latitude, station.longitude);
-					mapView.addOverlay(new Marker(latLng));
-					mapView.setCenter(latLng, 16, MapType.NORMAL_MAP_TYPE);
-				}
-
+				addMarker();
 			}
 		]]>
 	</fx:Script>
@@ -148,15 +178,10 @@
 									 click="liveBoard_clickHandler(event)"/>
 	</s:Group>
 
-	<maps:Map id="mapView"
-			  language="en"
-			  width="600"
-			  height="200"
-			  horizontalCenter="0"
-			  y="280"
-			  sensor="false"
-			  visible="{this.currentState=='details'}"
-			  mapevent_mapready="mapView_mapreadyHandler(event)"
-			  url="http://joristimmerman.be"
-			  key="ABQIAAAAgOhxd4obsuQSg6_DD8ud_BRLHLSNl7ZqQWJZlWqK0xni3sXsYxTikWVKyrtj48RhKW6WJXCEB1DyGA"/>
+	<mx:UIComponent id="mapComponentContainer"
+					width="600"
+					height="200"
+					horizontalCenter="0"
+					y="280"
+					visible="{this.currentState=='details'}"/>
 </s:Group>
