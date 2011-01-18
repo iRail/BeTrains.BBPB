@@ -2,14 +2,23 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 width="1024"
-		 height="600"
+		 width="800"
+		 height="470"
 		 xmlns:liveboard="be.irail.api.data.liveboard.*"
 		 creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Metadata>
 	</fx:Metadata>
+	<s:filters>
+		<s:DropShadowFilter blurX="6"
+							blurY="6"
+							inner="false"
+							strength=".6"
+							quality="3"
+							angle="80"
+							distance="3"/>
+	</s:filters>
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.liveboard.Liveboard;
@@ -70,7 +79,7 @@
 			protected function group1_creationCompleteHandler(event:FlexEvent):void {
 				dispatchEvent(new Event("timeChange"));
 
-				_t = new Timer(10000);
+				_t = new Timer(1000);
 				_t.addEventListener(TimerEvent.TIMER, onTimer);
 				_t.start();
 			}

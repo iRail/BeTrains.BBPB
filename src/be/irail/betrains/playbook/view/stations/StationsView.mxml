@@ -44,19 +44,25 @@
 
 			}
 
-			override public function refresh():void {
+			override public function make():void {
 				presentationModel.refreshList();
 			}
 
-			private function search():void {
-				presentationModel.updateFilter(StringUtils.trim(searchInput.text));
-				presentationModel.refreshList();
+			override public function destroy():void {
+				searchInput.text = "";
+				stationsList.selectedIndex = -1;
+				search();
+			}
 
+
+			private function search():void {
 				if (!stationsList.selectedItem) {
 					presentationModel.selectedStation = null;
 				}
-			}
 
+				presentationModel.updateFilter(StringUtils.trim(searchInput.text));
+				presentationModel.refreshList();
+			}
 
 			protected function searchInput_changeHandler(event:Event):void {
 				if (searchInput.text.length == 0) {
@@ -80,6 +86,7 @@
 	<s:HGroup width="100%"
 			  height="100%"
 			  gap="0"
+			  paddingTop="10"
 			  paddingLeft="2"
 			  paddingRight="2"
 			  paddingBottom="2">
@@ -89,7 +96,7 @@
 			<ns:QContainer id="searchInputContainer">
 				<text:TextInput id="searchInput"
 								width="400"
-								height="30"
+								height="40"
 								prompt="{LocaleManager.localeManager.getResource('station.search.prompt')}"
 								returnKeyType="{ReturnKeyType.SEARCH}"
 								keyDown="onSearchInputChange(event)"
@@ -97,7 +104,7 @@
 								clearIconMode="{TextInputIconMode.ALWAYS}"/>
 			</ns:QContainer>
 			<s:List id="stationsList"
-					y="32"
+					y="52"
 					width="100%"
 					height="100%"
 					dataProvider="{presentationModel.stations}"

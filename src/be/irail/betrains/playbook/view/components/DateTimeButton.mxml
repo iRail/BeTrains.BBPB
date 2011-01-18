@@ -88,9 +88,9 @@
 
 				// Populate the month array and create the
 				// day DataProvider 
-
-				for (var i:int = 1; i < 32; i++) {
-					arrDay.push({label: i.toString(), value: i});
+				var i:int;
+				for (i = 1; i < 32; i++) {
+					arrDay.push({label: (i < 10) ? '0' + i : '' + i, value: i});
 				}
 
 				var months:Array = [
@@ -108,10 +108,9 @@
 					{label: _locale.getResource('system.months.december'), value: 11}
 					];
 
-				var dayDP:DataProvider = new DataProvider(arrDay);
-				var monthDP:DataProvider = new DataProvider(months);
-
-				var dpp:Array = new Array();
+				var dayDP:DataProvider = new DataProvider(arrDay),
+					monthDP:DataProvider = new DataProvider(months),
+					dpp:Array = new Array();
 
 				dpp.push(dayDP);
 				dpp.push(monthDP);
@@ -133,33 +132,33 @@
 				picker.width = 180;
 				picker.height = 50;
 
-				var hours:Array = [];
-				var minutes:Array = [];
+				var hours:Array = [],
+					minutes:Array = [],
+					i:int;
 
-				for (var i:int = 0; i < 24; i++) {
-					hours.push({label: i.toString(), value: i});
+				for (i = 0; i < 24; i++) {
+					hours.push({label: (i < 10) ? '0' + i : '' + i, value: i});
 				}
 
-				for (var j:int = 0; j < 60; j++) {
-					minutes.push({label: j.toString(), value: j});
+				for (i = 0; i < 60; i++) {
+					minutes.push({label: (i < 10) ? '0' + i : '' + i, value: i});
 				}
 
-				var dayDP:DataProvider = new DataProvider(hours);
-				var monthDP:DataProvider = new DataProvider(minutes);
-				var dpp:Array = new Array();
+				var dayDP:DataProvider = new DataProvider(hours),
+					monthDP:DataProvider = new DataProvider(minutes),
+					dpp:Array = new Array();
 
 				dpp.push(dayDP);
 				dpp.push(monthDP);
 
 				picker.dataProvider = new DataProvider(dpp);
 
-				pickerContainer.addChild(picker);
-
 				picker.setListWidth(0, 200);
 				picker.setListWidth(1, 200);
 
 				picker.x = 202;
 
+				pickerContainer.addChild(picker);
 				picker.addEventListener(Event.SELECT, handleSelect);
 
 			}
@@ -249,7 +248,7 @@
 					 textAlign="center"
 					 fontSize="16"/>
 		</s:HGroup>
-		<mx:Spacer height="20"/>
+		<mx:Spacer height="40"/>
 		<mx:UIComponent id="pickerContainer"
 						height="60"/>
 	</s:VGroup>

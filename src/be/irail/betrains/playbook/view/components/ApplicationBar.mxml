@@ -16,6 +16,8 @@
 
 	<fx:Script>
 		<![CDATA[
+			import be.irail.betrains.playbook.controller.ModelLocator;
+
 			import com.greensock.TweenLite;
 			import com.greensock.easing.Expo;
 
@@ -25,8 +27,12 @@
 
 			import spark.events.IndexChangeEvent;
 
+
 			[Bindable]
 			private var _locale:LocaleManager = LocaleManager.localeManager;
+
+			[Bindable]
+			private var _model:ModelLocator = ModelLocator.getInstance();
 
 			private var _created:Boolean;
 
@@ -147,7 +153,7 @@
 
 	<s:Group id="buttons"
 			 horizontalCenter="0"
-			 minWidth="600"
+			 minWidth="700"
 			 maxWidth="1024"
 			 top="1">
 		<s:layout>
@@ -183,10 +189,11 @@
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.recent')}"
 										 image="@Embed(source='images/recent.png')"
 										 change="changeHandler(event)"/>
-		<!--<components:ApplicationBarButton id="favs"
+		<components:ApplicationBarButton id="favs"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.favs')}"
 										 image="@Embed(source='images/favs.png')"
-										 change="changeHandler(event)"/>-->
+										 change="changeHandler(event)"
+										 enabled="{_model.loggedIn}"/>
 		<components:ApplicationBarButton id="schedule"
 										 label="{_locale.getResource('application.controlbar.scheduler')}"
 										 image="@Embed(source='images/schedule.png')"
@@ -195,10 +202,14 @@
 										 label="{_locale.getResource('application.controlbar.stations')}"
 										 image="@Embed(source='images/stations.png')"
 										 change="changeHandler(event)"/>
-		<!--<components:ApplicationBarButton id="chat"
+		<components:ApplicationBarButton id="works"
+										 label="{LocaleManager.localeManager.getResource('application.controlbar.works')}"
+										 image="@Embed(source='images/warning.png')"
+										 change="changeHandler(event)"/>
+		<components:ApplicationBarButton id="chat"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.chat')}"
 										 image="@Embed(source='images/chat.png')"
 										 change="changeHandler(event)"
-										 enabled="false"/>-->
+										 enabled="{_model.loggedIn}"/>
 	</s:Group>
 </s:SkinnableContainer>

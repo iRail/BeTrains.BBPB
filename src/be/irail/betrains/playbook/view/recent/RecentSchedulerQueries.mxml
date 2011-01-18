@@ -47,11 +47,13 @@
 				presentationModel.recents = value;
 			}
 
-			override public function refresh():void {
+			override public function make():void {
 				this.recents = ModelLocator.getInstance().recentSchedulerQueries;
-				if (this.currentState == "recents") {
-					callLater(selectSelectedItem);
-				}
+			}
+
+			override public function destroy():void {
+				if (recentsList)
+					recentsList.selectedIndex = -1;
 			}
 
 			private function selectSelectedItem():void {

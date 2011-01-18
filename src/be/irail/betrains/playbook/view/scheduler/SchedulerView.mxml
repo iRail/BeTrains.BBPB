@@ -170,8 +170,8 @@
 								width="595"
 								visible="{presentationModel.hasConnections}"
 								includeInLayout="{presentationModel.hasConnections}"
-								dataProvider="{presentationModel.connections}">
-		<!--change="resultList_changeHandler(event)"-->
+								dataProvider="{presentationModel.connections}"
+								change="resultList_changeHandler(event)">
 	</components:ConnectionsList>
 
 	<s:Group top="0"
@@ -207,7 +207,7 @@
 		</s:filters>
 	</s:Rect>
 
-	<s:VGroup top="10"
+	<s:VGroup top="30"
 			  bottom="0"
 			  id="dataCont"
 			  width="430"

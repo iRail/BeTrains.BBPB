@@ -10,7 +10,11 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
-			public function refresh():void {
+			public function make():void {
+				//to implement
+			}
+
+			public function destroy():void {
 				//to implement
 			}
 		]]>

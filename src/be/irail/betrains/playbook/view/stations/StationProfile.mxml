@@ -112,7 +112,8 @@
 
 				var stationsLiveboard:StationsLiveboardInfo = new StationsLiveboardInfo();
 				stationsLiveboard.liveBoard = (event.result.data as Liveboard);
-				PopUpManager.addPopUp(stationsLiveboard, FlexGlobals.topLevelApplication as DisplayObject, false);
+				PopUpManager.addPopUp(stationsLiveboard, FlexGlobals.topLevelApplication as DisplayObject, true);
+				PopUpManager.centerPopUp(stationsLiveboard);
 			}
 
 			protected function group1_creationCompleteHandler(event:FlexEvent):void {
@@ -126,7 +127,11 @@
 			private function onMapInitialize(event:YahooMapEvent):void {
 				mapComponent.removeEventListener(YahooMapEvent.MAP_INITIALIZE, onMapInitialize);
 				mapComponent.addPanControl();
+				mapComponent.addScaleBar();
 				mapComponent.addZoomWidget();
+
+				mapComponent.zoomWidget.scaleX = mapComponent.zoomWidget.scaleY = 2.2;
+
 				_mapReady = true;
 
 				addMarker();

@@ -43,7 +43,7 @@
 		</s:fill>
 	</s:Rect>-->
 
-	<s:Group id="titleBar"
+	<!--<s:Group id="titleBar"
 			 left="0"
 			 right="0"
 			 height="50">
@@ -72,7 +72,7 @@
 				 fontWeight="bold"
 				 horizontalCenter="0"
 				 verticalCenter="0"/>
-	</s:Group>
+	</s:Group>-->
 
 	<!--
 		Note: setting the minimum size to 0 here so that changes to the host component's
@@ -83,7 +83,7 @@
 	<s:Group id="contentGroup"
 			 left="0"
 			 right="0"
-			 top="{titleBar.height+0}"
+			 top="0"
 			 bottom="0"
 			 minWidth="0"
 			 minHeight="0">

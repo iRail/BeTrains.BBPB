@@ -53,8 +53,8 @@
 
 global{
 	focus-thickness:0;
-	modal-transparency-blur:0;
-	modal-transparency-color:#ffFFff;
+	modal-transparency-blur:10;
+	modal-transparency-color:#060606;
 }
 
 

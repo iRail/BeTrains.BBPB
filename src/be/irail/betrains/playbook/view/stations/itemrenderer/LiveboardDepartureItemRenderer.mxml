@@ -89,7 +89,7 @@
 					return "";
 				}
 
-				return (liveboardItem.platform.platformNo > 0) ? "" + liveboardItem.platform.platformNo : LocaleManager.localeManager.getResource("iveboard.unknown");
+				return (liveboardItem.platform.platformNo > 0) ? "" + liveboardItem.platform.platformNo : LocaleManager.localeManager.getResource("liveboard.unknown");
 			}
 
 			// ----------------------------

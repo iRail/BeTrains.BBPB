@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
-					   xmlns:s="library://ns.adobe.com/flex/spark"
-					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   frameRate="30"
-					   width="1024"
-					   height="600"
-					   skinClass="be.irail.betrains.playbook.view.components.skins.ApplicationSkin"
-					   preinitialize="preinitializeHandler()"
-					   applicationComplete="applicationCompleteHandler()"
-					   contentCreationComplete="creationCompleteHandler()"
-					   xmlns:view="be.irail.betrains.playbook.view.*">
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:view="be.irail.betrains.playbook.view.*"
+			   skinClass="be.irail.betrains.playbook.view.components.skins.ApplicationSkin"
+			   frameRate="30"
+			   width="1024"
+			   height="600"
+			   usePreloader="true"
+			   preloader="be.irail.betrains.playbook.view.components.preloader.BeTrainsLoader"
+			   preinitialize="preinitializeHandler()"
+			   applicationComplete="applicationCompleteHandler()"
+			   creationComplete="creationCompleteHandler()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -35,13 +37,14 @@
 			private var _file:File;
 
 			private function preinitializeHandler():void {
+				setupResourceManager();
 				readStations();
 				readRecents();
 			}
 
 			private function creationCompleteHandler():void {
 				NativeApplication.nativeApplication.addEventListener(Event.EXITING, onApplicationExiting);
-				setupResourceManager();
+				callLater(setupMainView);
 			/* Alert.show(
 				"Supports touch events: " + Multitouch.supportsTouchEvents + "\n" +
 				"Maximum supported touch points: " + Multitouch.maxTouchPoints + "\n\n" +
@@ -146,7 +149,12 @@
 
 			private function onUncaughtError(event:UncaughtErrorEvent):void {
 			}
+
+			private function setupMainView():void {
+				var mv:MainView = new MainView();
+				this.addElement(mv);
+			}
 		]]>
 	</fx:Script>
-	<view:MainView id="mainView"/>
-</s:WindowedApplication>
+
+</s:Application>

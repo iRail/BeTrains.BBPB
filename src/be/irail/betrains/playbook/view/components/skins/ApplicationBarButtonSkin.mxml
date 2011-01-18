@@ -69,6 +69,7 @@
 
 		<s:Label id="labelDisplay"
 				 y="35"
+				 width="100%"
 				 fontWeight="bold"
 				 fontSize="12"
 				 paddingLeft="0"

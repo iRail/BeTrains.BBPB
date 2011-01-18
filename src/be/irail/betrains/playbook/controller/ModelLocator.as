@@ -12,10 +12,16 @@ package be.irail.betrains.playbook.controller {
 		private static var _instanceAllowed:Boolean;
 
 		[Bindable]
+		public var loggedIn:Boolean;
+
+		[Bindable]
 		public var stations:ArrayCollection;
 
 		[Bindable]
 		public var recentSchedulerQueries:RecentQueriesCollection;
+
+		[Bindable]
+		public var favourites:ArrayCollection;
 
 		public function ModelLocator() {
 			if (!_instanceAllowed) {
