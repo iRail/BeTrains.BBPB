@@ -8,7 +8,7 @@
 		 xmlns:recent="be.irail.betrains.playbook.view.recent.*"
 		 xmlns:favs="be.irail.betrains.playbook.view.favs.*"
 		 xmlns:chat="be.irail.betrains.playbook.view.chat.*"
-		 xmlns:works="be.irail.betrains.playbook.view.works.*"
+		 xmlns:traffic="be.irail.betrains.playbook.view.traffic.*"
 		 width="100%"
 		 height="100%">
 	<fx:Declarations>
@@ -61,7 +61,7 @@
 								   title="{LocaleManager.localeManager.getResource('liveboard.title')}"/>
 		</s:NavigatorContent>
 		<s:NavigatorContent>
-			<works:RailroadWorksView id="works"/>
+			<traffic:TrafficIssuesView id="works"/>
 		</s:NavigatorContent>
 		<s:NavigatorContent>
 			<chat:ChatView id="chat"

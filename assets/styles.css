@@ -1,5 +1,6 @@
 /* CSS file */
 @namespace s "library://ns.adobe.com/flex/spark";
+@namespace controls "be.irail.betrains.playbook.view.components.controls.*";
 
 /* --------------------------------------------------------------------
 
@@ -53,8 +54,12 @@
 
 global{
 	focus-thickness:0;
-	modal-transparency-blur:10;
+	modal-transparency-blur:6;
 	modal-transparency-color:#060606;
+}
+
+controls|Spinner{
+	tick-color:#1F1F1F;
 }
 
 
@@ -77,4 +82,12 @@ s|RichEditableText{
 	font-size:16;
 	fontStyle:italic;
 	vertical-align:middle;
+}
+
+.noneLabel{
+	text-align:center;
+	vertical-align:middle;
+	font-size:40;
+	color:#1F1F1F; 
+	fontWeight:bold;
 }

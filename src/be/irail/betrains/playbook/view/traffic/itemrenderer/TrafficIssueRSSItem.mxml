@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				autoDrawBackground="false"
+				width="100%"
+				height="100">
+
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.xml.syndication.rss.Item20;
+
+			override public function set data(value:Object):void {
+				this.rssItem = value as Item20;
+			}
+
+			// ----------------------------
+			// rssItem
+			// ----------------------------
+
+			private var _rssItem:Item20;
+
+			[Bindable(event="rssItemChange")]
+			public function get rssItem():Item20 {
+				return _rssItem;
+			}
+
+			[Bindable(event="rssItemChange")]
+			public function get subject():String {
+				if (!rssItem)
+					return "";
+				return _rssItem.title;
+			}
+
+			[Bindable(event="rssItemChange")]
+			public function get description():String {
+				if (!rssItem)
+					return "";
+				return _rssItem.description;
+			}
+
+			public function set rssItem(value:Item20):void {
+				if (value != _rssItem) {
+					_rssItem = value;
+					dispatchEvent(new Event("rssItemChange"));
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:Rect left="0"
+			right="0"
+			top="0"
+			bottom="0">
+		<s:fill>
+			<s:BitmapFill source="@Embed(source='images/cellBg.png')"
+						  fillMode="repeat"
+						  smooth="true"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:HGroup gap="5">
+		<s:BitmapImage source="@Embed(source='images/warningxl.png')"
+					   smooth="true"
+					   width="80"
+					   height="80"/>
+		<s:VGroup gap="5"
+				  paddingTop="10"
+				  paddingLeft="10"
+				  paddingRight="10"
+				  paddingBottom="10"
+				  width="100%"
+				  height="100%">
+
+			<s:Label id="title"
+					 text="{subject}"
+					 fontSize="16"
+					 color="0"
+					 width="100%"
+					 textAlign="left"
+					 maxDisplayedLines="1"
+					 fontWeight="bold"/>
+
+			<s:Label text="{description}"
+					 fontSize="14"
+					 color="0"
+					 width="100%"
+					 height="100%"
+					 textAlign="left"
+					 fontWeight="normal"/>
+		</s:VGroup>
+	</s:HGroup>
+
+</s:ItemRenderer>

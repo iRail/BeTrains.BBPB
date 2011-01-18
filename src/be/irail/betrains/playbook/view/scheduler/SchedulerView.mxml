@@ -10,7 +10,10 @@
 						 creationComplete="mainviewitem1_creationCompleteHandler(event)"
 						 xmlns:scheduler="be.irail.betrains.playbook.view.scheduler.*"
 						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
-
+	<components:states>
+		<s:State name="none"/>
+		<s:State name="hasConnections"/>
+	</components:states>
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.scheduler.IRConnection;
@@ -162,16 +165,24 @@
 	<fx:Declarations>
 		<scheduler:SchedulerPresentationModel id="presentationModel"/>
 	</fx:Declarations>
-
+	<s:Label styleName="noneLabel"
+			 alpha=".3"
+			 top="0"
+			 bottom="0"
+			 right="0"
+			 width="595"
+			 includeIn="none"
+			 text="{LocaleManager.localeManager.getResource('scheduler.none')}"/>
 	<components:ConnectionsList id="resultList"
+								includeIn="hasConnections"
 								top="0"
 								bottom="0"
 								right="0"
 								width="595"
 								visible="{presentationModel.hasConnections}"
 								includeInLayout="{presentationModel.hasConnections}"
-								dataProvider="{presentationModel.connections}"
-								change="resultList_changeHandler(event)">
+								dataProvider="{presentationModel.connections}">
+		<!--change="resultList_changeHandler(event)"-->
 	</components:ConnectionsList>
 
 	<s:Group top="0"
@@ -184,8 +195,7 @@
 			 hide="loadingSpinner.stop();">
 		<controls:Spinner id="loadingSpinner"
 						  horizontalCenter="0"
-						  verticalCenter="0"
-						  tickColor="#ffffff"/>
+						  verticalCenter="0"/>
 	</s:Group>
 
 	<s:Rect left="0"
@@ -251,7 +261,7 @@
 	</s:VGroup>
 
 	<s:Group x="65"
-			 y="60"
+			 y="80"
 			 width="30"
 			 height="30"
 			 click="onSwapClick(event)">
@@ -260,5 +270,13 @@
 					   height="30"
 					   rotation="90"
 					   smooth="true"/>
+		<s:filters>
+			<s:DropShadowFilter blurX="6"
+								blurY="6"
+								strength=".4"
+								quality="1"
+								angle="90"
+								distance="3"/>
+		</s:filters>
 	</s:Group>
 </components:MainViewItem>

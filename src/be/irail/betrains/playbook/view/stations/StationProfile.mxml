@@ -25,7 +25,6 @@
 			import com.yahoo.maps.api.YahooMap;
 			import com.yahoo.maps.api.YahooMapEvent;
 			import com.yahoo.maps.api.core.location.LatLon;
-			import com.yahoo.maps.api.markers.SimpleMarker;
 
 			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
@@ -139,16 +138,12 @@
 		]]>
 	</fx:Script>
 
-	<s:Label textAlign="center"
+	<s:Label styleName="noneLabel"
+			 alpha=".3"
 			 left="10"
 			 top="10"
-			 fontSize="40"
 			 horizontalCenter="0"
 			 verticalCenter="0"
-			 verticalAlign="middle"
-			 color="#1F1F1F"
-			 alpha=".3"
-			 fontWeight="bold"
 			 includeIn="none"
 			 text="{LocaleManager.localeManager.getResource('station.profile.none')}"/>
 

@@ -21,6 +21,8 @@ package be.irail.betrains.playbook.view.components.preloader {
 		[Bindable]
 		public var imgCls:Class;
 
+		private var _loading:Boolean;
+
 		public function BeTrainsLoader() {
 			super();
 		}
@@ -42,8 +44,10 @@ package be.irail.betrains.playbook.view.components.preloader {
 		}
 
 		override protected function createChildren():void {
-			if (backgroundImage != null)
+			if (backgroundImage != null && !_loading) {
+				_loading = true;
 				loadBackgroundImage(backgroundImage);
+			}
 		}
 
 		/**
@@ -104,7 +108,7 @@ package be.irail.betrains.playbook.view.components.preloader {
 		 *  @private
 		 */
 		private function initBackgroundImage(image:DisplayObject):void {
-
+			addChildAt(image, 0);
 			var backgroundImageWidth:Number = image.width;
 			var backgroundImageHeight:Number = image.height;
 
@@ -130,7 +134,7 @@ package be.irail.betrains.playbook.view.components.preloader {
 			image.x = offsetX;
 			image.y = offsetY;
 
-			addChildAt(image, 0);
+
 		}
 
 		/**

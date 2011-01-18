@@ -65,20 +65,17 @@
 			}
 		]]>
 	</fx:Script>
+	<s:Label styleName="noneLabel"
+			 alpha=".3"
+			 width="100%"
+			 height="100%"
+			 includeIn="none"
+			 text="{LocaleManager.localeManager.getResource('recent.none')}"/>
+
 	<s:Group left="0"
 			 right="0"
 			 top="0"
 			 bottom="50">
-
-		<s:Label textAlign="center"
-				 fontSize="40"
-				 color="#1F1F1F"
-				 alpha=".3"
-				 horizontalCenter="0"
-				 verticalCenter="0"
-				 fontWeight="bold"
-				 includeIn="none"
-				 text="{LocaleManager.localeManager.getResource('recent.none')}"/>
 
 		<s:HGroup id="contentCont"
 				  height="500"

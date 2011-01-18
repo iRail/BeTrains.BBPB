@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:MainViewItem xmlns:fx="http://ns.adobe.com/mxml/2009"
+						 xmlns:s="library://ns.adobe.com/flex/spark"
+						 xmlns:mx="library://ns.adobe.com/flex/mx"
+						 xmlns:components="be.irail.betrains.playbook.view.components.*"
+						 width="100%"
+						 height="100%"
+						 xmlns:traffic="be.irail.betrains.playbook.view.traffic.*"
+						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
+	<components:states>
+		<s:State name="none"/>
+		<s:State name="loading"/>
+		<s:State name="hasRSS"/>
+	</components:states>
+
+	<fx:Script>
+
+		<![CDATA[
+			import be.irail.betrains.playbook.view.traffic.itemrenderer.TrafficIssueRSSItem;
+
+			import qnx.locale.LocaleManager;
+
+			import spark.events.IndexChangeEvent;
+
+			protected function rssFeedList_changeHandler(event:IndexChangeEvent):void {
+				callLater(unselect);
+			}
+
+			override public function make():void {
+				presentationModel.loadRSSFeed();
+			}
+
+			private function unselect():void {
+				rssFeedList.selectedIndex = -1;
+			}
+
+			protected function presentationModel_rssFeedChangeHandler(event:Event):void {
+				if (!presentationModel.rssFeed || presentationModel.rssFeed.length == 0) {
+					this.currentState = "none";
+				} else {
+					this.currentState = "hasRSS";
+				}
+			}
+
+			protected function presentationModel_rssFeedLoadingHandler(event:Event):void {
+				this.currentState = "loading";
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<traffic:TrafficIssuesPresentationModel id="presentationModel"
+												rssFeedLoading="presentationModel_rssFeedLoadingHandler(event)"
+												rssFeedChange="presentationModel_rssFeedChangeHandler(event)"/>
+	</fx:Declarations>
+
+	<s:Label styleName="noneLabel"
+			 alpha=".3"
+			 width="100%"
+			 height="100%"
+			 includeIn="none"
+			 text="{LocaleManager.localeManager.getResource('rrrss.none')}"/>
+
+	<controls:Spinner horizontalCenter="0"
+					  verticalCenter="0"
+					  includeIn="loading"/>
+
+	<s:List id="rssFeedList"
+			width="100%"
+			height="100%"
+			includeIn="hasRSS"
+			contentBackgroundAlpha="0"
+			requireSelection="false"
+			allowMultipleSelection="false"
+			change="rssFeedList_changeHandler(event)"
+			dataProvider="{presentationModel.rssFeed}"
+			itemRenderer="be.irail.betrains.playbook.view.traffic.itemrenderer.TrafficIssueRSSItem">
+		<s:layout>
+			<s:VerticalLayout useVirtualLayout="true"
+							  gap="0"
+							  variableRowHeight="false"/>
+		</s:layout>
+
+	</s:List>
+</components:MainViewItem>

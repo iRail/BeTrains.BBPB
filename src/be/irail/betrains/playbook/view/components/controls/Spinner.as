@@ -5,8 +5,6 @@ package be.irail.betrains.playbook.view.components.controls {
 
 	import mx.core.UIComponent;
 	import mx.events.FlexEvent;
-	import mx.styles.CSSStyleDeclaration;
-	import mx.styles.StyleManager;
 
 
 	[Style(name="tickColor", type="uint", format="Color", inherit="no")]
@@ -25,24 +23,23 @@ package be.irail.betrains.playbook.view.components.controls {
 		// Make sure we create the ticks the first time updateDisplayList is called
 		private var creation:Boolean = true;
 
-
 		private var fadeTimer:Timer;
 
 		private var _isPlaying:Boolean;
 
-		private var _numTicks:int = 12;
+		private var _numTicks:int = 10;
 
 		private var numTicksChanged:Boolean;
 
-		private var _size:Number = 30;
+		private var _size:Number = 35;
 
 		private var sizeChanged:Boolean;
 
-		private var _tickWidth:Number = 3;
+		private var _tickWidth:Number = 2;
 
 		private var tickWidthChanged:Boolean;
 
-		private var _speed:int = 1000;
+		private var _speed:int = 600;
 
 		[Bindable]
 		public var fadeSpeed:int = 600;
@@ -94,20 +91,20 @@ package be.irail.betrains.playbook.view.components.controls {
 				}
 
 				// Re-create the children
-				var radius:Number = size / 2;
-				var angle:Number = 2 * Math.PI / _numTicks; // The angle between each tick
-				var tickWidth:Number = (_tickWidth != -1) ? _tickWidth : size / 10;
-				var tickColor:uint = getStyle(STYLE_TICK_COLOR);
+				var radius:Number = size / 2,
+					angle:Number = 2 * Math.PI / _numTicks, // The angle between each tick
+					tickWidth:Number = (_tickWidth != -1) ? _tickWidth : size / 10,
+					tickColor:uint = getStyle(STYLE_TICK_COLOR),
 
-				var currentAngle:Number = 0;
-				for (var j:int = 0; j < _numTicks; j++) {
+					currentAngle:Number = 0, j:int;
+				for (j = 0; j < _numTicks; j++) {
 
-					var xStart:Number = radius + Math.sin(currentAngle) * ((_numTicks + 2) * tickWidth / 2 / Math.PI);
-					var yStart:Number = radius - Math.cos(currentAngle) * ((_numTicks + 2) * tickWidth / 2 / Math.PI);
-					var xEnd:Number = radius + Math.sin(currentAngle) * (radius - tickWidth);
-					var yEnd:Number = radius - Math.cos(currentAngle) * (radius - tickWidth);
+					var xStart:Number = radius + Math.sin(currentAngle) * ((_numTicks + 2) * tickWidth / 2 / Math.PI),
+						yStart:Number = radius - Math.cos(currentAngle) * ((_numTicks + 2) * tickWidth / 2 / Math.PI),
+						xEnd:Number = radius + Math.sin(currentAngle) * (radius - tickWidth),
+						yEnd:Number = radius - Math.cos(currentAngle) * (radius - tickWidth),
 
-					var t:Tick = new Tick(xStart, yStart, xEnd, yEnd, tickWidth, tickColor);
+						t:Tick = new Tick(xStart, yStart, xEnd, yEnd, tickWidth, tickColor);
 					t.alpha = 0.1;
 
 					this.addChild(t);
@@ -119,6 +116,8 @@ package be.irail.betrains.playbook.view.components.controls {
 				if (wasPlaying) {
 					play();
 				}
+
+
 
 				tickColorChanged = false;
 				numTicksChanged = false;
