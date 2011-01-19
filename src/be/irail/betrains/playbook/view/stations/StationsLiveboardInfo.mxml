@@ -2,10 +2,11 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 width="800"
-		 height="470"
+		 width="900"
+		 height="540"
 		 xmlns:liveboard="be.irail.api.data.liveboard.*"
-		 creationComplete="group1_creationCompleteHandler(event)">
+		 creationComplete="group1_creationCompleteHandler(event)"
+		 xmlns:components="be.irail.betrains.playbook.view.components.*">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Metadata>
@@ -107,73 +108,88 @@
 				}
 			}
 
-			protected function group2_clickHandler(event:MouseEvent):void {
+			private function close():void {
 				PopUpManager.removePopUp(this);
 			}
 		]]>
 	</fx:Script>
 
-	<s:Rect left="0"
-			right="0"
-			top="0"
-			height="75">
-		<s:fill>
-			<s:SolidColor color="0x1B76F8"/>
-		</s:fill>
-	</s:Rect>
+	<s:BitmapImage id="tv"
+				   left="0"
+				   right="0"
+				   top="0"
+				   bottom="0"
+				   source="@Embed(source='images/tvscreen.png')"/>
 
-	<s:Label color="0xFFFFFF"
-			 text="{title}"
-			 top="20"
-			 paddingLeft="10"
-			 paddingRight="10"
-			 width="100%"
-			 textAlign="center"
-			 fontSize="50"
-			 verticalAlign="bottom"
-			 maxDisplayedLines="1"/>
+	<components:CloseButton top="-15"
+							right="-15"
+							close="close()"/>
 
-	<s:Label color="0xFFFFFF"
-			 text="{time}"
-			 top="20"
-			 paddingBottom="10"
-			 paddingLeft="10"
-			 paddingRight="10"
-			 textAlign="center"
-			 fontSize="50"
-			 verticalAlign="bottom"
-			 maxDisplayedLines="1"/>
+	<s:Group left="54"
+			 right="52"
+			 top="47"
+			 bottom="45">
 
-	<s:Label color="0xFFFFFF"
-			 text="{stationName}"
-			 right="0"
-			 top="35"
-			 paddingLeft="10"
-			 paddingRight="10"
-			 textAlign="right"
-			 fontSize="30"
-			 verticalAlign="bottom"
-			 maxDisplayedLines="1"/>
+		<s:Rect left="0"
+				right="0"
+				top="0"
+				height="75">
+			<s:fill>
+				<s:SolidColor color="0x1B76F8"/>
+			</s:fill>
+		</s:Rect>
 
-	<s:Group left="0"
-			 right="0"
-			 top="0"
-			 height="75"
-			 click="group2_clickHandler(event)"
-			 mouseChildren="false"/>
+		<s:Label color="0xFFFFFF"
+				 text="{title}"
+				 top="20"
+				 paddingLeft="10"
+				 paddingRight="10"
+				 width="100%"
+				 textAlign="center"
+				 fontSize="50"
+				 verticalAlign="bottom"
+				 maxDisplayedLines="1"/>
 
-	<s:List id="liveboardItems"
-			top="75"
-			bottom="0"
-			left="0"
-			right="0"
-			borderVisible="false"
-			contentBackgroundAlpha="1"
-			contentBackgroundColor="0"
-			itemRenderer="be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer">
-		<s:layout>
-			<s:VerticalLayout gap="0"/>
-		</s:layout>
-	</s:List>
+		<s:Label color="0xFFFFFF"
+				 text="{time}"
+				 top="20"
+				 paddingBottom="10"
+				 paddingLeft="10"
+				 paddingRight="10"
+				 textAlign="center"
+				 fontSize="50"
+				 verticalAlign="bottom"
+				 maxDisplayedLines="1"/>
 
+		<s:Label color="0xFFFFFF"
+				 text="{stationName}"
+				 right="0"
+				 top="35"
+				 paddingLeft="10"
+				 paddingRight="10"
+				 textAlign="right"
+				 fontSize="30"
+				 verticalAlign="bottom"
+				 maxDisplayedLines="1"/>
+
+		<s:Group left="0"
+				 right="0"
+				 top="0"
+				 height="75"
+				 mouseChildren="false"/>
+
+		<s:List skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
+				id="liveboardItems"
+				top="75"
+				bottom="0"
+				left="0"
+				right="0"
+				contentBackgroundAlpha="1"
+				contentBackgroundColor="0"
+				itemRenderer="be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer">
+			<s:layout>
+				<s:VerticalLayout gap="0"/>
+			</s:layout>
+		</s:List>
+	</s:Group>
 </s:Group>

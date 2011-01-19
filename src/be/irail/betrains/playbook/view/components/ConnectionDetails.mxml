@@ -279,8 +279,6 @@
 			 maxDisplayedLines="{NaN}"/>
 
 	<s:List id="connections"
-			borderVisible="false"
-			contentBackgroundAlpha="0"
 			allowMultipleSelection="false"
 			width="500"
 			bottom="5"
@@ -289,6 +287,7 @@
 			right="5"
 			horizontalCenter="0"
 			changing="refreshStationsView()"
+			skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
 			itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem">
 		<s:layout>
 			<s:VerticalLayout rowHeight="50"

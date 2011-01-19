@@ -27,6 +27,7 @@
 
 			import spark.events.IndexChangeEvent;
 
+			public const ABOUT_INDEX:uint = 100;
 
 			[Bindable]
 			private var _locale:LocaleManager = LocaleManager.localeManager;
@@ -65,19 +66,22 @@
 						isFirst = true;
 						dispatchEvent(new IndexChangeEvent(IndexChangeEvent.CHANGE, false, false, -1, 0));
 					}
-					var btn:ApplicationBarButton = getButtonByIndex(_selectedIndex),
-						newX:int = btn.x,
-						newW:int = btn.width;
 
-					if (!isFirst) {
-						TweenLite.to(indicator, .6, {x: newX, ease: Expo.easeOut, onComplete: function():void {
-											 btn.selected = true;
-										 }
-									 });
-					} else {
-						indicator.x = newX;
-						indicator.width = newW;
-						indicator.visible = true;
+					if (_selectedIndex != ABOUT_INDEX) {
+						var btn:ApplicationBarButton = getButtonByIndex(_selectedIndex),
+							newX:int = btn.x,
+							newW:int = btn.width;
+
+						if (!isFirst) {
+							TweenLite.to(indicator, .6, {x: newX, ease: Expo.easeOut, onComplete: function():void {
+												 btn.selected = true;
+											 }
+										 });
+						} else {
+							indicator.x = newX;
+							indicator.width = newW;
+							indicator.visible = true;
+						}
 					}
 				}
 			}
@@ -97,6 +101,9 @@
 			}
 
 			private function getButtonIndex(btn:ApplicationBarButton):int {
+				if (btn == about)
+					return ABOUT_INDEX;
+
 				var i:int = 0, count:int = 0, element:IVisualElement;
 				for (i = 0; i < buttons.numElements; i++) {
 					element = buttons.getElementAt(i);
@@ -187,7 +194,7 @@
 		</s:Rect>
 		<components:ApplicationBarButton id="recents"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.recent')}"
-										 image="@Embed(source='images/recent.png')"
+										 image="@Embed(source='images/time.png')"
 										 change="changeHandler(event)"/>
 		<components:ApplicationBarButton id="favs"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.favs')}"
@@ -196,7 +203,7 @@
 										 enabled="{_model.loggedIn}"/>
 		<components:ApplicationBarButton id="schedule"
 										 label="{_locale.getResource('application.controlbar.scheduler')}"
-										 image="@Embed(source='images/schedule.png')"
+										 image="@Embed(source='images/train.png')"
 										 change="changeHandler(event)"/>
 		<components:ApplicationBarButton id="stations"
 										 label="{_locale.getResource('application.controlbar.stations')}"
@@ -212,4 +219,9 @@
 										 change="changeHandler(event)"
 										 enabled="{_model.loggedIn}"/>
 	</s:Group>
+	<components:ApplicationBarButton id="about"
+									 label="{LocaleManager.localeManager.getResource('application.controlbar.about')}"
+									 image="@Embed(source='images/about.png')"
+									 right="40"
+									 change="changeHandler(event)"/>
 </s:SkinnableContainer>

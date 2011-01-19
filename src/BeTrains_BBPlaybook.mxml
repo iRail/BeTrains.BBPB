@@ -39,7 +39,6 @@
 			private function preinitializeHandler():void {
 				setupResourceManager();
 				readStations();
-				readRecents();
 			}
 
 			private function creationCompleteHandler():void {
@@ -102,27 +101,33 @@
 				var ba:ByteArray = new ByteArray();
 				stream.readBytes(ba, 0, stream.bytesAvailable);
 				stream.close();
-				_file = null;
 
 				var data:Object = SerializeUtil.deserialize(ba);
 				_model.stations = new ArrayCollection((data.data) as Array);
 
+				_file = null;
+				readRecents();
 			}
 
 			private function recentDataReadHandler(event:Event):void {
 				var stream:FileStream = event.target as FileStream;
-				var ba:ByteArray = new ByteArray();
-				stream.readBytes(ba, 0, stream.bytesAvailable);
-				stream.close();
+				if (stream.bytesAvailable > 0) {
+					var ba:ByteArray = new ByteArray();
+
+					stream.readBytes(ba, 0, stream.bytesAvailable);
+					stream.close();
+
+					var data:Object = SerializeUtil.deserialize(ba);
+					_model.recentSchedulerQueries = new RecentQueriesCollection(data as Array);
+				} else {
+					_file.deleteFile();
+				}
 				_file = null;
-
-				var data:Object = SerializeUtil.deserialize(ba);
-				_model.recentSchedulerQueries = new RecentQueriesCollection(data as Array);
-
 			}
 
 			private function readStationsIOErrorHandler(event:IOErrorEvent):void {
 				_model.stations = new ArrayCollection();
+				readRecents();
 			}
 
 			private function readRecentIOErrorHandler(event:IOErrorEvent):void {
@@ -156,5 +161,4 @@
 			}
 		]]>
 	</fx:Script>
-
 </s:Application>

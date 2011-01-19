@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library:/	/ns.adobe.com/flex/mx"
+		 width="400"
+		 height="500"
+		 creationComplete="init()"
+		 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
+		 xmlns:components="be.irail.betrains.playbook.view.components.*">
+	<fx:Declarations>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import be.irail.betrains.playbook.controller.AppSettings;
+
+			import mx.managers.PopUpManager;
+
+			import qnx.media.QNXStageWebView;
+
+			private var webView:QNXStageWebView;
+
+			// ----------------------------
+			// isLoading
+			// ----------------------------
+
+			private var _isLoading:Boolean;
+
+			[Bindable(event="isLoadingChange")]
+			public function get isLoading():Boolean {
+				return _isLoading;
+			}
+
+			[Bindable(event="isLoadingChange")]
+			public function get closeBtnX():Number {
+				var value:Number = _isLoading ? (spinner.x + spinner.width) : this.width;
+				return value;
+			}
+
+			[Bindable(event="isLoadingChange")]
+			public function get closeBtnY():Number {
+				var value:Number = _isLoading ? spinner.y : 0;
+				return value - 45;
+			}
+
+			public function set isLoading(value:Boolean):void {
+				if (value != _isLoading) {
+					_isLoading = value;
+					if (value) {
+						spinner.play()
+					} else {
+						spinner.stop();
+					}
+					dispatchEvent(new Event("isLoadingChange"));
+				}
+			}
+
+			private function init():void {
+				webView = new QNXStageWebView();
+				webView.enableCookies = true;
+
+				webView.addEventListener(Event.COMPLETE, loadWebView);
+				webView.addEventListener(ErrorEvent.ERROR, onError);
+
+				webView.loadURL(AppSettings.ABOUT_PAGE_URL);
+				isLoading = true;
+			}
+
+			private function onError(event:ErrorEvent):void {
+				isLoading = false;
+				close();
+			}
+
+			private function close():void {
+				webView.dispose();
+				PopUpManager.removePopUp(this);
+			}
+
+			private function loadWebView(event:Event):void {
+				webView.viewPort = new Rectangle(x, y - 20, this.width, this.height);
+				webView.stage = this.stage;
+				isLoading = false;
+			}
+		]]>
+	</fx:Script>
+	<controls:Spinner id="spinner"
+					  autoPlay="false"
+					  visible="{isLoading}"
+					  horizontalCenter="0"
+					  verticalCenter="0"/>
+
+	<components:CloseButton id="closeBtnGrp"
+							x="{closeBtnX}"
+							y="{closeBtnY}"
+							moveEffect="Move"
+							close="close();"/>
+
+</s:Group>

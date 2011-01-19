@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2008 Adobe Systems Incorporated
+	All Rights Reserved.
+
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for the Spark Button component.
+
+	   @see spark.components.Button
+
+	  @langversion 3.0
+	  @playerversion Flash 10
+	  @playerversion AIR 1.5
+	  @productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+			 xmlns:s="library://ns.adobe.com/flex/spark"
+			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+			 minHeight="21"
+			 width="10"
+			 alpha="0.5">
+
+	<!-- host component -->
+	<fx:Metadata>
+		<![CDATA[ 
+        /** 
+         * @copy spark.skins.spark.ApplicationSkin#hostComponent
+         */
+        [HostComponent("spark.components.Button")]
+        ]]>
+	</fx:Metadata>
+	<s:filters>
+		<s:DropShadowFilter blurX="6"
+							blurY="6"
+							inner="false"
+							strength=".6"
+							quality="3"
+							angle="80"
+							distance="3"/>
+	</s:filters>
+	<!-- states -->
+	<s:states>
+		<s:State name="up"/>
+		<s:State name="over"/>
+		<s:State name="down"/>
+		<s:State name="disabled"/>
+	</s:states>
+
+	<s:Rect radiusX="4"
+			radiusY="4"
+			top="0"
+			bottom="0"
+			right="0"
+			left="0">
+		<s:fill>
+			<s:SolidColor color="#060606"/>
+		</s:fill>
+	</s:Rect>
+</s:SparkSkin>

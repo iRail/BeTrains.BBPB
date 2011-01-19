@@ -92,8 +92,6 @@
 					maxHeight="{contentCont.height}"
 					change="recentsList_changeHandler(event)"
 					dataProvider="{presentationModel.recents}"
-					borderVisible="false"
-					contentBackgroundAlpha="0"
 					allowMultipleSelection="false"
 					skinClass="be.irail.betrains.playbook.view.recent.RecentListSkin"
 					itemRenderer="be.irail.betrains.playbook.view.recent.itemrenderer.RecentQueryItem">

@@ -64,11 +64,11 @@
 					  verticalCenter="0"
 					  includeIn="loading"/>
 
-	<s:List id="rssFeedList"
+	<s:List skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
+			id="rssFeedList"
 			width="100%"
 			height="100%"
 			includeIn="hasRSS"
-			contentBackgroundAlpha="0"
 			requireSelection="false"
 			allowMultipleSelection="false"
 			change="rssFeedList_changeHandler(event)"

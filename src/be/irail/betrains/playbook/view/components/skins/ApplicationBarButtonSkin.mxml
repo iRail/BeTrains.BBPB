@@ -68,10 +68,10 @@
 					   smooth="true"/>
 
 		<s:Label id="labelDisplay"
-				 y="35"
+				 y="34"
 				 width="100%"
-				 fontWeight="bold"
 				 fontSize="12"
+				 fontWeight="bold"
 				 paddingLeft="0"
 				 paddingRight="0"
 				 maxDisplayedLines="1"

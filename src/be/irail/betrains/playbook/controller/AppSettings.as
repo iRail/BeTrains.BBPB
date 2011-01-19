@@ -11,6 +11,8 @@ package be.irail.betrains.playbook.controller {
 		// Recent scheduler location 
 		public static const RECENT_STORAGE_LOCATION:File = File.applicationStorageDirectory.resolvePath("recents.bpd");
 
+		public static const ABOUT_PAGE_URL:String = "http://www.betrains.com";
+
 		public static const RSS_URL_NL:String = "http://www.railtime.be/website/RSS/RssInfoBar_nl.xml";
 
 		public static const RSS_URL_FR:String = "http://www.railtime.be/website/RSS/RssInfoBar_fr.xml";

@@ -51,6 +51,8 @@
 				   source="@Embed(source='images/arroworange.png')"
 				   smooth="true"
 				   right="10"
+				   scaleX="2"
+				   scaleY="2"
 				   includeIn="normal"/>
 	<controls:Spinner verticalCenter="0"
 					  id="spinner"

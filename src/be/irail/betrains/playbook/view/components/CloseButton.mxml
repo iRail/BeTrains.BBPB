@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 mouseChildren="false"
+		 click="dispatchEvent(new Event('close'));">
+	<fx:Metadata>
+		[Event(name="close",type="flash.events.Event")]
+	</fx:Metadata>
+	<s:BitmapImage width="40"
+				   height="40"
+				   smooth="true"
+				   x="-5"
+				   source="@Embed(source='images/close_popup.png')"/>
+</s:Group>

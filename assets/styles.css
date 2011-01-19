@@ -54,20 +54,27 @@
 
 global{
 	focus-thickness:0;
-	modal-transparency-blur:6;
+	modal-transparency-blur:2;
 	modal-transparency-color:#060606;
+}
+
+s|List{
+	content-background-alpha:0;
+	border-visible:false;
 }
 
 controls|Spinner{
 	tick-color:#1F1F1F;
 }
 
+s|VScrollBar{
+	skinClass: ClassReference("be.irail.betrains.playbook.view.components.skins.BeTrainsVScrollbarSkin");
+	fixedThumbSize:false;
+	slide-duration:400;
+	liveDragging:true;
+	smoothScrolling:true;
+}
 
-/*s|TextArea{
-	focus-alpha:0;
-	content-background-alpha:0;
-	border-visible:false;
-}*/
 
 s|Label {
 	font-size:16;
