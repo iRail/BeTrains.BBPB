@@ -25,11 +25,11 @@
 			import be.irail.api.data.liveboard.Liveboard;
 			import be.irail.betrains.playbook.utils.FormatUtil;
 			import be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer;
-
+			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
-
+			
 			import qnx.locale.LocaleManager;
 
 			// ----------------------------

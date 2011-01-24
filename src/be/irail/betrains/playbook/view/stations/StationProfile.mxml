@@ -5,8 +5,6 @@
 		 xmlns:stations="be.irail.api.data.stations.*"
 		 xmlns:components="be.irail.betrains.playbook.view.components.*"
 		 xmlns:stations1="be.irail.betrains.playbook.view.stations.*"
-		 width="100%"
-		 height="100%"
 		 xmlns:ns="http://ns.renaun.com/mxml/2010"
 		 xmlns:yahoo="http://www.yahoo.com/2008/mxml"
 		 creationComplete="group1_creationCompleteHandler(event)">
@@ -28,6 +26,7 @@
 
 			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
 			import mx.managers.PopUpManager;
 
 			import qnx.locale.LocaleManager;
@@ -135,6 +134,13 @@
 
 				addMarker();
 			}
+
+			protected function mapComponentContainer_resizeHandler(event:ResizeEvent):void {
+				if (mapComponent) {
+					mapComponent.width = mapComponentContainer.width;
+					mapComponent.height = mapComponentContainer.height;
+				}
+			}
 		]]>
 	</fx:Script>
 
@@ -172,16 +178,19 @@
 
 		<stations1:StationDataButton id="liveBoardBtn"
 									 y="150"
-									 width="600"
+									 left="0"
+									 right="10"
 									 horizontalCenter="0"
 									 label="{LocaleManager.localeManager.getResource('station.profile.liveboardbtn')}"
 									 click="liveBoard_clickHandler(event)"/>
 	</s:Group>
 
 	<mx:UIComponent id="mapComponentContainer"
-					width="600"
-					height="200"
+					top="280"
+					left="0"
+					right="10"
+					height="220"
 					horizontalCenter="0"
-					y="280"
-					visible="{this.currentState=='details'}"/>
+					visible="{this.currentState=='details'}"
+					resize="mapComponentContainer_resizeHandler(event)"/>
 </s:Group>
