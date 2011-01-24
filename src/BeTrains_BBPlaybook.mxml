@@ -77,15 +77,15 @@
 
 			private function readRecents():void {
 				_file = AppSettings.RECENT_STORAGE_LOCATION;
+				_model.recentSchedulerQueries = new RecentQueriesCollection();
 
 				if (_file.exists) {
 					var stream:FileStream = new FileStream();
 					stream.openAsync(_file, FileMode.READ);
 					stream.addEventListener(Event.COMPLETE, recentDataReadHandler);
 					stream.addEventListener(IOErrorEvent.IO_ERROR, readRecentIOErrorHandler);
-				} else {
-					_model.recentSchedulerQueries = new RecentQueriesCollection();
 				}
+
 			}
 
 			private function writeRecents():void {

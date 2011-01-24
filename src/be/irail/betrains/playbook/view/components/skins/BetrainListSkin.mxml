@@ -92,6 +92,7 @@
 				When switching to a different layout, HorizontalLayout for example,
 				make sure to adjust the minWidth, minHeihgt sizes of the skin -->
 				<s:VerticalLayout gap="0"
+								  useVirtualLayout="true"
 								  horizontalAlign="contentJustify"
 								  requestedMinRowCount="5"/>
 			</s:layout>

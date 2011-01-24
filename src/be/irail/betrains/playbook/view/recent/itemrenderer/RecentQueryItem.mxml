@@ -12,10 +12,8 @@
 	</s:states>
 	<fx:Script>
 		<![CDATA[
-			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.data.SchedulerQuery;
 			import be.irail.betrains.playbook.utils.DateUtils;
-			import be.irail.betrains.playbook.utils.FormatUtil;
 
 			import qnx.locale.LocaleManager;
 
@@ -179,6 +177,14 @@
 			</s:HGroup>
 		</s:VGroup>
 	</s:HGroup>
+	<s:Line left="0"
+			right="0"
+			top="0">
+		<s:stroke>
+			<s:SolidColorStroke color="0"
+								weight="1"/>
+		</s:stroke>
+	</s:Line>
 	<s:Line left="0"
 			right="0"
 			bottom="0">

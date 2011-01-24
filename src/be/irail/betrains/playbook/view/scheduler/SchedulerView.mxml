@@ -159,11 +159,20 @@
 				PopUpManager.addPopUp(details, FlexGlobals.topLevelApplication as DisplayObject, true)
 				PopUpManager.centerPopUp(details);
 			}
+
+			protected function presentationModel_connectionsChangeHandler(event:Event):void {
+				if (presentationModel.connections && presentationModel.connections.length > 0) {
+					this.currentState = "hasConnections";
+				} else {
+					this.currentState = "none";
+				}
+			}
 		]]>
 	</fx:Script>
 
 	<fx:Declarations>
-		<scheduler:SchedulerPresentationModel id="presentationModel"/>
+		<scheduler:SchedulerPresentationModel id="presentationModel"
+											  connectionsChange="presentationModel_connectionsChangeHandler(event)"/>
 	</fx:Declarations>
 	<s:Label styleName="noneLabel"
 			 alpha=".3"
@@ -173,6 +182,7 @@
 			 width="595"
 			 includeIn="none"
 			 text="{LocaleManager.localeManager.getResource('scheduler.none')}"/>
+
 	<components:ConnectionsList id="resultList"
 								includeIn="hasConnections"
 								top="0"

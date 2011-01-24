@@ -72,8 +72,8 @@ package be.irail.betrains.playbook.view.scheduler {
 			_query.result = event.result;
 			_model.recentSchedulerQueries.addItem(_query);
 
-			dispatchEvent(new Event("connectionsChange"));
 			_query = null;
+			dispatchEvent(new Event("connectionsChange"));
 		}
 
 	}
