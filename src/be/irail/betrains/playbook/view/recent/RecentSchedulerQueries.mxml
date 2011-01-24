@@ -83,37 +83,30 @@
 			 bottom="50"
 			 includeIn="recents,recentItemSelected">
 
-		<s:List id="recentsList"
-				width="410"
-				height="100%"
-				change="recentsList_changeHandler(event)"
-				dataProvider="{presentationModel.recents}"
-				allowMultipleSelection="false"
-				skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
-				itemRenderer="be.irail.betrains.playbook.view.recent.itemrenderer.RecentQueryItem">
-			<s:layout>
-				<s:VerticalLayout useVirtualLayout="true"
-								  clipAndEnableScrolling="false"
-								  gap="0"
-								  verticalAlign="middle"
-								  variableRowHeight="false"/>
-			</s:layout>
-		</s:List>
+		<s:Rect left="0"
+				bottom="0"
+				top="0"
+				width="410">
+			<s:fill>
+				<s:BitmapFill source="@Embed(source='images/bg.png')"
+							  fillMode="scale"
+							  smooth="true"/>
+			</s:fill>
+			<s:filters>
+				<s:DropShadowFilter blurX="6"
+									blurY="6"
+									strength=".4"
+									quality="3"
+									angle="45"
+									distance="3"/>
+			</s:filters>
+		</s:Rect>
 
 		<components:ConnectionsList includeIn="recentItemSelected"
 									dataProvider="{presentationModel.schedulerItems}"
 									x="410"
 									width="614"
 									height="100%"/>
-
-
-		<s:Label styleName="noneLabel"
-				 alpha=".3"
-				 x="410"
-				 width="614"
-				 height="100%"
-				 includeIn="recents"
-				 text="{LocaleManager.localeManager.getResource('recent.noneSelected')}"/>
 
 		<s:Rect left="0"
 				bottom="0"
@@ -133,6 +126,35 @@
 									distance="3"/>
 			</s:filters>
 		</s:Rect>
+
+		<s:List id="recentsList"
+				width="410"
+				height="100%"
+				change="recentsList_changeHandler(event)"
+				dataProvider="{presentationModel.recents}"
+				allowMultipleSelection="false"
+				skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
+				itemRenderer="be.irail.betrains.playbook.view.recent.itemrenderer.RecentQueryItem">
+			<s:layout>
+				<s:VerticalLayout useVirtualLayout="true"
+								  clipAndEnableScrolling="false"
+								  gap="0"
+								  verticalAlign="middle"
+								  variableRowHeight="false"/>
+			</s:layout>
+		</s:List>
+
+
+
+		<s:Label styleName="noneLabel"
+				 alpha=".3"
+				 x="410"
+				 width="614"
+				 height="100%"
+				 includeIn="recents"
+				 text="{LocaleManager.localeManager.getResource('recent.noneSelected')}"/>
+
+
 
 
 	</s:Group>
