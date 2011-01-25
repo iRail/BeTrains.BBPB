@@ -30,7 +30,7 @@
 			 minHeight="76"
 			 alpha.disabled="0.5"
 			 alpha.disabledWithControlBar="0.5">
-	<fx:Metadata>[HostComponent("be.irail.betrains.playbook.view.components.StationListPopUp")]</fx:Metadata>
+	<fx:Metadata>[HostComponent("be.irail.betrains.playbook.view.scheduler.components.StationListPopUp")]</fx:Metadata>
 
 	<!--
 		NOTE: this skin file contains sub-parts that may continue to react to

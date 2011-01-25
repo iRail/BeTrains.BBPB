@@ -127,24 +127,28 @@
 			</s:filters>
 		</s:Rect>
 
-		<s:List id="recentsList"
-				width="410"
-				height="100%"
-				change="recentsList_changeHandler(event)"
-				dataProvider="{presentationModel.recents}"
-				allowMultipleSelection="false"
-				skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
-				itemRenderer="be.irail.betrains.playbook.view.recent.itemrenderer.RecentQueryItem">
-			<s:layout>
-				<s:VerticalLayout useVirtualLayout="true"
-								  clipAndEnableScrolling="false"
-								  gap="0"
-								  verticalAlign="middle"
-								  variableRowHeight="false"/>
-			</s:layout>
-		</s:List>
-
-
+		<s:HGroup gap="0"
+				  height="100%"
+				  width="410">
+			<mx:Spacer width="25"/>
+			<s:List id="recentsList"
+					width="100%"
+					height="100%"
+					change="recentsList_changeHandler(event)"
+					dataProvider="{presentationModel.recents}"
+					allowMultipleSelection="false"
+					skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
+					itemRenderer="be.irail.betrains.playbook.view.recent.itemrenderer.RecentQueryItem">
+				<s:layout>
+					<s:VerticalLayout useVirtualLayout="true"
+									  clipAndEnableScrolling="false"
+									  gap="0"
+									  verticalAlign="middle"
+									  variableRowHeight="false"/>
+				</s:layout>
+			</s:List>
+			<mx:Spacer width="25"/>
+		</s:HGroup>
 
 		<s:Label styleName="noneLabel"
 				 alpha=".3"
@@ -153,9 +157,6 @@
 				 height="100%"
 				 includeIn="recents"
 				 text="{LocaleManager.localeManager.getResource('recent.noneSelected')}"/>
-
-
-
 
 	</s:Group>
 

@@ -1,27 +1,46 @@
 package be.irail.betrains.playbook.view.traffic {
 
 	import be.irail.betrains.playbook.controller.AppSettings;
+	import be.irail.betrains.playbook.controller.ModelLocator;
 
 	import com.adobe.utils.XMLUtil;
+	import com.adobe.xml.syndication.rss.IImage;
+	import com.adobe.xml.syndication.rss.Image20;
 	import com.adobe.xml.syndication.rss.RSS20;
 
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
+	import flash.geom.Matrix;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 
 	import mx.collections.ArrayCollection;
 
+	import qnx.events.ImageCacheEvent;
 	import qnx.locale.LocaleManager;
 
 	[Event(name="rssFeedChange", type="flash.events.Event")]
 	[Event(name="rssFeedLoading", type="flash.events.Event")]
 	public class TrafficIssuesPresentationModel extends EventDispatcher {
+		private var _model:ModelLocator = ModelLocator.getInstance();
+
+		private var _providerImage:IImage;
 
 		private var loader:URLLoader;
+
+		private var _imgWidth:Number;
+
+		private var _imgHeight:Number;
+
+		public var maxImageHeight:Number = 80;
+
+		public var maxImageWidth:Number = 100;
+
 
 		// ----------------------------
 		// rssFeed
@@ -39,6 +58,80 @@ package be.irail.betrains.playbook.view.traffic {
 				_rssFeed = value;
 				dispatchEvent(new Event("rssFeedChange"));
 			}
+		}
+
+		// ----------------------------
+		// imageData
+		// ----------------------------
+
+		private var _imageData:BitmapData;
+
+		[Bindable(event="imageDataChange")]
+		public function get imageData():BitmapData {
+			return _imageData;
+		}
+
+		[Bindable(event="imageDataChange")]
+		public function get imageDataWidth():Number {
+			if (!_imageData)
+				return 0;
+
+			return _imgWidth;
+		}
+
+		[Bindable(event="imageDataChange")]
+		public function get imageDataHeight():Number {
+			if (!_imageData)
+				return 0;
+
+			return _imgHeight;
+		}
+
+		public function set imageData(value:BitmapData):void {
+			if (value != _imageData) {
+
+				if (value) {
+					_imageData = resize(value, maxImageHeight, maxImageWidth);
+					;
+				} else {
+					_imageData = null;
+				}
+
+				dispatchEvent(new Event("imageDataChange"));
+			}
+		}
+
+		private function resize(data:BitmapData, maximumHeight:int, maximumWidth:int):BitmapData {
+			var thisWidth:int = data.width,
+				thisHeight:int = data.height,
+				ratio:Number = thisHeight / thisWidth;
+
+			if (thisWidth > maximumWidth) {
+				thisWidth = maximumWidth;
+				thisHeight = Math.round(thisWidth * ratio);
+			}
+			if (thisHeight > maximumHeight) {
+				thisHeight = maximumHeight;
+				thisWidth = Math.round(thisHeight / ratio);
+			}
+
+			var rW:Number = thisWidth / data.width,
+				rH:Number = thisHeight / data.height,
+				m:Matrix = new Matrix();
+
+			m.scale(rW, rH);
+
+			var tmp:BitmapData = new BitmapData(thisWidth, thisHeight, true, 0xFF0000);
+			tmp.draw(data, m);
+
+			return tmp;
+		}
+
+		[Bindable(event="providerImageChange")]
+		public function get providerImageLink():String {
+			if (!_providerImage)
+				return "";
+			return _providerImage.link;
 		}
 
 		public function loadRSSFeed():void {
@@ -93,8 +186,28 @@ package be.irail.betrains.playbook.view.traffic {
 			var rss:RSS20 = new RSS20();
 			rss.parse(data);
 
+			setProviderImage(rss.image);
+
 			var items:Array = rss.items;
 			rssFeed = new ArrayCollection(items);
+		}
+
+		private function setProviderImage(image:IImage):void {
+			_providerImage = image;
+
+			imageData = _model.imageCache.getImage(_providerImage.url, true);
+
+			if (!imageData)
+				_model.imageCache.addEventListener(ImageCacheEvent.IMAGE_LOADED, onImageLoaded);
+
+			dispatchEvent(new Event("providerImageChange"));
+		}
+
+		private function onImageLoaded(event:ImageCacheEvent):void {
+			if (event.url == _providerImage.url) {
+				_model.imageCache.removeEventListener(ImageCacheEvent.IMAGE_LOADED, onImageLoaded);
+				imageData = _model.imageCache.getImage(_providerImage.url, true);
+			}
 		}
 
 		private function onIOError(e:IOErrorEvent):void {

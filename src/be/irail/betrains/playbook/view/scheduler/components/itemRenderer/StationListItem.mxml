@@ -75,6 +75,7 @@
 						  smooth="true"/>
 		</s:fill>
 	</s:Rect>
+
 	<s:Rect left="0"
 			right="0"
 			top="0"

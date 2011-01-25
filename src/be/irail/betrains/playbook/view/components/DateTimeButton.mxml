@@ -119,6 +119,8 @@
 
 				pickerContainer.addChild(picker);
 
+				picker.x = -2;
+
 				picker.setListWidth(0, 200);
 				picker.setListWidth(1, 300);
 
@@ -129,7 +131,7 @@
 				var picker:Picker = new Picker();
 				picker.setListBackgroundSkin(PickerListBackgroundWhite);
 				picker.name = "timePicker";
-				picker.width = 180;
+				picker.width = 168;
 				picker.height = 50;
 
 				var hours:Array = [],
@@ -156,7 +158,7 @@
 				picker.setListWidth(0, 200);
 				picker.setListWidth(1, 200);
 
-				picker.x = 202;
+				picker.x = 200;
 
 				pickerContainer.addChild(picker);
 				picker.addEventListener(Event.SELECT, handleSelect);
@@ -228,7 +230,7 @@
 
 	<s:VGroup width="100%"
 			  height="100%"
-			  paddingLeft="5"
+			  paddingLeft="0"
 			  paddingRight="5"
 			  paddingTop="5"
 			  paddingBottom="5"

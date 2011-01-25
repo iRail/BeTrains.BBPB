@@ -11,5 +11,6 @@
 				   height="40"
 				   smooth="true"
 				   x="-5"
+				   y="-5"
 				   source="@Embed(source='images/close_popup.png')"/>
 </s:Group>

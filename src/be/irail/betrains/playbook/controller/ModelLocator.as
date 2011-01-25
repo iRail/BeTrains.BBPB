@@ -6,6 +6,8 @@ package be.irail.betrains.playbook.controller {
 
 	import mx.collections.ArrayCollection;
 
+	import qnx.utils.ImageCache;
+
 	public class ModelLocator {
 		private static var _instance:ModelLocator;
 
@@ -22,6 +24,8 @@ package be.irail.betrains.playbook.controller {
 
 		[Bindable]
 		public var favourites:ArrayCollection;
+
+		public var imageCache:ImageCache = new ImageCache();
 
 		public function ModelLocator() {
 			if (!_instanceAllowed) {

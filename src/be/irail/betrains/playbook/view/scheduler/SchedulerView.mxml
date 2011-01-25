@@ -19,7 +19,7 @@
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.view.components.ConnectionDetails;
-			import be.irail.betrains.playbook.view.components.StationListPopUp;
+			import be.irail.betrains.playbook.view.scheduler.components.StationListPopUp;
 
 			import mx.core.FlexGlobals;
 			import mx.core.UIComponent;
@@ -78,14 +78,13 @@
 				if (_popup) {
 					_popup.close();
 				}
+
 				_popup = new StationListPopUp();
 
-				var mainApp:Application = FlexGlobals.topLevelApplication as Application;
-				PopUpManager.addPopUp(_popup, mainApp as DisplayObject, true);
+				_popup.x = 0;
+				_popup.y = 0;
 
-				_popup.x = (mainApp.width / 2) - (_popup.width / 2);
-				_popup.y = (mainApp.height / 2) - (_popup.height / 2) - 100;
-
+				PopUpManager.addPopUp(_popup, FlexGlobals.topLevelApplication as DisplayObject, true);
 				_popup.addEventListener(CloseEvent.CLOSE, onFromStationsClose);
 			}
 
@@ -100,13 +99,13 @@
 				if (_popup) {
 					_popup.close();
 				}
+
 				_popup = new StationListPopUp();
 
-				var mainApp:Application = FlexGlobals.topLevelApplication as Application;
-				PopUpManager.addPopUp(_popup, mainApp as DisplayObject, true);
+				_popup.x = 0;
+				_popup.y = 0;
 
-				_popup.x = (mainApp.width / 2) - (_popup.width / 2);
-				_popup.y = (mainApp.height / 2) - (_popup.height / 2) - 100;
+				PopUpManager.addPopUp(_popup, FlexGlobals.topLevelApplication as DisplayObject, true);
 
 				_popup.addEventListener(CloseEvent.CLOSE, onToStationsClose);
 			}
@@ -179,7 +178,7 @@
 			 top="0"
 			 bottom="0"
 			 right="0"
-			 width="595"
+			 width="610"
 			 includeIn="none"
 			 text="{LocaleManager.localeManager.getResource('scheduler.none')}"/>
 
@@ -188,7 +187,7 @@
 								top="0"
 								bottom="0"
 								right="0"
-								width="595"
+								width="610"
 								visible="{presentationModel.hasConnections}"
 								includeInLayout="{presentationModel.hasConnections}"
 								dataProvider="{presentationModel.connections}">
@@ -200,7 +199,7 @@
 			 right="0"
 			 visible="{presentationModel.isLoading}"
 			 includeInLayout="{presentationModel.isLoading}"
-			 width="595"
+			 width="610"
 			 show="loadingSpinner.play();"
 			 hide="loadingSpinner.stop();">
 		<controls:Spinner id="loadingSpinner"
@@ -211,7 +210,7 @@
 	<s:Rect left="0"
 			bottom="0"
 			top="0"
-			width="430">
+			width="410">
 		<s:fill>
 			<s:BitmapFill source="@Embed(source='images/bg.png')"
 						  fillMode="scale"
@@ -230,7 +229,7 @@
 	<s:VGroup top="30"
 			  bottom="0"
 			  id="dataCont"
-			  width="430"
+			  width="410"
 			  horizontalAlign="center">
 		<!--Stations-->
 		<s:VGroup width="90%"
