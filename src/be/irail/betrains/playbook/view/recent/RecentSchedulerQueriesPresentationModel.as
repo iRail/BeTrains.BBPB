@@ -1,12 +1,11 @@
 package be.irail.betrains.playbook.view.recent {
 
+	import be.irail.betrains.playbook.collection.RecentQueriesCollection;
 	import be.irail.betrains.playbook.controller.AppSettings;
-	import be.irail.betrains.playbook.data.RecentQueriesCollection;
 	import be.irail.betrains.playbook.data.SchedulerQuery;
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
 
 	import mx.collections.ArrayCollection;
 

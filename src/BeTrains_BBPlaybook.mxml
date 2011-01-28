@@ -22,9 +22,10 @@
 		<![CDATA[
 			import be.irail.api.event.IRailResultEvent;
 			import be.irail.api.methodgroup.Stations;
+			import be.irail.betrains.playbook.collection.FavouriteConnectionCollection;
+			import be.irail.betrains.playbook.collection.RecentQueriesCollection;
 			import be.irail.betrains.playbook.controller.AppSettings;
 			import be.irail.betrains.playbook.controller.ModelLocator;
-			import be.irail.betrains.playbook.data.RecentQueriesCollection;
 			import be.irail.betrains.playbook.utils.SerializeUtil;
 			import be.irail.betrains.playbook.view.MainView;
 
@@ -34,11 +35,12 @@
 
 			private var _model:ModelLocator = ModelLocator.getInstance();
 
-			private var _file:File;
 
 			private function preinitializeHandler():void {
 				setupResourceManager();
 				readStations();
+				readRecents();
+				readFavs();
 			}
 
 			private function creationCompleteHandler():void {
@@ -59,40 +61,55 @@
 			}
 
 			private function onAllStationsResult(event:IRailResultEvent):void {
-				_file = File.desktopDirectory.resolvePath("stations.bpd");
 				var stream:FileStream = new FileStream();
 				var ba:ByteArray = SerializeUtil.serialize(event.result);
-				stream.openAsync(_file, FileMode.WRITE);
+				stream.openAsync(File.desktopDirectory.resolvePath("stations.bpd"), FileMode.WRITE);
 				stream.writeBytes(ba);
 			}
 
 			private function readStations():void {
-				_file = AppSettings.STATIONSLIST_STORAGE_LOCATION;
 				var stream:FileStream = new FileStream();
 
-				stream.openAsync(_file, FileMode.READ);
+				stream.openAsync(AppSettings.STATIONSLIST_STORAGE_LOCATION, FileMode.READ);
 				stream.addEventListener(Event.COMPLETE, stationDataReadHandler);
 				stream.addEventListener(IOErrorEvent.IO_ERROR, readStationsIOErrorHandler);
 			}
 
 			private function readRecents():void {
-				_file = AppSettings.RECENT_STORAGE_LOCATION;
 				_model.recentSchedulerQueries = new RecentQueriesCollection();
 
-				if (_file.exists) {
+				if (AppSettings.RECENT_STORAGE_LOCATION.exists) {
 					var stream:FileStream = new FileStream();
-					stream.openAsync(_file, FileMode.READ);
+					stream.openAsync(AppSettings.RECENT_STORAGE_LOCATION, FileMode.READ);
 					stream.addEventListener(Event.COMPLETE, recentDataReadHandler);
 					stream.addEventListener(IOErrorEvent.IO_ERROR, readRecentIOErrorHandler);
 				}
 
 			}
 
+			private function readFavs():void {
+				_model.favourites = new FavouriteConnectionCollection();
+
+				if (AppSettings.FAVOURITES_STORAGE_LOCATION.exists) {
+					var stream:FileStream = new FileStream();
+					stream.openAsync(AppSettings.FAVOURITES_STORAGE_LOCATION, FileMode.READ);
+					stream.addEventListener(Event.COMPLETE, favsDataReadHandler);
+					stream.addEventListener(IOErrorEvent.IO_ERROR, favsIOErrorHandler);
+				}
+
+			}
+
 			private function writeRecents():void {
-				_file = AppSettings.RECENT_STORAGE_LOCATION;
 				var stream:FileStream = new FileStream();
 				var ba:ByteArray = SerializeUtil.serialize(_model.recentSchedulerQueries.toArray());
-				stream.openAsync(_file, FileMode.WRITE);
+				stream.openAsync(AppSettings.RECENT_STORAGE_LOCATION, FileMode.WRITE);
+				stream.writeBytes(ba);
+			}
+
+			private function writeFavourites():void {
+				var stream:FileStream = new FileStream();
+				var ba:ByteArray = SerializeUtil.serialize(_model.favourites.toArray());
+				stream.openAsync(AppSettings.FAVOURITES_STORAGE_LOCATION, FileMode.WRITE);
 				stream.writeBytes(ba);
 			}
 
@@ -104,9 +121,6 @@
 
 				var data:Object = SerializeUtil.deserialize(ba);
 				_model.stations = new ArrayCollection((data.data) as Array);
-
-				_file = null;
-				readRecents();
 			}
 
 			private function recentDataReadHandler(event:Event):void {
@@ -120,22 +134,38 @@
 					var data:Object = SerializeUtil.deserialize(ba);
 					_model.recentSchedulerQueries = new RecentQueriesCollection(data as Array);
 				} else {
-					_file.deleteFile();
+					AppSettings.RECENT_STORAGE_LOCATION.deleteFile();
 				}
-				_file = null;
+			}
+
+			private function favsDataReadHandler(event:Event):void {
+				var stream:FileStream = event.target as FileStream;
+				if (stream.bytesAvailable > 0) {
+					var ba:ByteArray = new ByteArray();
+
+					stream.readBytes(ba, 0, stream.bytesAvailable);
+					stream.close();
+
+					var data:Object = SerializeUtil.deserialize(ba);
+					_model.favourites = new FavouriteConnectionCollection(data as Array);
+				} else {
+					AppSettings.FAVOURITES_STORAGE_LOCATION.deleteFile();
+				}
 			}
 
 			private function readStationsIOErrorHandler(event:IOErrorEvent):void {
-				_model.stations = new ArrayCollection();
-				readRecents();
 			}
 
 			private function readRecentIOErrorHandler(event:IOErrorEvent):void {
-				_model.recentSchedulerQueries = new RecentQueriesCollection();
+			}
+
+			private function favsIOErrorHandler(event:IOErrorEvent):void {
+				//chain done
 			}
 
 			private function onApplicationExiting(event:Event):void {
 				writeRecents();
+				writeFavourites();
 			}
 
 			private function setupResourceManager():void {

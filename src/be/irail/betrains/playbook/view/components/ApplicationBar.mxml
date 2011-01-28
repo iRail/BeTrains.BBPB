@@ -199,8 +199,7 @@
 		<components:ApplicationBarButton id="favs"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.favs')}"
 										 image="@Embed(source='images/favs.png')"
-										 change="changeHandler(event)"
-										 enabled="{_model.loggedIn}"/>
+										 change="changeHandler(event)"/>
 		<components:ApplicationBarButton id="schedule"
 										 label="{_locale.getResource('application.controlbar.scheduler')}"
 										 image="@Embed(source='images/train.png')"

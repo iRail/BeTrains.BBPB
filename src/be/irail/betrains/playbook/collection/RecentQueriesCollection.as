@@ -1,4 +1,4 @@
-package be.irail.betrains.playbook.data {
+package be.irail.betrains.playbook.collection {
 
 	import be.irail.betrains.playbook.controller.AppSettings;
 

@@ -4,10 +4,8 @@
 						 xmlns:mx="library://ns.adobe.com/flex/mx"
 						 xmlns:stations="be.irail.api.data.stations.*"
 						 xmlns:components="be.irail.betrains.playbook.view.components.*"
-						 width="100%"
-						 height="100%"
 						 xmlns:components1="be.irail.betrains.playbook.view.scheduler.components.*"
-						 creationComplete="mainviewitem1_creationCompleteHandler(event)"
+						 creationComplete="mainviewitem1_creationCompleteHandler()"
 						 xmlns:scheduler="be.irail.betrains.playbook.view.scheduler.*"
 						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<components:states>
@@ -22,15 +20,12 @@
 			import be.irail.betrains.playbook.view.scheduler.components.StationListPopUp;
 
 			import mx.core.FlexGlobals;
-			import mx.core.UIComponent;
 			import mx.events.CloseEvent;
-			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 
 			import qnx.locale.LocaleManager;
 			import qnx.ui.buttons.IconButton;
 
-			import spark.components.Application;
 			import spark.events.IndexChangeEvent;
 
 			private var _popup:StationListPopUp;
@@ -38,41 +33,6 @@
 			[Bindable]
 			private var _locale:LocaleManager = LocaleManager.localeManager;
 
-			// ----------------------------
-			// stationFrom
-			// ----------------------------
-
-			private var _stationFrom:IRStation;
-
-			[Bindable(event="stationFromChange")]
-			public function get stationFrom():IRStation {
-				return _stationFrom;
-			}
-
-			public function set stationFrom(value:IRStation):void {
-				if (value != _stationFrom) {
-					_stationFrom = value;
-					dispatchEvent(new Event("stationFromChange"));
-				}
-			}
-
-			// ----------------------------
-			// stationTo
-			// ----------------------------
-
-			private var _stationTo:IRStation;
-
-			[Bindable(event="stationToChange")]
-			public function get stationTo():IRStation {
-				return _stationTo;
-			}
-
-			public function set stationTo(value:IRStation):void {
-				if (value != _stationTo) {
-					_stationTo = value;
-					dispatchEvent(new Event("stationToChange"));
-				}
-			}
 
 			protected function selectFromStation_clickHandler(event:MouseEvent):void {
 				if (_popup) {
@@ -90,7 +50,7 @@
 
 			private function onFromStationsClose(event:CloseEvent):void {
 				if (event.detail == StationListPopUp.OK) {
-					this.stationFrom = _popup.selectedStation;
+					presentationModel.from = _popup.selectedStation;
 				}
 				_popup = null;
 			}
@@ -112,7 +72,7 @@
 
 			private function onToStationsClose(event:CloseEvent):void {
 				if (event.detail == StationListPopUp.OK) {
-					this.stationTo = _popup.selectedStation;
+					presentationModel.to = _popup.selectedStation;
 				}
 				_popup = null;
 			}
@@ -129,25 +89,21 @@
 			}
 
 			protected function searchBtn_clickHandler(event:MouseEvent):void {
-				if (validateGUI()) {
-					presentationModel.getSchedule(stationFrom, stationTo, dateSelector.selectedDate, dateSelector.arrDep);
+				if (presentationModel.isValid) {
+					presentationModel.getSchedule(dateSelector.arrDep);
 				}
 			}
 
 			protected function onSwapClick(event:MouseEvent):void {
-				var from:IRStation = this.stationFrom;
-				var to:IRStation = this.stationTo;
+				var from:IRStation = presentationModel.from;
+				var to:IRStation = presentationModel.to;
 
-				this.stationTo = from;
-				this.stationFrom = to;
+				presentationModel.to = from;
+				presentationModel.from = to;
 			}
 
-			protected function mainviewitem1_creationCompleteHandler(event:FlexEvent):void {
+			protected function mainviewitem1_creationCompleteHandler():void {
 				createSearchBtn();
-			}
-
-			private function validateGUI():Boolean {
-				return stationFrom != null && stationTo != null && (dateSelector && dateSelector.selectedDate);
 			}
 
 			protected function resultList_changeHandler(event:IndexChangeEvent):void {
@@ -187,7 +143,7 @@
 								top="0"
 								bottom="0"
 								right="0"
-								width="610"
+								width="615"
 								visible="{presentationModel.hasConnections}"
 								includeInLayout="{presentationModel.hasConnections}"
 								dataProvider="{presentationModel.connections}">
@@ -241,13 +197,13 @@
 											 width="100%"
 											 height="60"
 											 infoLabel="{_locale.getResource('scheduler.station1.label')}"
-											 station="{stationFrom}"
+											 station="{presentationModel.from}"
 											 click="selectFromStation_clickHandler(event)"/>
 
 			<components1:ChooseStationButton width="100%"
 											 height="60"
 											 infoLabel="{_locale.getResource('scheduler.station2.label')}"
-											 station="{stationTo}"
+											 station="{presentationModel.to}"
 											 click="selectToStation_clickHandler(event)"/>
 		</s:VGroup>
 
@@ -261,12 +217,20 @@
 				  gap="30">
 			<components:DateTimeButton id="dateSelector"
 									   width="100%"
-									   height="100%"/>
+									   height="100%"
+									   dateChange="{presentationModel.when=dateSelector.selectedDate}"/>
 			<mx:UIComponent id="searchBtnGroup"
 							width="100%"
 							height="70"
 							horizontalCenter="0"/>
 		</s:VGroup>
+
+		<mx:Spacer height="20"/>
+
+		<components1:FavouriteButton id="addToFavs"
+									 width="90%"
+									 click="presentationModel.favCurrentConnection()"
+									 enabled="{presentationModel.canAddToFavourites}"/>
 	</s:VGroup>
 
 	<s:Group x="65"
@@ -288,4 +252,7 @@
 								distance="3"/>
 		</s:filters>
 	</s:Group>
+
+
+
 </components:MainViewItem>

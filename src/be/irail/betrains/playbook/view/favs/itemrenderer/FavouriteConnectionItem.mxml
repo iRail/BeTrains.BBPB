@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				autoDrawBackground="false"
+				height="75"
+				width="300">
+	<fx:Script>
+		<![CDATA[
+			import be.irail.api.data.stations.IRStation;
+			import be.irail.betrains.playbook.data.FavouriteConnection;
+
+			import qnx.locale.LocaleManager;
+
+			override public function set data(value:Object):void {
+				super.data = value;
+
+				if (!value) {
+					return;
+				}
+
+				if (data is FavouriteConnection) {
+					connection = value as FavouriteConnection;
+				}
+			}
+
+			// ----------------------------
+			// connection
+			// ----------------------------
+
+			private var _connection:FavouriteConnection;
+
+			[Bindable(event="connectionChange")]
+			public function get connection():FavouriteConnection {
+				return _connection;
+			}
+
+			public function set connection(value:FavouriteConnection):void {
+				if (value !== _connection) {
+					_connection = value;
+					dispatchEvent(new Event("connectionChange"));
+				}
+			}
+
+			// ----------------------------
+			// from
+			// ----------------------------
+
+			[Bindable(event="connectionChange")]
+			public function get from():String {
+				return _connection.from.formattedName;
+			}
+
+			// ----------------------------
+			// to
+			// ----------------------------
+
+			[Bindable(event="connectionChange")]
+			public function get to():String {
+				return _connection.to.formattedName;
+			}
+		]]>
+	</fx:Script>
+
+	<s:Rect left="0"
+			right="0"
+			top="0"
+			bottom="0">
+		<s:fill>
+			<s:BitmapFill source="@Embed(source='images/cellBg.png')"
+						  fillMode="repeat"
+						  smooth="true"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:HGroup paddingLeft="10"
+			  paddingRight="10"
+			  paddingTop="5"
+			  paddingBottom="5"
+			  width="100%"
+			  height="100%"
+			  verticalAlign="middle">
+		<s:Label text="{from}"
+				 fontSize="16"
+				 color="0"
+				 width="100%"
+				 height="100%"
+				 textAlign="center"
+				 fontWeight="bold"
+				 verticalAlign="middle"/>
+		<s:BitmapImage id="arrowDown"
+					   width="10"
+					   height="10"
+					   horizontalCenter="0"
+					   rotation="-90"
+					   source="@Embed(source='images/arroworange.png')"
+					   smooth="true"/>
+		<s:Label text="{to}"
+				 fontSize="16"
+				 color="0"
+				 width="100%"
+				 height="100%"
+				 textAlign="center"
+				 fontWeight="bold"
+				 verticalAlign="middle"/>
+	</s:HGroup>
+</s:ItemRenderer>

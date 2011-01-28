@@ -4,6 +4,7 @@ package be.irail.betrains.playbook.view.scheduler {
 	import be.irail.api.event.IRailResultEvent;
 	import be.irail.api.methodgroup.Scheduler;
 	import be.irail.betrains.playbook.controller.ModelLocator;
+	import be.irail.betrains.playbook.data.FavouriteConnection;
 	import be.irail.betrains.playbook.data.SchedulerQuery;
 
 	import flash.events.Event;
@@ -18,6 +19,58 @@ package be.irail.betrains.playbook.view.scheduler {
 		private var _model:ModelLocator = ModelLocator.getInstance();
 
 		private var _query:SchedulerQuery;
+
+		// ----------------------------
+		// from
+		// ----------------------------
+
+		private var _from:IRStation;
+
+		[Bindable(event="fromChange")]
+		public function get from():IRStation {
+			return _from;
+		}
+
+		public function set from(value:IRStation):void {
+			if (value !== _from) {
+				_from = value;
+				dispatchEvent(new Event("fromChange"));
+			}
+		}
+
+		// ----------------------------
+		// to
+		// ----------------------------
+
+		private var _to:IRStation;
+
+		[Bindable(event="toChange")]
+		public function get to():IRStation {
+			return _to;
+		}
+
+		public function set to(value:IRStation):void {
+			if (value !== _to) {
+				_to = value;
+				dispatchEvent(new Event("toChange"));
+			}
+		}
+
+		// ----------------------------
+		// date
+		// ----------------------------
+
+		private var _date:Date;
+
+		[Bindable(event="dateChange")]
+		public function get when():Date {
+			return _date;
+		}
+
+		public function set when(value:Date):void {
+			_date = value;
+			dispatchEvent(new Event("dateChange"));
+		}
 
 		// ----------------------------
 		// connections (read-only)
@@ -53,15 +106,45 @@ package be.irail.betrains.playbook.view.scheduler {
 			}
 		}
 
+		// ----------------------------
+		// canAddToFavourites (read-only)
+		// ----------------------------
+		[Bindable(event="toChange")]
+		[Bindable(event="fromChange")]
+		[Bindable(event="dateChange")]
+		[Bindable(event="connectionFavd")]
+		public function get canAddToFavourites():Boolean {
+			if (from == null || to == null)
+				return false;
+
+			var doesNotExist:Boolean = !_model.favourites.containsConnection(from, to);
+			return doesNotExist;
+		}
+
 		public function SchedulerPresentationModel() {
 			_schedule = new Scheduler();
 		}
 
-		public function getSchedule(from:IRStation, to:IRStation, when:Date, dateArrDep:String = "depart"):void {
-			_schedule.addEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
+		[Bindable(event="toChange")]
+		[Bindable(event="fromChange")]
+		[Bindable(event="dateChange")]
+		public function get isValid():Boolean {
+			return from != null && to != null && when != null;
+		}
+
+		public function getSchedule(dateArrDep:String = "depart"):void {
 			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"]);
+			_schedule.addEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
+
 			_query = new SchedulerQuery(from, to, when, dateArrDep);
 			isLoading = true;
+		}
+
+		public function favCurrentConnection():void {
+			if (from != null && to != null) {
+				_model.favourites.addItem(new FavouriteConnection(from, to));
+				dispatchEvent(new Event("connectionFavd"));
+			}
 		}
 
 		private function onSchedulerResult(event:IRailResultEvent):void {

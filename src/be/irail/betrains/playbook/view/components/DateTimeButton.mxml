@@ -7,7 +7,9 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-
+	<fx:Metadata>
+	[Event(name="dateChange",type="flash.events.Event")]
+</fx:Metadata>
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.scheduler.DateTimeIndicator;
@@ -40,10 +42,8 @@
 			}
 
 			public function set selectedDate(value:Date):void {
-				if (value != _date) {
-					_date = value;
-					dispatchEvent(new Event("dateChange"));
-				}
+				_date = value;
+				dispatchEvent(new Event("dateChange"));
 			}
 
 			// ----------------------------

@@ -16,6 +16,7 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.view.about.AboutPopup;
 			import be.irail.betrains.playbook.view.components.MainViewItem;
 
@@ -27,6 +28,9 @@
 			import qnx.locale.LocaleManager;
 
 			import spark.events.IndexChangeEvent;
+
+			[Bindable]
+			private var _model:ModelLocator = ModelLocator.getInstance();
 
 			private function applicationBar_changeHandler(event:IndexChangeEvent):void {
 				if (event.newIndex != applicationBar.ABOUT_INDEX) {
@@ -61,6 +65,7 @@
 		</s:NavigatorContent>
 		<s:NavigatorContent>
 			<favs:FavouritesView id="favourites"
+								 favourites="{_model.favourites}"
 								 title="{LocaleManager.localeManager.getResource('favs.title')}"/>
 		</s:NavigatorContent>
 		<s:NavigatorContent>

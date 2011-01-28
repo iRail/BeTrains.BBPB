@@ -3,8 +3,6 @@
 						 xmlns:s="library://ns.adobe.com/flex/spark"
 						 xmlns:mx="library://ns.adobe.com/flex/mx"
 						 xmlns:components="be.irail.betrains.playbook.view.components.*"
-						 width="100%"
-						 height="100%"
 						 xmlns:favs="be.irail.betrains.playbook.view.favs.*">
 	<fx:Declarations>
 		<favs:FavouritesPresentationModel id="presentationModel"/>
@@ -27,14 +25,12 @@
 			}
 
 			public function set favourites(value:ArrayCollection):void {
-				if (value != favourites) {
-					presentationModel.favourites = value;
+				presentationModel.favourites = value;
 
-					if (!value || value.length == 0) {
-						this.currentState = "none";
-					} else {
-						this.currentState = "favourites";
-					}
+				if (!value || value.length == 0) {
+					this.currentState = "none";
+				} else {
+					this.currentState = "favourites";
 				}
 			}
 
@@ -53,4 +49,16 @@
 			 fontWeight="bold"
 			 includeIn="none"
 			 text="{LocaleManager.localeManager.getResource('favs.none')}"/>
+
+	<s:DataGroup width="100%"
+				 height="100%"
+				 includeIn="favourites"
+				 itemRenderer="be.irail.betrains.playbook.view.favs.itemrenderer.FavouriteConnectionItem"
+				 dataProvider="{presentationModel.favourites}">
+		<s:layout>
+			<s:TileLayout orientation="rows"
+						  verticalAlign="middle"
+						  horizontalAlign="center"/>
+		</s:layout>
+	</s:DataGroup>
 </components:MainViewItem>

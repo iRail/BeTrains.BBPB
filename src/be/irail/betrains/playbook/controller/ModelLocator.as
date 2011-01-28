@@ -1,6 +1,7 @@
 package be.irail.betrains.playbook.controller {
 
-	import be.irail.betrains.playbook.data.RecentQueriesCollection;
+	import be.irail.betrains.playbook.collection.RecentQueriesCollection;
+	import be.irail.betrains.playbook.collection.FavouriteConnectionCollection;
 
 	import flash.errors.IllegalOperationError;
 
@@ -23,7 +24,7 @@ package be.irail.betrains.playbook.controller {
 		public var recentSchedulerQueries:RecentQueriesCollection;
 
 		[Bindable]
-		public var favourites:ArrayCollection;
+		public var favourites:FavouriteConnectionCollection;
 
 		public var imageCache:ImageCache = new ImageCache();
 
