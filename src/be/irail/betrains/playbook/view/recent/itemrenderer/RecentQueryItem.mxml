@@ -179,6 +179,16 @@
 	</s:HGroup>
 	<s:Line left="0"
 			right="0"
+			bottom="0"
+			visible="{this.itemIndex==0}">
+		<s:stroke>
+			<s:SolidColorStroke color="0"
+								alpha=".4"
+								weight="1"/>
+		</s:stroke>
+	</s:Line>
+	<s:Line left="0"
+			right="0"
 			bottom="0">
 		<s:stroke>
 			<s:SolidColorStroke color="0"

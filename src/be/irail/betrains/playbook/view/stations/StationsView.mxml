@@ -43,13 +43,8 @@
 			}
 
 			override public function make():void {
-				presentationModel.refreshList();
-			}
-
-			override public function destroy():void {
-				searchInput.text = "";
-				stationsList.selectedIndex = -1;
-				search();
+				if (stationsList.selectedIndex == -1)
+					presentationModel.refreshList();
 			}
 
 

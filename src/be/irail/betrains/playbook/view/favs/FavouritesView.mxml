@@ -3,7 +3,8 @@
 						 xmlns:s="library://ns.adobe.com/flex/spark"
 						 xmlns:mx="library://ns.adobe.com/flex/mx"
 						 xmlns:components="be.irail.betrains.playbook.view.components.*"
-						 xmlns:favs="be.irail.betrains.playbook.view.favs.*">
+						 xmlns:favs="be.irail.betrains.playbook.view.favs.*"
+						 creationComplete="mainviewitem1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<favs:FavouritesPresentationModel id="presentationModel"/>
 	</fx:Declarations>
@@ -21,9 +22,10 @@
 		<![CDATA[
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
+			import be.irail.betrains.playbook.view.favs.itemrenderer.FavouriteConnectionItem;
 
 			import mx.collections.ArrayCollection;
-			import mx.events.ResizeEvent;
+			import mx.events.FlexEvent;
 
 			import qnx.locale.LocaleManager;
 
@@ -49,7 +51,7 @@
 
 			private var _selectedFavourite:FavouriteConnection;
 
-			[Bindable(event="favouriteChange")]
+			[Bindable(event="selectedFavouriteChange")]
 			public function get selectedFavourite():FavouriteConnection {
 				return _selectedFavourite;
 			}
@@ -57,7 +59,7 @@
 			public function set selectedFavourite(value:FavouriteConnection):void {
 				if (value != _selectedFavourite) {
 					_selectedFavourite = value;
-					dispatchEvent(new Event("favouriteChange"));
+					dispatchEvent(new Event("selectedFavouriteChange"));
 				}
 			}
 
@@ -80,10 +82,23 @@
 				if (favDataGroup.y < 0) {
 					favDataGroup.y = 0;
 				}
+
+				if (favDataGroup.height > 544) {
+					favDataGroup.height = 544;
+				}
 			}
 
-			protected function favDataGroup_changeHandler(event:IndexChangeEvent):void {
+			private function favDataGroup_changeHandler(event:IndexChangeEvent):void {
 				selectedFavourite = favDataGroup.selectedItem;
+			}
+
+			private function favouriteDeleteHandler(e:Event):void {
+				e.stopImmediatePropagation();
+				presentationModel.deleteFav(FavouriteConnectionItem(e.target).connection);
+			}
+
+			protected function mainviewitem1_creationCompleteHandler(event:FlexEvent):void {
+				addEventListener('favouriteDelete', favouriteDeleteHandler);
 			}
 		]]>
 	</fx:Script>
@@ -101,14 +116,13 @@
 	<components:BeTrainsList id="favDataGroup"
 							 includeIn="favourites"
 							 maxHeight="544"
-							 maxWidth="1024"
 							 vScrollPolicy="off"
 							 borderVisible="false"
 							 change="favDataGroup_changeHandler(event)"
 							 itemRenderer="be.irail.betrains.playbook.view.favs.itemrenderer.FavouriteConnectionItem"
 							 dataProvider="{presentationModel.favourites}">
 		<components:layout>
-			<s:TileLayout orientation="rows"
+			<s:TileLayout orientation="columns"
 						  useVirtualLayout="true"
 						  clipAndEnableScrolling="false"
 						  columnAlign="justifyUsingWidth"

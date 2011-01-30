@@ -12,7 +12,9 @@
 		 width="100%"
 		 height="100%">
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:Fade id="slider"
+				 duration="100"
+				 easingFunction="Exponential.easeInOut"/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -23,7 +25,7 @@
 
 			import mx.core.FlexGlobals;
 			import mx.core.IFlexDisplayObject;
-			import mx.events.IndexChangedEvent;
+			import mx.effects.easing.Exponential;
 			import mx.managers.PopUpManager;
 
 			import qnx.locale.LocaleManager;
@@ -43,18 +45,20 @@
 				}
 			}
 
-			protected function vs_changeHandler(event:IndexChangedEvent):void {
+			private function vs_changeHandler(event:IndexChangeEvent):void {
 				if (event.oldIndex > -1 && (event.oldIndex != applicationBar.ABOUT_INDEX)) {
-					MainViewItem(NavigatorContent(vs.getElementAt(event.oldIndex)).getElementAt(0)).destroy();
+					var oldNavElement:MainViewItem = MainViewItem(vs.getElementAt(event.oldIndex));
+					oldNavElement.destroy();
 				}
 
 				if (event.newIndex > -1) {
-					MainViewItem(NavigatorContent(vs.getElementAt(event.newIndex)).getElementAt(0)).make();
+					MainViewItem(vs.getElementAt(event.newIndex)).make();
 				}
 
 			}
 
-			protected function favourites_favouriteChangeHandler(event:Event):void {
+			private function favourites_favouriteChangeHandler(event:Event):void {
+				event.stopImmediatePropagation();
 				var fav:FavouriteConnection = favourites.selectedFavourite;
 
 				if (fav) {
@@ -64,58 +68,28 @@
 			}
 		]]>
 	</fx:Script>
-
-	<mx:ViewStack id="vs"
-				  left="0"
-				  right="0"
-				  top="0"
-				  bottom="54"
-				  creationPolicy="all"
-				  change="vs_changeHandler(event)">
-		<s:NavigatorContent left="0"
-							right="0"
-							top="0"
-							bottom="0">
-			<recent:RecentSchedulerQueries id="recent"
-										   title="{LocaleManager.localeManager.getResource('recent.title')}"/>
-		</s:NavigatorContent>
-		<s:NavigatorContent left="0"
-							right="0"
-							top="0"
-							bottom="0">
-			<favs:FavouritesView id="favourites"
-								 favourites="{_model.favourites}"
-								 favouriteChange="favourites_favouriteChangeHandler(event)"
-								 title="{LocaleManager.localeManager.getResource('favs.title')}"/>
-		</s:NavigatorContent>
-		<s:NavigatorContent left="0"
-							right="0"
-							top="0"
-							bottom="0">
-			<scheduler:SchedulerView id="scheduler"
-									 title="{LocaleManager.localeManager.getResource('scheduler.title')}"/>
-		</s:NavigatorContent>
-		<s:NavigatorContent left="0"
-							right="0"
-							top="0"
-							bottom="0">
-			<stations:StationsView id="stations"
-								   title="{LocaleManager.localeManager.getResource('liveboard.title')}"/>
-		</s:NavigatorContent>
-		<s:NavigatorContent left="0"
-							right="0"
-							top="0"
-							bottom="0">
-			<traffic:TrafficIssuesView id="works"/>
-		</s:NavigatorContent>
-		<!--<s:NavigatorContent left="0"
-							right="0"
-							top="0"
-							bottom="0">
+	<components:SparkViewStack id="vs"
+							   left="0"
+							   right="0"
+							   top="0"
+							   bottom="54"
+							   change="vs_changeHandler(event)">
+		<recent:RecentSchedulerQueries id="recent"
+									   title="{LocaleManager.localeManager.getResource('recent.title')}"/>
+		<favs:FavouritesView id="favourites"
+							 favourites="{_model.favourites}"
+							 favouriteChange="favourites_favouriteChangeHandler(event)"
+							 title="{LocaleManager.localeManager.getResource('favs.title')}"/>
+		<scheduler:SchedulerView id="scheduler"
+								 title="{LocaleManager.localeManager.getResource('scheduler.title')}"/>
+		<stations:StationsView id="stations"
+							   title="{LocaleManager.localeManager.getResource('liveboard.title')}"/>
+		<traffic:TrafficIssuesView id="works"/>
+		<!--
 			<chat:ChatView id="chat"
 						   title="{LocaleManager.localeManager.getResource('chat.title')}"/>
-		</s:NavigatorContent>-->
-	</mx:ViewStack>
+		-->
+	</components:SparkViewStack>
 
 	<components:ApplicationBar id="applicationBar"
 							   left="0"

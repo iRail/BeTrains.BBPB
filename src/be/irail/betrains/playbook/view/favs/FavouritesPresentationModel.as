@@ -1,5 +1,7 @@
 package be.irail.betrains.playbook.view.favs {
 
+	import be.irail.betrains.playbook.data.FavouriteConnection;
+
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 
@@ -22,10 +24,15 @@ package be.irail.betrains.playbook.view.favs {
 		}
 
 		public function set favourites(value:ArrayCollection):void {
-			if (value !== _favourites) {
+			if (value != _favourites) {
 				_favourites = value;
-				dispatchEvent(new Event("favouritesChange"));
 			}
+			dispatchEvent(new Event("favouritesChange"));
+		}
+
+		public function deleteFav(fav:FavouriteConnection):void {
+			favourites.removeItemAt(favourites.getItemIndex(fav));
+			dispatchEvent(new Event("favouritesChange"));
 		}
 	}
 }

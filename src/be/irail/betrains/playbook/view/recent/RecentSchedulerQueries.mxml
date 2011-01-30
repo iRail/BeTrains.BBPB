@@ -135,6 +135,7 @@
 									 change="recentsList_changeHandler(event)"
 									 dataProvider="{presentationModel.recents}"
 									 allowMultipleSelection="false"
+									 borderVisible="false"
 									 itemRenderer="be.irail.betrains.playbook.view.recent.itemrenderer.RecentQueryItem">
 				<components:layout>
 					<s:VerticalLayout useVirtualLayout="true"
