@@ -18,19 +18,19 @@
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.view.scheduler.components.itemRenderer.StationListItem;
-
+			
+			import com.adobe.utils.StringUtil;
+			
 			import mx.collections.ArrayCollection;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
-
-			import org.as3commons.lang.StringUtils;
-
+			
 			import qnx.locale.LocaleManager;
 			import qnx.ui.skins.text.TextInputSkinWhite;
 			import qnx.ui.text.TextInput;
 			import qnx.ui.text.TextInputIconMode;
-
+			
 			import spark.events.IndexChangeEvent;
 
 			public static const OK:uint = 0x0004;
@@ -76,7 +76,7 @@
 
 			protected function stationName_changeHandler(e:Event):void {
 				var txtInput:TextInput = e.currentTarget as TextInput;
-				_nameFilter = StringUtils.trim(txtInput.text);
+				_nameFilter = StringUtil.trim(txtInput.text);
 				refreshList();
 			}
 

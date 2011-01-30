@@ -16,9 +16,9 @@
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.view.stations.itemrenderer.StationListItem;
 
-			import mx.events.FlexEvent;
+			import com.adobe.utils.StringUtil;
 
-			import org.as3commons.lang.StringUtils;
+			import mx.events.FlexEvent;
 
 			import qnx.locale.LocaleManager;
 			import qnx.ui.text.ReturnKeyType;
@@ -53,7 +53,7 @@
 					presentationModel.selectedStation = null;
 				}
 
-				presentationModel.updateFilter(StringUtils.trim(searchInput.text));
+				presentationModel.updateFilter(StringUtil.trim(searchInput.text));
 				presentationModel.refreshList();
 			}
 

@@ -46,6 +46,10 @@
 			private function creationCompleteHandler():void {
 				NativeApplication.nativeApplication.addEventListener(Event.EXITING, onApplicationExiting);
 				callLater(setupMainView);
+
+			/* var deviceFonts:Array = Font.enumerateFonts(true);
+			trace("device fonts: ", deviceFonts); */
+
 			/* Alert.show(
 				"Supports touch events: " + Multitouch.supportsTouchEvents + "\n" +
 				"Maximum supported touch points: " + Multitouch.maxTouchPoints + "\n\n" +

@@ -1,5 +1,10 @@
 package be.irail.betrains.playbook.view.components.preloader {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
+	import com.greensock.plugins.AutoAlphaPlugin;
+	import com.greensock.plugins.TweenPlugin;
+
 	import flash.display.DisplayObject;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
@@ -35,6 +40,10 @@ package be.irail.betrains.playbook.view.components.preloader {
 			return "100%";
 		}
 
+		override public function get backgroundAlpha():Number {
+			return 0;
+		}
+
 		override protected function showDisplayForInit(elapsedTime:int, count:int):Boolean {
 			return true;
 		}
@@ -44,6 +53,7 @@ package be.irail.betrains.playbook.view.components.preloader {
 		}
 
 		override protected function createChildren():void {
+			this.graphics.clear();
 			if (backgroundImage != null && !_loading) {
 				_loading = true;
 				loadBackgroundImage(backgroundImage);
@@ -133,8 +143,6 @@ package be.irail.betrains.playbook.view.components.preloader {
 
 			image.x = offsetX;
 			image.y = offsetY;
-
-
 		}
 
 		/**
@@ -153,7 +161,7 @@ package be.irail.betrains.playbook.view.components.preloader {
 		}
 
 		override protected function initCompleteHandler(event:Event):void {
-			setTimeout(passCompleted, 2000)
+			setTimeout(passCompleted, 1000)
 		}
 
 		private function passCompleted():void {

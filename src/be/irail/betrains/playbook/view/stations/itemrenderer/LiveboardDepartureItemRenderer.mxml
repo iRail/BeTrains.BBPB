@@ -11,6 +11,8 @@
 			import be.irail.api.data.liveboard.LiveboardDeparture;
 			import be.irail.betrains.playbook.utils.FormatUtil;
 
+			import com.adobe.utils.DateUtil;
+
 			import org.as3commons.lang.DateUtils;
 
 			import qnx.locale.LocaleManager;

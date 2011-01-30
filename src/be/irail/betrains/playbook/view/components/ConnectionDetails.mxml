@@ -19,13 +19,15 @@
 			import be.irail.api.event.IRailResultEvent;
 			import be.irail.api.methodgroup.Vehicles;
 			import be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem;
-
+			
+			import com.adobe.utils.ArrayUtil;
+			
 			import flash.utils.setTimeout;
-
+			
 			import mx.collections.ArrayCollection;
-
+			
 			import org.as3commons.lang.ArrayUtils;
-
+			
 			import qnx.locale.LocaleManager;
 
 			private var _service:Vehicles = new Vehicles();
@@ -155,7 +157,7 @@
 					return list;
 				}
 
-				var tmp:Array = ArrayUtils.clone(list),
+				var tmp:Array = ArrayUtil.copyArray(list),
 					numListItems:int = tmp.length,
 					firstIndex:int, firstIndexSet:Boolean,
 					lastIndex:int, lastIndexSet:Boolean,
