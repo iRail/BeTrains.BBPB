@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:List xmlns:s="library://ns.adobe.com/flex/spark"
-		xmlns:mx="library://ns.adobe.com/flex/mx"
-		allowMultipleSelection="false"
-		skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
-		xmlns:fx="http://ns.adobe.com/mxml/2009"
-		itemRenderer="be.irail.betrains.playbook.view.components.itemrenderers.SchedulerItem">
-	<s:layout>
-		<s:VerticalLayout clipAndEnableScrolling="true"
-						  useVirtualLayout="true"
-						  gap="0"
-						  variableRowHeight="false"/>
-	</s:layout>
-</s:List>
+<components:BeTrainsList xmlns:s="library://ns.adobe.com/flex/spark"
+						 xmlns:mx="library://ns.adobe.com/flex/mx"
+						 xmlns:components="be.irail.betrains.playbook.view.components.*"
+						 skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
+						 xmlns:fx="http://ns.adobe.com/mxml/2009"
+						 itemRenderer="be.irail.betrains.playbook.view.components.itemrenderers.SchedulerItem"
+						 allowMultipleSelection="false"
+						 borderVisible="false">
+</components:BeTrainsList>

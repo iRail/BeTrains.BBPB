@@ -99,7 +99,7 @@
 
 	<s:HGroup width="100%"
 			  height="100%"
-			  gap="20"
+			  gap="40"
 			  paddingTop="2"
 			  paddingLeft="20"
 			  paddingRight="20"
@@ -108,7 +108,9 @@
 		<s:Group id="stationListGrp"
 				 width="370"
 				 height="100%">
-			<ns:QContainer id="searchInputContainer">
+			<ns:QContainer id="searchInputContainer"
+						   x="-3"
+						   padding="0">
 				<text:TextInput id="searchInput"
 								width="{stationListGrp.width}"
 								height="40"
@@ -119,23 +121,15 @@
 								clearIconMode="{TextInputIconMode.ALWAYS}"/>
 			</ns:QContainer>
 
-			<s:List skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
-					id="stationsList"
-					y="45"
-					width="100%"
-					height="100%"
-					dataProvider="{presentationModel.stations}"
-					requireSelection="false"
-					change="stationsList_changeHandler(event)"
-					itemRenderer="be.irail.betrains.playbook.view.stations.itemrenderer.StationListItem"
-					allowMultipleSelection="false">
-				<s:layout>
-					<s:VerticalLayout useVirtualLayout="true"
-									  gap="0"
-									  variableRowHeight="false"/>
-				</s:layout>
+			<components:BeTrainsList id="stationsList"
+									 y="45"
+									 width="100%"
+									 height="100%"
+									 dataProvider="{presentationModel.stations}"
+									 change="stationsList_changeHandler(event)"
+									 itemRenderer="be.irail.betrains.playbook.view.stations.itemrenderer.StationListItem">
 
-			</s:List>
+			</components:BeTrainsList>
 		</s:Group>
 
 		<stations:StationProfile id="stationProfile"

@@ -5,6 +5,7 @@ package be.irail.betrains.playbook.view.favs {
 
 	import mx.collections.ArrayCollection;
 
+	[Event(name="favouritesChange", type="flash.events.Event")]
 	public class FavouritesPresentationModel extends EventDispatcher {
 		public function FavouritesPresentationModel() {
 		}

@@ -29,10 +29,7 @@
 
 	<fx:Metadata>
 		<![CDATA[ 
-        /** 
-         * @copy spark.skins.spark.ApplicationSkin#hostComponent
-         */
-        [HostComponent("spark.components.List")]
+        [HostComponent("be.irail.betrains.playbook.view.components.BeTrainsList")]
     ]]>
 	</fx:Metadata>
 
@@ -77,15 +74,21 @@
 	</fx:Declarations>
 
 	<!--- The Scroller component to add scroll bars to the list. -->
-	<s:Scroller left="0"
+	<s:Scroller id="scroller"
+				left="0"
 				top="0"
 				right="0"
 				bottom="0"
-				id="scroller"
+				horizontalScrollPolicy="{hostComponent.hScrollPolicy}"
+				verticalScrollPolicy="{hostComponent.vScrollPolicy}"
 				minViewportInset="0"
 				hasFocusableChildren="false">
 		<!--- @copy spark.components.SkinnableDataContainer#dataGroup -->
 		<s:DataGroup id="dataGroup"
+					 left="0"
+					 top="0"
+					 right="0"
+					 bottom="0"
 					 itemRenderer="spark.skins.spark.DefaultItemRenderer">
 			<s:layout>
 				<!--- The default layout is vertical and measures at least for 5 rows.
@@ -98,4 +101,17 @@
 			</s:layout>
 		</s:DataGroup>
 	</s:Scroller>
+
+	<s:Rect left="0"
+			right="1"
+			top="0"
+			bottom="1"
+			visible="{hostComponent.borderVisible}"
+			includeInLayout="{hostComponent.borderVisible}">
+		<s:stroke>
+			<s:SolidColorStroke color="0"
+								alpha=".4"
+								weight="1"/>
+		</s:stroke>
+	</s:Rect>
 </s:SparkSkin>

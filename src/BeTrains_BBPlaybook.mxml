@@ -70,9 +70,11 @@
 			private function readStations():void {
 				var stream:FileStream = new FileStream();
 
-				stream.openAsync(AppSettings.STATIONSLIST_STORAGE_LOCATION, FileMode.READ);
-				stream.addEventListener(Event.COMPLETE, stationDataReadHandler);
-				stream.addEventListener(IOErrorEvent.IO_ERROR, readStationsIOErrorHandler);
+				if (AppSettings.STATIONSLIST_STORAGE_LOCATION.exists) {
+					stream.openAsync(AppSettings.STATIONSLIST_STORAGE_LOCATION, FileMode.READ);
+					stream.addEventListener(Event.COMPLETE, stationDataReadHandler);
+					stream.addEventListener(IOErrorEvent.IO_ERROR, readStationsIOErrorHandler);
+				}
 			}
 
 			private function readRecents():void {
@@ -100,17 +102,29 @@
 			}
 
 			private function writeRecents():void {
-				var stream:FileStream = new FileStream();
-				var ba:ByteArray = SerializeUtil.serialize(_model.recentSchedulerQueries.toArray());
-				stream.openAsync(AppSettings.RECENT_STORAGE_LOCATION, FileMode.WRITE);
-				stream.writeBytes(ba);
+				if (AppSettings.RECENT_STORAGE_LOCATION.exists) {
+					AppSettings.RECENT_STORAGE_LOCATION.deleteFile();
+				}
+
+				if (_model.recentSchedulerQueries.length > 0) {
+					var stream:FileStream = new FileStream();
+					var ba:ByteArray = SerializeUtil.serialize(_model.recentSchedulerQueries.toArray());
+					stream.open(AppSettings.RECENT_STORAGE_LOCATION, FileMode.WRITE);
+					stream.writeBytes(ba);
+				}
 			}
 
 			private function writeFavourites():void {
-				var stream:FileStream = new FileStream();
-				var ba:ByteArray = SerializeUtil.serialize(_model.favourites.toArray());
-				stream.openAsync(AppSettings.FAVOURITES_STORAGE_LOCATION, FileMode.WRITE);
-				stream.writeBytes(ba);
+				if (AppSettings.FAVOURITES_STORAGE_LOCATION.exists) {
+					AppSettings.FAVOURITES_STORAGE_LOCATION.deleteFile();
+				}
+
+				if (_model.favourites.length > 0) {
+					var stream:FileStream = new FileStream();
+					var ba:ByteArray = SerializeUtil.serialize(_model.favourites.toArray());
+					stream.open(AppSettings.FAVOURITES_STORAGE_LOCATION, FileMode.WRITE);
+					stream.writeBytes(ba);
+				}
 			}
 
 			private function stationDataReadHandler(event:Event):void {

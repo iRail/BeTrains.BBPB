@@ -212,11 +212,11 @@
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.works')}"
 										 image="@Embed(source='images/warning.png')"
 										 change="changeHandler(event)"/>
-		<components:ApplicationBarButton id="chat"
+		<!--<components:ApplicationBarButton id="chat"
 										 label="{LocaleManager.localeManager.getResource('application.controlbar.chat')}"
 										 image="@Embed(source='images/chat.png')"
 										 change="changeHandler(event)"
-										 enabled="{_model.loggedIn}"/>
+										 enabled="{_model.loggedIn}"/>-->
 	</s:Group>
 	<components:ApplicationBarButton id="about"
 									 label="{LocaleManager.localeManager.getResource('application.controlbar.about')}"

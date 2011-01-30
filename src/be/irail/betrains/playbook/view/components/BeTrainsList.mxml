@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:List xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
+		maxWidth="1024"
+		requireSelection="false"
+		allowMultipleSelection="false">
+	<s:layout>
+		<s:VerticalLayout useVirtualLayout="true"
+						  gap="0"
+						  variableRowHeight="false"/>
+	</s:layout>
+	<fx:Declarations>
+		<fx:Boolean id="borderVisible">true</fx:Boolean>
+		<fx:String id="hScrollPolicy">off</fx:String>
+		<fx:String id="vScrollPolicy">auto</fx:String>
+	</fx:Declarations>
+</s:List>

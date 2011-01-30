@@ -30,18 +30,6 @@
 				return _isLoading;
 			}
 
-			[Bindable(event="isLoadingChange")]
-			public function get closeBtnX():Number {
-				var value:Number = _isLoading ? (spinner.x + spinner.width) : this.width;
-				return value;
-			}
-
-			[Bindable(event="isLoadingChange")]
-			public function get closeBtnY():Number {
-				var value:Number = _isLoading ? spinner.y : 0;
-				return value - 45;
-			}
-
 			public function set isLoading(value:Boolean):void {
 				if (value != _isLoading) {
 					_isLoading = value;
@@ -76,12 +64,35 @@
 			}
 
 			private function loadWebView(event:Event):void {
-				webView.viewPort = new Rectangle(x, y - 20, this.width, this.height);
+				webView.viewPort = new Rectangle(x + 10, y + 10, this.width - 20, this.height - 20);
 				webView.stage = this.stage;
 				isLoading = false;
 			}
 		]]>
 	</fx:Script>
+
+	<s:Rect id="panel"
+			left="0"
+			right="0"
+			bottom="0"
+			top="0"
+			radiusX="4"
+			radiusY="4">
+		<s:fill>
+			<s:BitmapFill source="@Embed(source='images/bg.png')"
+						  fillMode="scale"
+						  smooth="true"/>
+		</s:fill>
+		<s:filters>
+			<s:DropShadowFilter blurX="6"
+								blurY="6"
+								strength=".4"
+								quality="3"
+								angle="45"
+								distance="3"/>
+		</s:filters>
+	</s:Rect>
+
 	<controls:Spinner id="spinner"
 					  autoPlay="false"
 					  visible="{isLoading}"
@@ -89,9 +100,8 @@
 					  verticalCenter="0"/>
 
 	<components:CloseButton id="closeBtnGrp"
-							x="{closeBtnX}"
-							y="{closeBtnY}"
-							moveEffect="Move"
+							top="-15"
+							right="-20"
 							close="close();"/>
 
 </s:Group>

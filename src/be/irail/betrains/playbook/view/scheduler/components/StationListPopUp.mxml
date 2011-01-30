@@ -8,7 +8,9 @@
 			   xmlns:stations="be.irail.api.data.stations.*"
 			   creationComplete="titlewindow1_creationCompleteHandler(event)"
 			   contentCreationComplete="titlewindow1_contentCreationCompleteHandler(event)"
-			   xmlns:components="be.irail.betrains.playbook.view.components.*">
+			   xmlns:components="be.irail.betrains.playbook.view.components.*"
+			   xmlns:ns="http://ns.renaun.com/mxml/2010"
+			   xmlns:text="qnx.ui.text.*">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Script>
@@ -24,8 +26,8 @@
 
 			import org.as3commons.lang.StringUtils;
 
+			import qnx.locale.LocaleManager;
 			import qnx.ui.skins.text.TextInputSkinWhite;
-			import qnx.ui.text.KeyboardType;
 			import qnx.ui.text.TextInput;
 			import qnx.ui.text.TextInputIconMode;
 
@@ -108,30 +110,9 @@
 			}
 
 			protected function titlewindow1_contentCreationCompleteHandler(event:FlexEvent):void {
-				while (inputGroup.numChildren) {
-					inputGroup.removeChildAt(0);
-				}
-
-				var txtInput:TextInput = new TextInput();
-				txtInput.keyboardType = qnx.ui.text.KeyboardType.DEFAULT
-				txtInput.clearIconMode = TextInputIconMode.ALWAYS;
-
 				txtInput.setSkin(TextInputSkinWhite);
-				txtInput.setSize(inputGroup.width, inputGroup.height);
-
-				txtInput.addEventListener(Event.CHANGE, stationName_changeHandler)
-
-				txtInput.focusRect = null;
-				txtInput.drawNow();
-				inputGroup.addChild(txtInput);
 			}
 
-			private function onInputGroupResize():void {
-				if (inputGroup && inputGroup.numChildren) {
-					var txtInput:TextInput = TextInput(inputGroup.getChildAt(0));
-					txtInput.setSize(inputGroup.width, inputGroup.height);
-				}
-			}
 
 			private function closeButtonClose():void {
 				selectedStation = null;
@@ -139,28 +120,34 @@
 			}
 		]]>
 	</fx:Script>
+	<s:Group width="800"
+			 horizontalCenter="0">
+		<ns:QContainer width="800"
+					   height="50"
+					   y="15"
+					   x="-3"
+					   padding="0">
+			<text:TextInput id="txtInput"
+							width="800"
+							height="50"
+							prompt="{LocaleManager.localeManager.getResource('station.search.prompt')}"
+							change="stationName_changeHandler(event)"
+							clearIconMode="{TextInputIconMode.ALWAYS}"/>
+		</ns:QContainer>
 
+		<components:BeTrainsList itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.StationListItem"
+								 id="stationList"
+								 y="70"
+								 width="800"
+								 height="470"
+								 horizontalCenter="0"
+								 labelFunction="IRStation.labelFunction"
+								 dataProvider="{stations}"
+								 change="stationList_changeHandler(event)"/>
 
-	<mx:UIComponent id="inputGroup"
-					width="800"
-					height="50"
-					y="15"
-					horizontalCenter="0"
-					resize="onInputGroupResize()"/>
+		<components:CloseButton right="-45"
+								top="24"
+								click="closeButtonClose()"/>
 
-	<s:List skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
-			itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.StationListItem"
-			id="stationList"
-			y="70"
-			useVirtualLayout="true"
-			width="800"
-			height="470"
-			horizontalCenter="0"
-			labelFunction="IRStation.labelFunction"
-			dataProvider="{stations}"
-			change="stationList_changeHandler(event)"/>
-
-	<components:CloseButton x="{inputGroup.x+inputGroup.width+15}"
-							y="{(inputGroup.height/2)}"
-							click="closeButtonClose()"/>
+	</s:Group>
 </s:TitleWindow>

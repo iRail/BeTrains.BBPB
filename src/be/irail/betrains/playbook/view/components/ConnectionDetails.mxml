@@ -4,7 +4,8 @@
 					  xmlns:mx="library://ns.adobe.com/flex/mx"
 					  xmlns:scheduler="be.irail.api.data.scheduler.*"
 					  width="400"
-					  height="500">
+					  height="500"
+					  xmlns:components="be.irail.betrains.playbook.view.components.*">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Script>
@@ -278,20 +279,18 @@
 			 text="{connectionTitle}"
 			 maxDisplayedLines="{NaN}"/>
 
-	<s:List id="connections"
-			allowMultipleSelection="false"
-			width="500"
-			bottom="5"
-			top="50"
-			left="10"
-			right="5"
-			horizontalCenter="0"
-			changing="refreshStationsView()"
-			skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
-			itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem">
-		<s:layout>
+	<components:BeTrainsList id="connections"
+							 width="500"
+							 bottom="5"
+							 top="50"
+							 left="10"
+							 right="5"
+							 horizontalCenter="0"
+							 changing="refreshStationsView()"
+							 itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem">
+		<components:layout>
 			<s:VerticalLayout rowHeight="50"
 							  gap="0"/>
-		</s:layout>
-	</s:List>
+		</components:layout>
+	</components:BeTrainsList>
 </s:SkinnableContainer>

@@ -25,11 +25,11 @@
 			import be.irail.api.data.liveboard.Liveboard;
 			import be.irail.betrains.playbook.utils.FormatUtil;
 			import be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer;
-			
+
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
-			
+
 			import qnx.locale.LocaleManager;
 
 			// ----------------------------
@@ -178,18 +178,14 @@
 				 height="75"
 				 mouseChildren="false"/>
 
-		<s:List skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
-				id="liveboardItems"
-				top="75"
-				bottom="0"
-				left="0"
-				right="0"
-				contentBackgroundAlpha="1"
-				contentBackgroundColor="0"
-				itemRenderer="be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer">
-			<s:layout>
-				<s:VerticalLayout gap="0"/>
-			</s:layout>
-		</s:List>
+		<components:BeTrainsList id="liveboardItems"
+								 top="75"
+								 bottom="0"
+								 left="0"
+								 right="0"
+								 contentBackgroundAlpha="1"
+								 contentBackgroundColor="0"
+								 itemRenderer="be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer">
+		</components:BeTrainsList>
 	</s:Group>
 </s:Group>

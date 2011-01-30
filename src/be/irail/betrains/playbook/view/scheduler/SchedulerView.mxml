@@ -16,6 +16,7 @@
 		<![CDATA[
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.api.data.stations.IRStation;
+			import be.irail.betrains.playbook.data.FavouriteConnection;
 			import be.irail.betrains.playbook.view.components.ConnectionDetails;
 			import be.irail.betrains.playbook.view.scheduler.components.StationListPopUp;
 
@@ -33,8 +34,12 @@
 			[Bindable]
 			private var _locale:LocaleManager = LocaleManager.localeManager;
 
+			public function setDataByFavourite(fav:FavouriteConnection):void {
+				presentationModel.to = fav.to;
+				presentationModel.from = fav.from;
+			}
 
-			protected function selectFromStation_clickHandler(event:MouseEvent):void {
+			private function selectFromStation_clickHandler(event:MouseEvent):void {
 				if (_popup) {
 					_popup.close();
 				}
@@ -55,7 +60,7 @@
 				_popup = null;
 			}
 
-			protected function selectToStation_clickHandler(event:MouseEvent):void {
+			private function selectToStation_clickHandler(event:MouseEvent):void {
 				if (_popup) {
 					_popup.close();
 				}
@@ -88,13 +93,13 @@
 				searchBtnGroup.addChild(btn);
 			}
 
-			protected function searchBtn_clickHandler(event:MouseEvent):void {
+			private function searchBtn_clickHandler(event:MouseEvent):void {
 				if (presentationModel.isValid) {
 					presentationModel.getSchedule(dateSelector.arrDep);
 				}
 			}
 
-			protected function onSwapClick(event:MouseEvent):void {
+			private function onSwapClick(event:MouseEvent):void {
 				var from:IRStation = presentationModel.from;
 				var to:IRStation = presentationModel.to;
 
@@ -102,11 +107,11 @@
 				presentationModel.from = to;
 			}
 
-			protected function mainviewitem1_creationCompleteHandler():void {
+			private function mainviewitem1_creationCompleteHandler():void {
 				createSearchBtn();
 			}
 
-			protected function resultList_changeHandler(event:IndexChangeEvent):void {
+			private function resultList_changeHandler(event:IndexChangeEvent):void {
 				var connection:IRConnection = resultList.selectedItem as IRConnection;
 				var details:ConnectionDetails = new ConnectionDetails();
 				details.connection = connection;
@@ -115,7 +120,7 @@
 				PopUpManager.centerPopUp(details);
 			}
 
-			protected function presentationModel_connectionsChangeHandler(event:Event):void {
+			private function presentationModel_connectionsChangeHandler(event:Event):void {
 				if (presentationModel.connections && presentationModel.connections.length > 0) {
 					this.currentState = "hasConnections";
 				} else {

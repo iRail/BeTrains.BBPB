@@ -7,6 +7,11 @@
 	<fx:Declarations>
 		<favs:FavouritesPresentationModel id="presentationModel"/>
 	</fx:Declarations>
+
+	<fx:Metadata>
+		[Event(name="favouriteChange",type="flash.events.Event")]
+	</fx:Metadata>
+
 	<components:states>
 		<s:State name="none"/>
 		<s:State name="favourites"/>
@@ -15,10 +20,14 @@
 	<fx:Script>
 		<![CDATA[
 			import be.irail.betrains.playbook.controller.ModelLocator;
+			import be.irail.betrains.playbook.data.FavouriteConnection;
 
 			import mx.collections.ArrayCollection;
+			import mx.events.ResizeEvent;
 
 			import qnx.locale.LocaleManager;
+
+			import spark.events.IndexChangeEvent;
 
 			public function get favourites():ArrayCollection {
 				return presentationModel.favourites;
@@ -34,8 +43,47 @@
 				}
 			}
 
+			// ----------------------------
+			// selectedFavourite
+			// ----------------------------
+
+			private var _selectedFavourite:FavouriteConnection;
+
+			[Bindable(event="favouriteChange")]
+			public function get selectedFavourite():FavouriteConnection {
+				return _selectedFavourite;
+			}
+
+			public function set selectedFavourite(value:FavouriteConnection):void {
+				if (value != _selectedFavourite) {
+					_selectedFavourite = value;
+					dispatchEvent(new Event("favouriteChange"));
+				}
+			}
+
 			override public function make():void {
 				this.favourites = ModelLocator.getInstance().favourites;
+				callLater(adjustPosition);
+			}
+
+			private function adjustPosition():void {
+				if (!favDataGroup)
+					return;
+
+				favDataGroup.x = (this.width / 2) - (favDataGroup.width / 2);
+				favDataGroup.y = (this.height / 2) - (favDataGroup.height / 2);
+
+				if (favDataGroup.x < 0) {
+					favDataGroup.x = 0;
+				}
+
+				if (favDataGroup.y < 0) {
+					favDataGroup.y = 0;
+				}
+			}
+
+			protected function favDataGroup_changeHandler(event:IndexChangeEvent):void {
+				selectedFavourite = favDataGroup.selectedItem;
 			}
 		]]>
 	</fx:Script>
@@ -50,15 +98,25 @@
 			 includeIn="none"
 			 text="{LocaleManager.localeManager.getResource('favs.none')}"/>
 
-	<s:DataGroup width="100%"
-				 height="100%"
-				 includeIn="favourites"
-				 itemRenderer="be.irail.betrains.playbook.view.favs.itemrenderer.FavouriteConnectionItem"
-				 dataProvider="{presentationModel.favourites}">
-		<s:layout>
+	<components:BeTrainsList id="favDataGroup"
+							 includeIn="favourites"
+							 maxHeight="544"
+							 maxWidth="1024"
+							 vScrollPolicy="off"
+							 borderVisible="false"
+							 change="favDataGroup_changeHandler(event)"
+							 itemRenderer="be.irail.betrains.playbook.view.favs.itemrenderer.FavouriteConnectionItem"
+							 dataProvider="{presentationModel.favourites}">
+		<components:layout>
 			<s:TileLayout orientation="rows"
-						  verticalAlign="middle"
-						  horizontalAlign="center"/>
-		</s:layout>
-	</s:DataGroup>
+						  useVirtualLayout="true"
+						  clipAndEnableScrolling="false"
+						  columnAlign="justifyUsingWidth"
+						  rowAlign="justifyUsingHeight"
+						  horizontalGap="5"
+						  verticalGap="5"
+						  horizontalAlign="center"
+						  verticalAlign="middle"/>
+		</components:layout>
+	</components:BeTrainsList>
 </components:MainViewItem>

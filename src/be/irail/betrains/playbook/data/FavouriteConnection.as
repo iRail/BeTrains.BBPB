@@ -5,7 +5,7 @@ package be.irail.betrains.playbook.data {
 	[RemoteClass(alias="betrains.playbook.FavouriteConnection")]
 	public class FavouriteConnection {
 
-		public function FavouriteConnection(from:IRStation, to:IRStation):void {
+		public function FavouriteConnection(from:IRStation = null, to:IRStation = null):void {
 			this.from = from;
 			this.to = to;
 		}

@@ -17,6 +17,7 @@
 	<fx:Script>
 		<![CDATA[
 			import be.irail.betrains.playbook.controller.ModelLocator;
+			import be.irail.betrains.playbook.data.FavouriteConnection;
 			import be.irail.betrains.playbook.view.about.AboutPopup;
 			import be.irail.betrains.playbook.view.components.MainViewItem;
 
@@ -50,39 +51,70 @@
 				if (event.newIndex > -1) {
 					MainViewItem(NavigatorContent(vs.getElementAt(event.newIndex)).getElementAt(0)).make();
 				}
+
+			}
+
+			protected function favourites_favouriteChangeHandler(event:Event):void {
+				var fav:FavouriteConnection = favourites.selectedFavourite;
+
+				if (fav) {
+					applicationBar.selectedIndex = 2;
+					scheduler.setDataByFavourite(fav);
+				}
 			}
 		]]>
 	</fx:Script>
 
 	<mx:ViewStack id="vs"
-				  width="100%"
-				  height="100%"
+				  left="0"
+				  right="0"
+				  top="0"
+				  bottom="54"
 				  creationPolicy="all"
 				  change="vs_changeHandler(event)">
-		<s:NavigatorContent>
+		<s:NavigatorContent left="0"
+							right="0"
+							top="0"
+							bottom="0">
 			<recent:RecentSchedulerQueries id="recent"
 										   title="{LocaleManager.localeManager.getResource('recent.title')}"/>
 		</s:NavigatorContent>
-		<s:NavigatorContent>
+		<s:NavigatorContent left="0"
+							right="0"
+							top="0"
+							bottom="0">
 			<favs:FavouritesView id="favourites"
 								 favourites="{_model.favourites}"
+								 favouriteChange="favourites_favouriteChangeHandler(event)"
 								 title="{LocaleManager.localeManager.getResource('favs.title')}"/>
 		</s:NavigatorContent>
-		<s:NavigatorContent>
+		<s:NavigatorContent left="0"
+							right="0"
+							top="0"
+							bottom="0">
 			<scheduler:SchedulerView id="scheduler"
 									 title="{LocaleManager.localeManager.getResource('scheduler.title')}"/>
 		</s:NavigatorContent>
-		<s:NavigatorContent>
+		<s:NavigatorContent left="0"
+							right="0"
+							top="0"
+							bottom="0">
 			<stations:StationsView id="stations"
 								   title="{LocaleManager.localeManager.getResource('liveboard.title')}"/>
 		</s:NavigatorContent>
-		<s:NavigatorContent>
+		<s:NavigatorContent left="0"
+							right="0"
+							top="0"
+							bottom="0">
 			<traffic:TrafficIssuesView id="works"/>
 		</s:NavigatorContent>
-		<s:NavigatorContent>
+		<!--<s:NavigatorContent left="0"
+							right="0"
+							top="0"
+							bottom="0">
 			<chat:ChatView id="chat"
 						   title="{LocaleManager.localeManager.getResource('chat.title')}"/>
-		</s:NavigatorContent>
+		</s:NavigatorContent>-->
 	</mx:ViewStack>
 
 	<components:ApplicationBar id="applicationBar"

@@ -9,10 +9,10 @@ package be.irail.betrains.playbook.controller {
 		public static const STATIONSLIST_STORAGE_LOCATION:File = File.applicationDirectory.resolvePath("data/stations.bpd");
 
 		// Recent scheduler location 
-		public static const RECENT_STORAGE_LOCATION:File = File.applicationStorageDirectory.resolvePath("recents.bpd");
+		public static const RECENT_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath("recents.bpd");
 
 		// Favourites  location 
-		public static const FAVOURITES_STORAGE_LOCATION:File = File.applicationStorageDirectory.resolvePath("favourites.bpd");
+		public static const FAVOURITES_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath("favourites.bpd");
 
 		public static const ABOUT_PAGE_URL:String = "http://www.betrains.com";
 
