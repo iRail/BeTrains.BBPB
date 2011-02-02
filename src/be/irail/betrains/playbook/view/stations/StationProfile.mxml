@@ -19,12 +19,14 @@
 			import be.irail.api.event.IRailErrorEvent;
 			import be.irail.api.event.IRailResultEvent;
 			import be.irail.api.methodgroup.Liveboards;
+			import be.irail.betrains.playbook.controller.AppSettings;
 
 			import com.yahoo.maps.api.YahooMap;
 			import com.yahoo.maps.api.YahooMapEvent;
 			import com.yahoo.maps.api.core.location.LatLon;
 
 			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
 			import mx.managers.PopUpManager;
@@ -36,6 +38,10 @@
 			private var service:Liveboards = new Liveboards();
 
 			private var mapComponent:YahooMap;
+
+			private var stationsLiveboard:StationsLiveboardInfo;
+
+			private var _refreshTimer:Timer;
 
 			// ----------------------------
 			// station
@@ -96,22 +102,64 @@
 				service.addEventListener(IRailResultEvent.LIVEBOARD_RESULT, onLiveboardResult);
 				service.addEventListener(IRailErrorEvent.API_ERROR, onError);
 				service.addEventListener(IRailErrorEvent.IO_ERROR, onError);
+
+				loadLiveBoard();
+			}
+
+			private function loadLiveBoard():void {
 				service.getStationLiveboardByStationName(stationName);
 				liveBoardBtn.isBusy = true;
 			}
 
 			private function onError(event:IRailErrorEvent):void {
 				liveBoardBtn.isBusy = false;
+				startRefreshTimer();
 			}
 
 			private function onLiveboardResult(event:IRailResultEvent):void {
-				service.removeEventListener(IRailResultEvent.LIVEBOARD_RESULT, onLiveboardResult);
 				liveBoardBtn.isBusy = false;
 
-				var stationsLiveboard:StationsLiveboardInfo = new StationsLiveboardInfo();
+				if (stationsLiveboard) {
+					stationsLiveboard.liveBoard = null;
+				} else {
+					stationsLiveboard = new StationsLiveboardInfo();
+					stationsLiveboard.addEventListener(CloseEvent.CLOSE, onLiveboardPopupClose);
+					PopUpManager.addPopUp(stationsLiveboard, FlexGlobals.topLevelApplication as DisplayObject, true);
+					PopUpManager.centerPopUp(stationsLiveboard);
+				}
+
 				stationsLiveboard.liveBoard = (event.result.data as Liveboard);
-				PopUpManager.addPopUp(stationsLiveboard, FlexGlobals.topLevelApplication as DisplayObject, true);
-				PopUpManager.centerPopUp(stationsLiveboard);
+
+				startRefreshTimer();
+			}
+
+			private function onLiveboardPopupClose(event:CloseEvent):void {
+				service.removeEventListener(IRailResultEvent.LIVEBOARD_RESULT, onLiveboardResult);
+				service.removeEventListener(IRailErrorEvent.API_ERROR, onError);
+				service.removeEventListener(IRailErrorEvent.IO_ERROR, onError);
+
+				stationsLiveboard.removeEventListener(CloseEvent.CLOSE, onLiveboardPopupClose);
+				stationsLiveboard = null;
+
+				if (_refreshTimer && _refreshTimer.running) {
+					_refreshTimer.stop();
+				}
+				_refreshTimer = null;
+			}
+
+			private function startRefreshTimer():void {
+				if (_refreshTimer && _refreshTimer.running) {
+					_refreshTimer.stop();
+				}
+				_refreshTimer = null;
+
+				_refreshTimer = new Timer(AppSettings.LIVEBOARD_REFRESH_INTERVAL * 1000, 1);
+				_refreshTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onRefreshLiveboard);
+				_refreshTimer.start();
+			}
+
+			private function onRefreshLiveboard(e:TimerEvent):void {
+				loadLiveBoard();
 			}
 
 			protected function group1_creationCompleteHandler(event:FlexEvent):void {

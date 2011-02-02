@@ -6,7 +6,8 @@
 		 height="540"
 		 xmlns:liveboard="be.irail.api.data.liveboard.*"
 		 creationComplete="group1_creationCompleteHandler(event)"
-		 xmlns:components="be.irail.betrains.playbook.view.components.*" xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
+		 xmlns:components="be.irail.betrains.playbook.view.components.*"
+		 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Metadata>
@@ -56,7 +57,7 @@
 				if (value != _liveBoard) {
 					_liveBoard = value;
 					liveboardItems.dataProvider = new ArrayCollection(liveBoard.departures);
-					evalDate();
+					callLater(evalDate);
 					dispatchEvent(new Event("liveBoardChange"));
 				}
 			}
@@ -122,8 +123,8 @@
 				   source="@Embed(source='images/tvscreen.png')"/>
 
 	<controls:CloseButton top="-15"
-							right="-15"
-							close="close()"/>
+						  right="-15"
+						  close="close()"/>
 
 	<s:Group left="54"
 			 right="52"

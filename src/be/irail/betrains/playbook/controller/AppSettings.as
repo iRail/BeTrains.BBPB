@@ -25,7 +25,7 @@ package be.irail.betrains.playbook.controller {
 		public static const RSS_URL_DE:String = "http://www.railtime.be/website/RSS/RssInfoBar_de.xml";
 
 		// Maximum number of stored recents
-		public static const MAX_NUM_STORED_RECENTS:int = 10;
+		public static const MAX_NUM_STORED_RECENTS:int = 5;
 
 		// Liveboard refresh interval in seconds
 		public static const LIVEBOARD_REFRESH_INTERVAL:int = 10;
