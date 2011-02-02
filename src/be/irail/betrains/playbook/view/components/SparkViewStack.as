@@ -70,19 +70,6 @@ package be.irail.betrains.playbook.view.components {
 
 		public var previousViewIndex:int = 0;
 
-		override public function set visible(value:Boolean):void {
-			var view:UIComponent = _arrayChildren[selectedIndex] as UIComponent;
-			if (view) {
-				view.visible = value;
-				if (value) {
-					this.scrollRect = new Rectangle(0, 0, width, height);
-				} else {
-					this.scrollRect = new Rectangle(0, 0, 1, 1);
-				}
-			}
-			super.visible = value;
-		}
-
 		// ----------------------------
 		// animateSelectedItemChange
 		// ----------------------------
@@ -94,7 +81,7 @@ package be.irail.betrains.playbook.view.components {
 		}
 
 		public function set animateSelectedItemChange(value:Boolean):void {
-			if (value !== _animateSelectedItemChange) {
+			if (value != _animateSelectedItemChange) {
 				_animateSelectedItemChange = value;
 			}
 		}

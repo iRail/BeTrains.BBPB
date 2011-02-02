@@ -25,7 +25,7 @@
 			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
 			 alpha.disabledStates="0.4"
 			 minWidth="50">
-	<fx:Metadata>[HostComponent("be.irail.betrains.playbook.view.components.ApplicationBarButton")]</fx:Metadata>
+	<fx:Metadata>[HostComponent("be.irail.betrains.playbook.view.components.controls.ApplicationBarButton")]</fx:Metadata>
 
 	<!-- host component -->
 	<!-- states -->

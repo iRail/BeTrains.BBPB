@@ -30,8 +30,6 @@
 			  visible="false"
 			  top="2"
 			  bottom="2"
-			  horizontalCenter="0"
-			  verticalCenter="0"
 			  id="track"/>
 
 	<s:Button skinClass="be.irail.betrains.playbook.view.components.skins.ScrollBarThumbSkin"

@@ -1,8 +1,10 @@
 package be.irail.betrains.playbook.view.scheduler {
 
 	import be.irail.api.data.stations.IRStation;
+	import be.irail.api.event.IRailErrorEvent;
 	import be.irail.api.event.IRailResultEvent;
 	import be.irail.api.methodgroup.Scheduler;
+	import be.irail.betrains.playbook.controller.AppSettings;
 	import be.irail.betrains.playbook.controller.ModelLocator;
 	import be.irail.betrains.playbook.data.FavouriteConnection;
 	import be.irail.betrains.playbook.data.SchedulerQuery;
@@ -32,7 +34,7 @@ package be.irail.betrains.playbook.view.scheduler {
 		}
 
 		public function set from(value:IRStation):void {
-			if (value !== _from) {
+			if (value != _from) {
 				_from = value;
 				dispatchEvent(new Event("fromChange"));
 			}
@@ -50,7 +52,7 @@ package be.irail.betrains.playbook.view.scheduler {
 		}
 
 		public function set to(value:IRStation):void {
-			if (value !== _to) {
+			if (value != _to) {
 				_to = value;
 				dispatchEvent(new Event("toChange"));
 			}
@@ -111,7 +113,6 @@ package be.irail.betrains.playbook.view.scheduler {
 		// ----------------------------
 		[Bindable(event="toChange")]
 		[Bindable(event="fromChange")]
-		[Bindable(event="dateChange")]
 		[Bindable(event="connectionFavd")]
 		public function get canAddToFavourites():Boolean {
 			if (from == null || to == null)
@@ -135,9 +136,17 @@ package be.irail.betrains.playbook.view.scheduler {
 		public function getSchedule(dateArrDep:String = "depart"):void {
 			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"]);
 			_schedule.addEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
+			_schedule.addEventListener(IRailErrorEvent.IO_ERROR, onIoError);
 
 			_query = new SchedulerQuery(from, to, when, dateArrDep);
 			isLoading = true;
+		}
+
+		private function onIoError(event:IRailErrorEvent):void {
+			_schedule.removeEventListener(IRailErrorEvent.IO_ERROR, onIoError);
+			isLoading = false;
+			_connections = new ArrayCollection();
+			dispatchEvent(new Event("connectionsChange"));
 		}
 
 		public function favCurrentConnection():void {

@@ -16,6 +16,7 @@
 	<components:states>
 		<s:State name="none"/>
 		<s:State name="favourites"/>
+		<s:State name="favouriteselect"/>
 	</components:states>
 
 	<fx:Script>
@@ -58,6 +59,11 @@
 
 			public function set selectedFavourite(value:FavouriteConnection):void {
 				if (value != _selectedFavourite) {
+					if (!value) {
+						this.currentState = "favourites";
+					} else {
+						this.currentState = "favouriteselect";
+					}
 					_selectedFavourite = value;
 					dispatchEvent(new Event("selectedFavouriteChange"));
 				}
@@ -65,40 +71,27 @@
 
 			override public function make():void {
 				this.favourites = ModelLocator.getInstance().favourites;
-				callLater(adjustPosition);
-			}
-
-			private function adjustPosition():void {
-				if (!favDataGroup)
-					return;
-
-				favDataGroup.x = (this.width / 2) - (favDataGroup.width / 2);
-				favDataGroup.y = (this.height / 2) - (favDataGroup.height / 2);
-
-				if (favDataGroup.x < 0) {
-					favDataGroup.x = 0;
-				}
-
-				if (favDataGroup.y < 0) {
-					favDataGroup.y = 0;
-				}
-
-				if (favDataGroup.height > 544) {
-					favDataGroup.height = 544;
-				}
+				favDataGroup.selectedItem = selectedFavourite;
 			}
 
 			private function favDataGroup_changeHandler(event:IndexChangeEvent):void {
 				selectedFavourite = favDataGroup.selectedItem;
 			}
 
-			private function favouriteDeleteHandler(e:Event):void {
+			private function favouriteDeleteHandler(e:FavouriteEvent):void {
 				e.stopImmediatePropagation();
-				presentationModel.deleteFav(FavouriteConnectionItem(e.target).connection);
+				presentationModel.deleteFav(selectedFavourite);
+				selectedFavourite = null;
 			}
 
-			protected function mainviewitem1_creationCompleteHandler(event:FlexEvent):void {
-				addEventListener('favouriteDelete', favouriteDeleteHandler);
+			private function favScheduleRouteHandler(e:FavouriteEvent):void {
+				e.stopImmediatePropagation();
+				dispatchEvent(new Event("favouriteChange"));
+			}
+
+			private function mainviewitem1_creationCompleteHandler(event:FlexEvent):void {
+				addEventListener(FavouriteEvent.DELETE, favouriteDeleteHandler);
+				addEventListener(FavouriteEvent.SCHEDULE_ROUTE, favScheduleRouteHandler);
 			}
 		]]>
 	</fx:Script>
@@ -113,24 +106,66 @@
 			 includeIn="none"
 			 text="{LocaleManager.localeManager.getResource('favs.none')}"/>
 
-	<components:BeTrainsList id="favDataGroup"
-							 includeIn="favourites"
-							 maxHeight="544"
-							 vScrollPolicy="off"
-							 borderVisible="false"
-							 change="favDataGroup_changeHandler(event)"
-							 itemRenderer="be.irail.betrains.playbook.view.favs.itemrenderer.FavouriteConnectionItem"
-							 dataProvider="{presentationModel.favourites}">
-		<components:layout>
-			<s:TileLayout orientation="columns"
-						  useVirtualLayout="true"
-						  clipAndEnableScrolling="false"
-						  columnAlign="justifyUsingWidth"
-						  rowAlign="justifyUsingHeight"
-						  horizontalGap="5"
-						  verticalGap="5"
-						  horizontalAlign="center"
-						  verticalAlign="middle"/>
-		</components:layout>
-	</components:BeTrainsList>
+
+	<s:Group width="100%"
+			 height="100%">
+
+		<s:Rect left="410"
+				right="0"
+				top="0"
+				bottom="0"
+				alpha=".6"
+				includeIn="favouriteselect">
+			<s:fill>
+				<s:SolidColor color="#FFFFFF"/>
+			</s:fill>
+		</s:Rect>
+
+		<s:Rect left="0"
+				bottom="0"
+				top="0"
+				width="410">
+			<s:fill>
+				<s:BitmapFill source="@Embed(source='images/bg.png')"
+							  fillMode="scale"
+							  smooth="true"/>
+			</s:fill>
+			<s:filters>
+				<s:DropShadowFilter blurX="6"
+									blurY="6"
+									strength=".4"
+									quality="3"
+									angle="45"
+									distance="3"/>
+			</s:filters>
+		</s:Rect>
+
+		<components:BeTrainsList id="favDataGroup"
+								 itemRenderer="be.irail.betrains.playbook.view.favs.itemrenderer.FavouriteConnectionItem"
+								 width="410"
+								 height="100%"
+								 borderVisible="false"
+								 change="favDataGroup_changeHandler(event)"
+								 dataProvider="{presentationModel.favourites}"/>
+
+		<s:Label left="410"
+				 width="100%"
+				 height="100%"
+				 textAlign="center"
+				 verticalAlign="middle"
+				 fontSize="40"
+				 color="#1F1F1F"
+				 alpha=".3"
+				 fontWeight="bold"
+				 includeIn="favourites"
+				 text="{LocaleManager.localeManager.getResource('favs.selected.none')}"/>
+
+		<favs:FavouriteOptions id="options"
+							   includeIn="favouriteselect"
+							   left="410"
+							   width="100%"
+							   height="100%"
+							   favourite="{selectedFavourite}"/>
+
+	</s:Group>
 </components:MainViewItem>

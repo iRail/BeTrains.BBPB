@@ -3,16 +3,19 @@
 				xmlns:s="library://ns.adobe.com/flex/spark"
 				xmlns:mx="library://ns.adobe.com/flex/mx"
 				xmlns:components="be.irail.betrains.playbook.view.components.*"
+				xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
 				autoDrawBackground="false"
 				height="75"
-				width="300"
-				gestureSwipe="gestureSwipeHandler()"
-				mouseDown="mouseDownHandler()">
-	<fx:Declarations>
-	</fx:Declarations>
+				width="100%"
+				mouseChildren="false">
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="selected"/>
+	</s:states>
 	<fx:Script>
 		<![CDATA[
 			import be.irail.betrains.playbook.data.FavouriteConnection;
+			import be.irail.betrains.playbook.view.favs.FavouriteEvent;
 
 			override public function set data(value:Object):void {
 				super.data = value;
@@ -38,7 +41,7 @@
 			}
 
 			public function set connection(value:FavouriteConnection):void {
-				if (value !== _connection) {
+				if (value != _connection) {
 					_connection = value;
 					dispatchEvent(new Event("connectionChange"));
 				}
@@ -61,45 +64,6 @@
 			public function get to():String {
 				return _connection.to.formattedName;
 			}
-
-			private function gestureSwipeHandler():void {
-				deleteBtn.visible = true;
-			}
-
-			private function clickHandler(event:MouseEvent):void {
-				if (event.target == this) {
-					dispatchEvent(new Event('favouriteChange', true));
-				}
-			}
-
-			override protected function getCurrentRendererState():String {
-				return this.currentState;
-			}
-
-			private var _t:Number;
-
-			private function mouseDownHandler():void {
-				this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				_t = getTimer();
-			}
-
-			private function onMouseUp(event:MouseEvent):void {
-				this.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				var time:int = getTimer() - _t;
-				if (time < 400) {
-					if (!deleteBtn.visible) {
-						dispatchEvent(new Event('favouriteChange', true));
-					} else {
-						deleteBtn.visible = false;
-					}
-				} else {
-					gestureSwipeHandler();
-				}
-			}
-
-			private function deleteBtn_deleteHandler(event:Event):void {
-				dispatchEvent(new Event('favouriteDelete', true));
-			}
 		]]>
 	</fx:Script>
 
@@ -111,6 +75,17 @@
 			<s:BitmapFill source="@Embed(source='images/cellBg.png')"
 						  fillMode="repeat"
 						  smooth="true"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:Rect left="0"
+			right="0"
+			top="0"
+			bottom="0"
+			includeIn="selected">
+		<s:fill>
+			<s:SolidColor color="#ffaa20"
+						  alpha=".40"/>
 		</s:fill>
 	</s:Rect>
 
@@ -148,20 +123,31 @@
 	</s:HGroup>
 
 	<s:BitmapImage id="favStar"
-				   right="2"
-				   top="2"
+				   horizontalCenter="0"
+				   verticalCenter="-20"
 				   source="@Embed(source='images/favstar.png')"
-				   height="20"
-				   width="20"
+				   height="15"
+				   width="15"
 				   smooth="true"/>
 
-	<components:RemoveButton id="deleteBtn"
-							 visible="false"
-							 showEffect="Fade"
-							 hideEffect="Fade"
-							 delete="deleteBtn_deleteHandler(event)"
-							 left="0"
-							 right="0"
-							 top="0"
-							 bottom="0"/>
+	<s:Line left="0"
+			right="0"
+			top="0"
+			visible="{this.itemIndex==0}">
+		<s:stroke>
+			<s:SolidColorStroke color="0"
+								alpha=".4"
+								weight="1"/>
+		</s:stroke>
+	</s:Line>
+	<s:Line left="0"
+			right="0"
+			bottom="0">
+		<s:stroke>
+			<s:SolidColorStroke color="0"
+								alpha=".4"
+								weight="1"/>
+		</s:stroke>
+	</s:Line>
+
 </s:ItemRenderer>

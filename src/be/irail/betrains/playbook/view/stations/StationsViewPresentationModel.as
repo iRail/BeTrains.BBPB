@@ -32,10 +32,8 @@ package be.irail.betrains.playbook.view.stations {
 		}
 
 		public function set selectedStation(value:IRStation):void {
-			if (value !== _selectedStation) {
-				_selectedStation = value;
-				dispatchEvent(new Event("selectedStationChange"));
-			}
+			_selectedStation = value;
+			dispatchEvent(new Event("selectedStationChange"));
 		}
 
 		[Bindable(event="stationListChange")]

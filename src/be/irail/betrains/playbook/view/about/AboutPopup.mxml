@@ -48,12 +48,18 @@
 
 				webView.addEventListener(Event.COMPLETE, loadWebView);
 				webView.addEventListener(ErrorEvent.ERROR, onError);
+				webView.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 
 				webView.loadURL(AppSettings.ABOUT_PAGE_URL);
 				isLoading = true;
 			}
 
 			private function onError(event:ErrorEvent):void {
+				isLoading = false;
+				close();
+			}
+
+			private function onIOError(event:IOErrorEvent):void {
 				isLoading = false;
 				close();
 			}
@@ -99,9 +105,9 @@
 					  horizontalCenter="0"
 					  verticalCenter="0"/>
 
-	<components:CloseButton id="closeBtnGrp"
-							top="-15"
-							right="-20"
-							close="close();"/>
+	<controls:CloseButton id="closeBtnGrp"
+						  top="-15"
+						  right="-20"
+						  close="close();"/>
 
 </s:Group>

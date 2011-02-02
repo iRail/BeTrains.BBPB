@@ -56,8 +56,8 @@ package be.irail.betrains.playbook.view.traffic {
 		public function set rssFeed(value:ArrayCollection):void {
 			if (value != _rssFeed) {
 				_rssFeed = value;
-				dispatchEvent(new Event("rssFeedChange"));
 			}
+			dispatchEvent(new Event("rssFeedChange"));
 		}
 
 		// ----------------------------
@@ -92,7 +92,6 @@ package be.irail.betrains.playbook.view.traffic {
 
 				if (value) {
 					_imageData = resize(value, maxImageHeight, maxImageWidth);
-					;
 				} else {
 					_imageData = null;
 				}

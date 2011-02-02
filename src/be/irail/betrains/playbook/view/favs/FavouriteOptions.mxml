@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="be.irail.betrains.playbook.view.components.*"
+		 xmlns:ns="http://ns.renaun.com/mxml/2010"
+		 xmlns:favs="be.irail.betrains.playbook.view.favs.*">
+	<fx:Script>
+		<![CDATA[
+			import be.irail.betrains.playbook.data.FavouriteConnection;
+
+			import qnx.locale.LocaleManager;
+
+
+			// ----------------------------
+			// favourite
+			// ----------------------------
+
+			private var _favourite:FavouriteConnection;
+
+			[Bindable(event="favouriteChange")]
+			public function get favourite():FavouriteConnection {
+				return _favourite;
+			}
+
+			[Bindable(event="favouriteChange")]
+			public function get favouriteFrom():String {
+				if (!_favourite)
+					return "";
+
+				return _favourite.from.formattedName;
+			}
+
+			[Bindable(event="favouriteChange")]
+			public function get favouriteTo():String {
+				if (!_favourite)
+					return "";
+
+				return _favourite.to.formattedName;
+			}
+
+			public function set favourite(value:FavouriteConnection):void {
+				if (value != _favourite) {
+					_favourite = value;
+					dispatchEvent(new Event("favouriteChange"));
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:Group top="10"
+			 width="100%"
+			 height="100%">
+
+		<s:VGroup gap="2"
+				  left="10"
+				  right="10">
+
+			<s:Label textAlign="left"
+					 paddingLeft="10"
+					 width="100%"
+					 fontSize="50"
+					 color="#1F1F1F"
+					 alpha=".6"
+					 fontWeight="bold"
+					 maxDisplayedLines="1"
+					 text="{favouriteFrom}"/>
+
+			<s:Label textAlign="right"
+					 paddingRight="10"
+					 width="100%"
+					 fontSize="50"
+					 color="#1F1F1F"
+					 alpha=".6"
+					 fontWeight="bold"
+					 maxDisplayedLines="1"
+					 text="{favouriteTo}"/>
+
+		</s:VGroup>
+
+		<s:VGroup y="150"
+				  left="40"
+				  right="40"
+				  gap="40">
+
+			<favs:FavActionButton id="see"
+								  width="100%"
+								  icon="normal"
+								  click="dispatchEvent(new FavouriteEvent(FavouriteEvent.SCHEDULE_ROUTE));"
+								  label="{LocaleManager.localeManager.getResource('favs.selected.use')}"/>
+
+			<favs:FavActionButton id="remove"
+								  width="100%"
+								  icon="delete"
+								  click="dispatchEvent(new FavouriteEvent(FavouriteEvent.DELETE));"
+								  label="{LocaleManager.localeManager.getResource('favs.selected.remove')}"/>
+		</s:VGroup>
+	</s:Group>
+
+</s:Group>

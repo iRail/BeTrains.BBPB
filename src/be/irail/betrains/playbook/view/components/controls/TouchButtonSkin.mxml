@@ -32,7 +32,7 @@
         /** 
          * @copy spark.skins.spark.ApplicationSkin#hostComponent
          */
-        [HostComponent("be.irail.betrains.playbook.view.components.TouchButton")]
+        [HostComponent("be.irail.betrains.playbook.view.components.controls.TouchButton")]
     ]]>
 	</fx:Metadata>
 

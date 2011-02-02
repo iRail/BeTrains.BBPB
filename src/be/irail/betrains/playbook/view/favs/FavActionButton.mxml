@@ -10,26 +10,22 @@
 	<controls:states>
 		<s:State name="normal"/>
 		<s:State name="busy"/>
+		<s:State name="delete"/>
 	</controls:states>
 	<fx:Script>
 		<![CDATA[
 			// ----------------------------
-			// isBusy
+			// icon
 			// ----------------------------
 
-			public function get isBusy():Boolean {
-				return this.currentState != "busy";
+			public function get icon():String {
+				return currentState;
 			}
 
-			public function set isBusy(value:Boolean):void {
-				if (value) {
-					this.currentState = "busy";
-					spinner.play();
-				} else {
-					if (this.currentState == "busy") {
-						spinner.stop();
-					}
-					this.currentState = "normal";
+			[Inspectable(name="icon", type="List", category="General", enumeration="normal,busy,delete")]
+			public function set icon(value:String):void {
+				if (value != icon) {
+					currentState = value;
 				}
 			}
 		]]>
@@ -58,4 +54,12 @@
 					  id="spinner"
 					  right="10"
 					  includeIn="busy"/>
+	<s:BitmapImage id="deleteX"
+				   width="35"
+				   height="35"
+				   verticalCenter="0"
+				   source="@Embed(source='images/trash.png')"
+				   smooth="true"
+				   right="10"
+				   includeIn="delete"/>
 </controls:TouchButton>

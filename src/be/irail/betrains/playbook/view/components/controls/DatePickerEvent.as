@@ -1,4 +1,4 @@
-package be.irail.betrains.playbook.view.components {
+package be.irail.betrains.playbook.view.components.controls {
 
 	import flash.events.Event;
 

@@ -87,7 +87,7 @@ package be.irail.betrains.playbook.data {
 		}
 
 		public function set result(value:IRailResult):void {
-			if (value !== _result) {
+			if (value != _result) {
 				_result = value;
 			}
 		}

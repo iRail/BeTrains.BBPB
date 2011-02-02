@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<components:TouchButton xmlns:fx="http://ns.adobe.com/mxml/2009"
+<controls:TouchButton xmlns:fx="http://ns.adobe.com/mxml/2009"
 						xmlns:s="library://ns.adobe.com/flex/spark"
 						xmlns:mx="library://ns.adobe.com/flex/mx"
-						xmlns:components="be.irail.betrains.playbook.view.components.*">
+						xmlns:components="be.irail.betrains.playbook.view.components.*" xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<fx:Declarations>
 		<fx:String id="infoLabel"/>
 	</fx:Declarations>
@@ -55,4 +55,4 @@
 					   height="20"
 					   smooth="true"/>
 	</s:HGroup>
-</components:TouchButton>
+</controls:TouchButton>

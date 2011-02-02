@@ -14,7 +14,6 @@
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.stations.IRStation;
-			import be.irail.betrains.playbook.view.stations.itemrenderer.StationListItem;
 
 			import com.adobe.utils.StringUtil;
 
@@ -24,8 +23,6 @@
 			import qnx.ui.text.ReturnKeyType;
 			import qnx.ui.text.TextInput;
 			import qnx.ui.text.TextInputIconMode;
-
-			import spark.events.IndexChangeEvent;
 
 			protected function mainvixewitem1_creationCompleteHandler(event:FlexEvent):void {
 				presentationModel.init();
@@ -37,16 +34,13 @@
 				}
 			}
 
-			private function stationsList_changeHandler(event:IndexChangeEvent):void {
+			private function stationsList_changeHandler(event:Event):void {
 				presentationModel.selectedStation = stationsList.selectedItem as IRStation;
-
 			}
 
 			override public function make():void {
-				if (stationsList.selectedIndex == -1)
-					presentationModel.refreshList();
+				presentationModel.refreshList();
 			}
-
 
 			private function search():void {
 				if (!stationsList.selectedItem) {
@@ -59,6 +53,10 @@
 
 			protected function searchInput_changeHandler(event:Event):void {
 				search();
+
+				if (searchInput.text.length == 0) {
+					stationsList.selectedIndex = -1;
+				}
 			}
 		]]>
 	</fx:Script>
@@ -94,14 +92,14 @@
 
 	<s:HGroup width="100%"
 			  height="100%"
-			  gap="40"
+			  gap="20"
 			  paddingTop="2"
-			  paddingLeft="20"
-			  paddingRight="20"
+			  paddingLeft="2"
+			  paddingRight="17"
 			  paddingBottom="2">
 
 		<s:Group id="stationListGrp"
-				 width="370"
+				 width="406"
 				 height="100%">
 			<ns:QContainer id="searchInputContainer"
 						   x="-3"
@@ -116,15 +114,13 @@
 								clearIconMode="{TextInputIconMode.ALWAYS}"/>
 			</ns:QContainer>
 
-			<components:BeTrainsList id="stationsList"
+			<components:StationsList id="stationsList"
 									 y="45"
 									 width="100%"
 									 height="100%"
-									 dataProvider="{presentationModel.stations}"
 									 change="stationsList_changeHandler(event)"
-									 itemRenderer="be.irail.betrains.playbook.view.stations.itemrenderer.StationListItem">
+									 dataProvider="{presentationModel.stations}"/>
 
-			</components:BeTrainsList>
 		</s:Group>
 
 		<stations:StationProfile id="stationProfile"

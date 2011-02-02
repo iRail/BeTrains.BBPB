@@ -6,7 +6,7 @@
 		 height="540"
 		 xmlns:liveboard="be.irail.api.data.liveboard.*"
 		 creationComplete="group1_creationCompleteHandler(event)"
-		 xmlns:components="be.irail.betrains.playbook.view.components.*">
+		 xmlns:components="be.irail.betrains.playbook.view.components.*" xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Metadata>
@@ -121,7 +121,7 @@
 				   bottom="0"
 				   source="@Embed(source='images/tvscreen.png')"/>
 
-	<components:CloseButton top="-15"
+	<controls:CloseButton top="-15"
 							right="-15"
 							close="close()"/>
 

@@ -71,7 +71,7 @@
 			}
 
 			public function set isEssentialStation(value:Boolean):void {
-				if (value !== _isEssentialStation) {
+				if (value != _isEssentialStation) {
 					_isEssentialStation = value;
 					dispatchEvent(new Event("isEssentialStationChange"));
 				}

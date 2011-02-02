@@ -11,6 +11,7 @@
 			import be.irail.betrains.playbook.utils.FormatUtil;
 
 			import qnx.locale.LocaleManager;
+			import qnx.utils.TimeFormatter;
 
 			override public function set data(value:Object):void {
 				super.data = value;
@@ -128,7 +129,7 @@
 
 			[Bindable(event="connectionChange")]
 			public function get duration():String {
-				return LocaleManager.localeManager.getResource("scheduler.results.duration") + " " + FormatUtil.secondsToHoursMinutes(_connection.duration);
+				return LocaleManager.localeManager.getResource("scheduler.results.duration") + " " + TimeFormatter.formatSeconds(_connection.duration);
 			}
 
 			[Bindable(event="connectionChange")]
@@ -138,7 +139,7 @@
 
 			[Bindable(event="connectionChange")]
 			public function get arrivalDelay():String {
-				return "" + FormatUtil.secondsToHoursMinutes(_connection.arrival.delay);
+				return "" + TimeFormatter.formatSeconds(_connection.arrival.delay);
 			}
 
 			[Bindable(event="connectionChange")]
@@ -148,7 +149,7 @@
 
 			[Bindable(event="connectionChange")]
 			public function get departureDelay():String {
-				return "" + FormatUtil.secondsToHoursMinutes(_connection.departure.delay);
+				return "" + TimeFormatter.formatSeconds(_connection.departure.delay);
 			}
 
 			[Bindable(event="connectionChange")]
@@ -281,12 +282,24 @@
 					 verticalAlign="middle"/>
 		</s:VGroup>
 	</s:HGroup>
+
+	<s:Line left="0"
+			right="0"
+			top="0"
+			visible="{this.itemIndex==0}">
+		<s:stroke>
+			<s:SolidColorStroke color="0"
+								weight="1"
+								alpha=".4"/>
+		</s:stroke>
+	</s:Line>
 	<s:Line left="0"
 			right="0"
 			bottom="0">
 		<s:stroke>
 			<s:SolidColorStroke color="0"
-								weight="1"/>
+								weight="1"
+								alpha=".4"/>
 		</s:stroke>
 	</s:Line>
 </s:ItemRenderer>

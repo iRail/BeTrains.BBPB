@@ -10,27 +10,27 @@
 			   contentCreationComplete="titlewindow1_contentCreationCompleteHandler(event)"
 			   xmlns:components="be.irail.betrains.playbook.view.components.*"
 			   xmlns:ns="http://ns.renaun.com/mxml/2010"
-			   xmlns:text="qnx.ui.text.*">
+			   xmlns:text="qnx.ui.text.*"
+			   xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.controller.ModelLocator;
-			import be.irail.betrains.playbook.view.scheduler.components.itemRenderer.StationListItem;
-			
+
 			import com.adobe.utils.StringUtil;
-			
+
 			import mx.collections.ArrayCollection;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
-			
+
 			import qnx.locale.LocaleManager;
 			import qnx.ui.skins.text.TextInputSkinWhite;
 			import qnx.ui.text.TextInput;
 			import qnx.ui.text.TextInputIconMode;
-			
+
 			import spark.events.IndexChangeEvent;
 
 			public static const OK:uint = 0x0004;
@@ -104,7 +104,7 @@
 				dispatchEvent(new Event("stationListChange"));
 			}
 
-			private function stationList_changeHandler(event:IndexChangeEvent):void {
+			private function stationList_changeHandler(event:Event):void {
 				selectedStation = (stationList.selectedItem as IRStation);
 				close(OK);
 			}
@@ -120,34 +120,46 @@
 			}
 		]]>
 	</fx:Script>
-	<s:Group width="800"
+	<s:Group width="780"
 			 horizontalCenter="0">
-		<ns:QContainer width="800"
+
+		<s:Rect left="0"
+				bottom="0"
+				top="8"
+				right="0"
+				radiusX="4"
+				radiusY="4">
+			<s:fill>
+				<s:BitmapFill source="@Embed(source='images/bg.png')"
+							  fillMode="scale"
+							  smooth="true"/>
+			</s:fill>
+		</s:Rect>
+
+		<ns:QContainer width="760"
 					   height="50"
 					   y="15"
-					   x="-3"
+					   x="7"
 					   padding="0">
 			<text:TextInput id="txtInput"
-							width="800"
+							width="760"
 							height="50"
 							prompt="{LocaleManager.localeManager.getResource('station.search.prompt')}"
 							change="stationName_changeHandler(event)"
 							clearIconMode="{TextInputIconMode.ALWAYS}"/>
 		</ns:QContainer>
 
-		<components:BeTrainsList itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.StationListItem"
-								 id="stationList"
+		<components:StationsList id="stationList"
 								 y="70"
-								 width="800"
+								 width="760"
 								 height="470"
 								 horizontalCenter="0"
-								 labelFunction="IRStation.labelFunction"
 								 dataProvider="{stations}"
 								 change="stationList_changeHandler(event)"/>
 
-		<components:CloseButton right="-45"
-								top="24"
-								click="closeButtonClose()"/>
+		<controls:CloseButton right="-45"
+							  top="24"
+							  click="closeButtonClose()"/>
 
 	</s:Group>
 </s:TitleWindow>

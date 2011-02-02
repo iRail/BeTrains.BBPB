@@ -5,12 +5,34 @@
 		skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin"
 		maxWidth="1024"
 		requireSelection="false"
-		allowMultipleSelection="false">
+		allowMultipleSelection="false"
+		click="list_clickHandler(event)">
 	<s:layout>
-		<s:VerticalLayout useVirtualLayout="true"
+		<s:VerticalLayout useVirtualLayout="false"
 						  gap="0"
 						  variableRowHeight="false"/>
 	</s:layout>
+
+	<fx:Script>
+		<![CDATA[
+			import spark.events.IndexChangeEvent;
+
+			private var _lastIndex:int = -99;
+
+			private function list_clickHandler(event:MouseEvent):void {
+				if (this.selectedIndex == _lastIndex) {
+					this.selectedIndex = -1;
+
+					var e:IndexChangeEvent = new IndexChangeEvent(IndexChangeEvent.CHANGE);
+					e.oldIndex = _lastIndex;
+					e.newIndex = selectedIndex;
+					dispatchEvent(e);
+				}
+				_lastIndex = this.selectedIndex;
+			}
+		]]>
+	</fx:Script>
+
 	<fx:Declarations>
 		<fx:Boolean id="borderVisible">true</fx:Boolean>
 		<fx:String id="hScrollPolicy">off</fx:String>

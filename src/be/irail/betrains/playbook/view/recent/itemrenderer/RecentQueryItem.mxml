@@ -105,6 +105,7 @@
 						  smooth="true"/>
 		</s:fill>
 	</s:Rect>
+
 	<s:Rect left="0"
 			right="0"
 			top="0"
@@ -177,9 +178,10 @@
 			</s:HGroup>
 		</s:VGroup>
 	</s:HGroup>
+
 	<s:Line left="0"
 			right="0"
-			bottom="0"
+			top="0"
 			visible="{this.itemIndex==0}">
 		<s:stroke>
 			<s:SolidColorStroke color="0"
@@ -189,6 +191,25 @@
 	</s:Line>
 	<s:Line left="0"
 			right="0"
+			bottom="0">
+		<s:stroke>
+			<s:SolidColorStroke color="0"
+								alpha=".4"
+								weight="1"/>
+		</s:stroke>
+	</s:Line>
+
+	<s:Line top="0"
+			right="0"
+			bottom="0">
+		<s:stroke>
+			<s:SolidColorStroke color="0"
+								alpha=".4"
+								weight="1"/>
+		</s:stroke>
+	</s:Line>
+	<s:Line top="0"
+			left="0"
 			bottom="0">
 		<s:stroke>
 			<s:SolidColorStroke color="0"

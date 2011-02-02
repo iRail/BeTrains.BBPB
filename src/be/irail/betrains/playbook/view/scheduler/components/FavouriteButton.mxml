@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<components:TouchButton xmlns:fx="http://ns.adobe.com/mxml/2009"
+<controls:TouchButton xmlns:fx="http://ns.adobe.com/mxml/2009"
 						xmlns:s="library://ns.adobe.com/flex/spark"
 						xmlns:mx="library://ns.adobe.com/flex/mx"
 						xmlns:components="be.irail.betrains.playbook.view.components.*"
-						height="50">
+						height="50" xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<fx:Script>
 		<![CDATA[
 			import qnx.locale.LocaleManager;
@@ -26,4 +26,4 @@
 				 height="100%"
 				 text="{LocaleManager.localeManager.getResource('scheduler.favourites.add')}"/>
 	</s:HGroup>
-</components:TouchButton>
+</controls:TouchButton>

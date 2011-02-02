@@ -21,7 +21,7 @@ package be.irail.betrains.playbook.data {
 		}
 
 		public function set from(value:IRStation):void {
-			if (value !== _from) {
+			if (value != _from) {
 				_from = value;
 			}
 		}
@@ -38,7 +38,7 @@ package be.irail.betrains.playbook.data {
 		}
 
 		public function set to(value:IRStation):void {
-			if (value !== _to) {
+			if (value != _to) {
 				_to = value;
 			}
 		}

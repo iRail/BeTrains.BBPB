@@ -175,10 +175,6 @@
 
 				arrDepSwitch.selected = true;
 
-				var selectedTxtFormat:TextFormat = arrDepSwitch.getTextFormatForState(SkinStates.SELECTED);
-				selectedTxtFormat.color = 0xFFFFFF;
-				arrDepSwitch.setTextFormatForState(selectedTxtFormat, SkinStates.SELECTED);
-
 				arrDepToggleSwitchContainer.addChild(arrDepSwitch);
 			}
 
