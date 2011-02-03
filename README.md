@@ -21,7 +21,7 @@ Some interesting links:
  - run ant-file build.xml
 
 # Testing
-To test the app, follow these steps (first time only):
+## first time only:
  - start simulator/device and enable development mode
  - Select the main mxml
  - Goto the Project menu, choose Debug configurations
