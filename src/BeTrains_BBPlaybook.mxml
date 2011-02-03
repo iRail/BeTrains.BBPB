@@ -26,6 +26,7 @@
 			import be.irail.betrains.playbook.collection.RecentQueriesCollection;
 			import be.irail.betrains.playbook.controller.AppSettings;
 			import be.irail.betrains.playbook.controller.ModelLocator;
+			import be.irail.betrains.playbook.utils.LocalisationUtil;
 			import be.irail.betrains.playbook.utils.SerializeUtil;
 			import be.irail.betrains.playbook.view.MainView;
 
@@ -188,11 +189,7 @@
 
 			private function setupResourceManager():void {
 				var deviceLocale:String = LocaleManager.localeManager.getDeviceLocale();
-				if (AppSettings.supportedLanguagesLocale.indexOf(deviceLocale) > -1) {
-					LocaleManager.localeManager.setLocale(deviceLocale);
-				} else {
-					LocaleManager.localeManager.setLocale("en_US");
-				}
+				LocaleManager.localeManager.setLocale(LocalisationUtil.getLocalisationByDeviceLocale(deviceLocale));
 				LocaleManager.localeManager.dispatchEvent(new Event(Event.CHANGE));
 			}
 

@@ -3,7 +3,7 @@ package be.irail.betrains.playbook.controller {
 	import flash.filesystem.File;
 
 	public class AppSettings {
-		public static const supportedLanguagesLocale:Array = ["en_US"];
+		public static const supportedLanguagesLocale:Array = ["en_US", "nl_NL"];
 
 		// Cached stationslist location
 		public static const STATIONSLIST_STORAGE_LOCATION:File = File.applicationDirectory.resolvePath("data/stations.bpd");
@@ -14,7 +14,7 @@ package be.irail.betrains.playbook.controller {
 		// Favourites  location 
 		public static const FAVOURITES_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath("favourites.bpd");
 
-		public static const ABOUT_PAGE_URL:String = "http://www.betrains.com";
+		public static const ABOUT_PAGE_URL:String = "http://www.betrains.com/api/iphone_app_pages/about_playbook.php";
 
 		public static const RSS_URL_NL:String = "http://www.railtime.be/website/RSS/RssInfoBar_nl.xml";
 

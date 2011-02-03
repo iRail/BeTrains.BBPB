@@ -1,45 +1,6 @@
-<project name="bbplaybook_betrains"
+<project name="BBPlaybook"
 		 basedir="."
-		 default="compile">
-
-	<condition property="exe"
-			   value=".exe">
-		<os family="windows"/>
-	</condition>
-	<condition property="exe"
-			   value="">
-		<os family="unix"/>
-	</condition>
-
-	<property file="apparat.properties"/>
-
-	<property name="dir.build"
-			  value="${basedir}/build"/>
-	<property name="dir.src"
-			  value="${basedir}/src"/>
-	<property name="binfolder"
-			  value="${basedir}/${dir.bin}"/>
-
-	<fail unless="APPARAT_HOME"/>
-	<fail unless="SCALA_HOME"/>
-
-	<path id="apparat.path">
-		<fileset dir="${SCALA_HOME}"
-				 includes="lib/*.jar"/>
-		<fileset dir="${APPARAT_HOME}"
-				 includes="*.jar"/>
-	</path>
-
-	<taskdef resource="apparat/embedding/ant/antlib.xml">
-		<classpath refid="apparat.path"/>
-	</taskdef>
-
-	<target name="compile"
-			depends="copyResources">
-		<tdsi in="${binfolder}/${swffile}">
-			<classpath refid="apparat.path"/>
-		</tdsi>
-	</target>
+		 default="copyResources">
 
 	<target name="copyResources">
 		<copy todir="bin-debug">
@@ -47,5 +8,12 @@
 				<include name="**/*"/>
 			</fileset>
 		</copy>
+
+		<copy todir="bin-release">
+			<fileset dir="assets">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
 	</target>
 </project>
