@@ -15,13 +15,14 @@ Some interesting links:
 
 # Set up
  - Pull the project from Github
- - Create new a new project in Flash Builder in the folder where you pulled the project in
+ - Create a new project in Flash Builder in the folder where you pulled the project in
  - Choose the Blackberry SDK in  the project's properties
  - add the resources folder to your source path
  - run ant-file build.xml
+ - import the iRail AS3 wrapper project or SWC (see: https://github.com/iRail/iRail-AS3)
 
 # Testing
-## first time only:
+### first time only:
  - start simulator/device and enable development mode
  - Select the main mxml
  - Goto the Project menu, choose Debug configurations
