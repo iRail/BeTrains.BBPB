@@ -124,7 +124,8 @@
 		<s:Rect left="0"
 				bottom="0"
 				top="0"
-				width="410">
+				width="410"
+				excludeFrom="none">
 			<s:fill>
 				<s:BitmapFill source="@Embed(source='images/bg.png')"
 							  fillMode="scale"
@@ -146,7 +147,8 @@
 								 height="100%"
 								 borderVisible="false"
 								 change="favDataGroup_changeHandler(event)"
-								 dataProvider="{presentationModel.favourites}"/>
+								 dataProvider="{presentationModel.favourites}">
+		</components:BeTrainsList>
 
 		<s:Label left="410"
 				 width="100%"

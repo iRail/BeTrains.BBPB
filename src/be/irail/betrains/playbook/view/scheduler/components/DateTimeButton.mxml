@@ -238,7 +238,7 @@
 						   height="20"/>
 			<mx:Spacer width="15"/>
 			<mx:UIComponent id="arrDepToggleSwitchContainer"
-							width="200"/>
+							width="180"/>
 			<s:Label text="{LocaleManager.localeManager.getResource('scheduler.arrdepart.at')}"
 					 width="40"
 					 height="100%"

@@ -80,6 +80,9 @@
 
 			public function set station(value:IRStation):void {
 				_station = value;
+
+				stopTimer();
+
 				if (value) {
 					this.currentState = "details";
 				} else {
@@ -119,6 +122,10 @@
 			private function onLiveboardResult(event:IRailResultEvent):void {
 				liveBoardBtn.isBusy = false;
 
+				if (!(event.result && event.result.data && event.result.data.station))
+					return;
+
+				//if (event.result.data.station.id == this.station.id) {
 				if (stationsLiveboard) {
 					stationsLiveboard.liveBoard = null;
 				} else {
@@ -129,8 +136,8 @@
 				}
 
 				stationsLiveboard.liveBoard = (event.result.data as Liveboard);
-
 				startRefreshTimer();
+				//}
 			}
 
 			private function onLiveboardPopupClose(event:CloseEvent):void {
@@ -141,21 +148,22 @@
 				stationsLiveboard.removeEventListener(CloseEvent.CLOSE, onLiveboardPopupClose);
 				stationsLiveboard = null;
 
-				if (_refreshTimer && _refreshTimer.running) {
-					_refreshTimer.stop();
-				}
-				_refreshTimer = null;
+				stopTimer();
 			}
 
 			private function startRefreshTimer():void {
-				if (_refreshTimer && _refreshTimer.running) {
-					_refreshTimer.stop();
-				}
-				_refreshTimer = null;
+				stopTimer();
 
 				_refreshTimer = new Timer(AppSettings.LIVEBOARD_REFRESH_INTERVAL * 1000, 1);
 				_refreshTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onRefreshLiveboard);
 				_refreshTimer.start();
+			}
+
+			private function stopTimer():void {
+				if (_refreshTimer && _refreshTimer.running) {
+					_refreshTimer.stop();
+				}
+				_refreshTimer = null;
 			}
 
 			private function onRefreshLiveboard(e:TimerEvent):void {

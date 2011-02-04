@@ -144,7 +144,7 @@
 
 			private function recentDataReadHandler(event:Event):void {
 				var stream:FileStream = event.target as FileStream;
-				if (stream.bytesAvailable > 0) {
+				if (false && stream.bytesAvailable > 0) {
 					var ba:ByteArray = new ByteArray();
 
 					stream.readBytes(ba, 0, stream.bytesAvailable);
@@ -159,7 +159,7 @@
 
 			private function favsDataReadHandler(event:Event):void {
 				var stream:FileStream = event.target as FileStream;
-				if (stream.bytesAvailable > 0) {
+				if (false && stream.bytesAvailable > 0) {
 					var ba:ByteArray = new ByteArray();
 
 					stream.readBytes(ba, 0, stream.bytesAvailable);
