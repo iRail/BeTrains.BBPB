@@ -20,8 +20,7 @@
 
 	<fx:Script>
 		<![CDATA[
-			import be.irail.api.event.IRailResultEvent;
-			import be.irail.api.methodgroup.Stations;
+			import be.irail.api.core.IRailAPISettings;
 			import be.irail.betrains.playbook.collection.FavouriteConnectionCollection;
 			import be.irail.betrains.playbook.collection.RecentQueriesCollection;
 			import be.irail.betrains.playbook.controller.AppSettings;
@@ -35,7 +34,6 @@
 			import qnx.locale.LocaleManager;
 
 			private var _model:ModelLocator = ModelLocator.getInstance();
-
 
 			private function preinitializeHandler():void {
 				setupResourceManager();
@@ -58,25 +56,14 @@
 				"Supported gestures: " + Multitouch.supportedGestures, "The BlackBerry Playbook: Multitouch support"); */
 			}
 
-
-			private function storeStationData():void {
-				var stationService:Stations = new Stations();
-				stationService.getAllStations();
-				stationService.addEventListener(IRailResultEvent.STATION_LIST_RESULT, onAllStationsResult);
-			}
-
-			private function onAllStationsResult(event:IRailResultEvent):void {
-				var stream:FileStream = new FileStream();
-				var ba:ByteArray = SerializeUtil.serialize(event.result);
-				stream.openAsync(File.desktopDirectory.resolvePath("stations.bpd"), FileMode.WRITE);
-				stream.writeBytes(ba);
-			}
-
 			private function readStations():void {
-				var stream:FileStream = new FileStream();
+				_model.stations = new ArrayCollection();
 
-				if (AppSettings.STATIONSLIST_STORAGE_LOCATION.exists) {
-					stream.openAsync(AppSettings.STATIONSLIST_STORAGE_LOCATION, FileMode.READ);
+				var stream:FileStream = new FileStream();
+				var dataFile:String = "stations_" + IRailAPISettings.mainLanguage + ".bpd";
+
+				if (AppSettings.STATIONSDATA_STORAGE_LOCATION.resolvePath(dataFile).exists) {
+					stream.openAsync(AppSettings.STATIONSDATA_STORAGE_LOCATION.resolvePath(dataFile), FileMode.READ);
 					stream.addEventListener(Event.COMPLETE, stationDataReadHandler);
 					stream.addEventListener(IOErrorEvent.IO_ERROR, readStationsIOErrorHandler);
 				}
@@ -189,7 +176,10 @@
 
 			private function setupResourceManager():void {
 				var deviceLocale:String = LocaleManager.localeManager.getDeviceLocale();
+
+				IRailAPISettings.mainLanguage = LocalisationUtil.getIRailLangByDeviceLocale(deviceLocale);
 				LocaleManager.localeManager.setLocale(LocalisationUtil.getLocalisationByDeviceLocale(deviceLocale));
+
 				LocaleManager.localeManager.dispatchEvent(new Event(Event.CHANGE));
 			}
 

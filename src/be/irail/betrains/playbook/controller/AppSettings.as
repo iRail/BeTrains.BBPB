@@ -6,7 +6,7 @@ package be.irail.betrains.playbook.controller {
 		public static const supportedLanguagesLocale:Array = ["en_US", "nl_NL"];
 
 		// Cached stationslist location
-		public static const STATIONSLIST_STORAGE_LOCATION:File = File.applicationDirectory.resolvePath("data/stations.bpd");
+		public static const STATIONSDATA_STORAGE_LOCATION:File = File.applicationDirectory.resolvePath("data/");
 
 		// Recent scheduler location 
 		public static const RECENT_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath("recents.bpd");
