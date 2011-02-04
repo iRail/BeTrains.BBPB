@@ -50,5 +50,13 @@
 				<include name="**/*"/>
 			</fileset>
 		</copy>
+		<delete dir="${binfolder}/be"/>
+		<delete file="${binfolder}/styles.css"/>
+
+		<delete>
+			<fileset dir="${binfolder}/images">
+				<exclude name="magnifyingglass.png"/>
+			</fileset>
+		</delete>
 	</target>
 </project>

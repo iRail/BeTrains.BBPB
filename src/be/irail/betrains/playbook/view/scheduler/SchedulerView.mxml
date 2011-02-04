@@ -10,6 +10,7 @@
 						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<components:states>
 		<s:State name="none"/>
+		<s:State name="loading"/>
 		<s:State name="hasConnections"/>
 	</components:states>
 	<fx:Script>
@@ -135,6 +136,8 @@
 			 bottom="0"
 			 right="0"
 			 width="610"
+			 visible="{!presentationModel.isLoading}"
+			 includeInLayout="{!presentationModel.isLoading}"
 			 includeIn="none"
 			 text="{LocaleManager.localeManager.getResource('scheduler.none')}"/>
 
@@ -158,6 +161,7 @@
 			 width="610"
 			 show="loadingSpinner.play();"
 			 hide="loadingSpinner.stop();">
+
 		<controls:Spinner id="loadingSpinner"
 						  horizontalCenter="0"
 						  verticalCenter="0"/>
@@ -252,7 +256,5 @@
 								distance="3"/>
 		</s:filters>
 	</s:Group>
-
-
 
 </components:MainViewItem>
