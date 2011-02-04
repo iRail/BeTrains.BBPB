@@ -1,19 +1,54 @@
 <project name="BBPlaybook"
 		 basedir="."
-		 default="copyResources">
+		 default="compile">
+
+	<condition property="exe"
+			   value=".exe">
+		<os family="windows"/>
+	</condition>
+	<condition property="exe"
+			   value="">
+		<os family="unix"/>
+	</condition>
+
+	<property name="dir.build"
+			  value="${basedir}"/>
+	<property name="dir.src"
+			  value="${basedir}/src"/>
+	<property name="dir.swfresources"
+			  value="${basedir}/resources/ui/swf/"/>
+
+	<property file="apparat.properties"/>
+
+	<property name="binfolder"
+			  value="${basedir}/${dir.bin}"/>
+
+	<fail unless="APPARAT_HOME"/>
+	<fail unless="SCALA_HOME"/>
+
+	<path id="apparat.path">
+		<fileset dir="${SCALA_HOME}"
+				 includes="lib/*.jar"/>
+		<fileset dir="${APPARAT_HOME}"
+				 includes="*.jar"/>
+	</path>
+
+	<taskdef resource="apparat/embedding/ant/antlib.xml">
+		<classpath refid="apparat.path"/>
+	</taskdef>
+
+	<target name="compile"
+			depends="copyResources">
+		<tdsi in="${binfolder}/${swffile}">
+			<classpath refid="apparat.path"/>
+		</tdsi>
+	</target>
 
 	<target name="copyResources">
-		<copy todir="bin-debug">
+		<copy todir="${binfolder}">
 			<fileset dir="assets">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
-
-		<copy todir="bin-release">
-			<fileset dir="assets">
-				<include name="**/*"/>
-			</fileset>
-		</copy>
-
 	</target>
 </project>
