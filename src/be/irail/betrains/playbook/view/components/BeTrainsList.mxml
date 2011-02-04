@@ -23,7 +23,6 @@
 
 
 			private function list_clickHandler(event:MouseEvent):void {
-				trace(event.currentTarget, event.target);
 				if (this.selectedIndex == _lastIndex) {
 					this.selectedIndex = -1;
 

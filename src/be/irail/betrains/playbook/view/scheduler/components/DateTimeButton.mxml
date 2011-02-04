@@ -194,6 +194,7 @@
 				tmp.setFullYear(year);
 				tmp.setHours(hours);
 				tmp.setMinutes(minutes);
+				tmp.setSeconds(0);
 
 				if (new Date().getTime() > tmp.getTime()) {
 					tmp.setFullYear(year + 1);
