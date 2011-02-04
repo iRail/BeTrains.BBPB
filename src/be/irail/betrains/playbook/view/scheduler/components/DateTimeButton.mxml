@@ -30,6 +30,8 @@
 
 			private var arrDepSwitch:ToggleSwitch;
 
+			private var _minuteStep:int = 5;
+
 			// ----------------------------
 			// date
 			// ----------------------------
@@ -142,7 +144,7 @@
 					hours.push({label: (i < 10) ? '0' + i : '' + i, value: i});
 				}
 
-				for (i = 0; i < 60; i += 15) {
+				for (i = 0; i < 60; i += _minuteStep) {
 					minutes.push({label: (i < 10) ? '0' + i : '' + i, value: i});
 				}
 
@@ -202,12 +204,11 @@
 				var dayIndex:int = selectedDate.date - 1,
 					monthIndex:int = selectedDate.getMonth(),
 					hoursIndex:int = selectedDate.hours,
-					minutesIndex:int = (15 * Math.floor(selectedDate.minutes / 15)) / 15;
+					minutesIndex:int = (_minuteStep * Math.floor(selectedDate.minutes / _minuteStep)) / _minuteStep;
 
 				picker.selectedIndices = [dayIndex, monthIndex];
 				timePicker.selectedIndices = [hoursIndex, minutesIndex];
 			}
-
 
 			private function handleSelect(e:Event):void {
 				var picker:Picker = pickerContainer.getChildByName("datePicker") as Picker,
@@ -217,7 +218,7 @@
 					month:int = picker.selectedIndices[1],
 					year:int = currentYear,
 					hours:int = timePicker.selectedIndices[0],
-					minutes:int = timePicker.selectedIndices[1];
+					minutes:int = timePicker.selectedIndices[1] * _minuteStep;
 
 				parseDateForPicker(day, month, year, hours, minutes);
 			}
