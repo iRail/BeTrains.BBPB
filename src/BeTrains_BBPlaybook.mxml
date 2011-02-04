@@ -131,7 +131,7 @@
 
 			private function recentDataReadHandler(event:Event):void {
 				var stream:FileStream = event.target as FileStream;
-				if (false && stream.bytesAvailable > 0) {
+				if (stream.bytesAvailable > 0) {
 					var ba:ByteArray = new ByteArray();
 
 					stream.readBytes(ba, 0, stream.bytesAvailable);
@@ -146,7 +146,7 @@
 
 			private function favsDataReadHandler(event:Event):void {
 				var stream:FileStream = event.target as FileStream;
-				if (false && stream.bytesAvailable > 0) {
+				if (stream.bytesAvailable > 0) {
 					var ba:ByteArray = new ByteArray();
 
 					stream.readBytes(ba, 0, stream.bytesAvailable);
@@ -160,13 +160,18 @@
 			}
 
 			private function readStationsIOErrorHandler(event:IOErrorEvent):void {
+				var stream:FileStream = event.target as FileStream;
+				stream.close();
 			}
 
 			private function readRecentIOErrorHandler(event:IOErrorEvent):void {
+				var stream:FileStream = event.target as FileStream;
+				stream.close();
 			}
 
 			private function favsIOErrorHandler(event:IOErrorEvent):void {
-				//chain done
+				var stream:FileStream = event.target as FileStream;
+				stream.close();
 			}
 
 			private function onApplicationExiting(event:Event):void {
