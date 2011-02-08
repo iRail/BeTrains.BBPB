@@ -192,6 +192,7 @@
 								 right="0"
 								 contentBackgroundAlpha="1"
 								 contentBackgroundColor="0"
+								 verticalAlignContent="top"
 								 itemRenderer="be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer">
 		</components:BeTrainsList>
 	</s:Group>

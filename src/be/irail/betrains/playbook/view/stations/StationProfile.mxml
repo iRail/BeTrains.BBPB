@@ -63,6 +63,14 @@
 			}
 
 			[Bindable(event="stationChange")]
+			public function get stationHasLocation():Boolean {
+				if (!station) {
+					return false;
+				}
+				return station.hasLocation;
+			}
+
+			[Bindable(event="stationChange")]
 			public function get stationLng():Number {
 				if (!station) {
 					return 0;
@@ -95,7 +103,7 @@
 			}
 
 			private function addMarker():void {
-				if (mapComponent && _mapReady) {
+				if (mapComponent && _mapReady && stationHasLocation) {
 					mapComponent.centerLatLon = new LatLon(stationLat, stationLng);
 					mapComponent.zoomLevel = 3;
 				}
@@ -154,9 +162,13 @@
 			private function startRefreshTimer():void {
 				stopTimer();
 
-				_refreshTimer = new Timer(AppSettings.LIVEBOARD_REFRESH_INTERVAL * 1000, 1);
-				_refreshTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onRefreshLiveboard);
-				_refreshTimer.start();
+				if (stationsLiveboard != null) {
+
+					_refreshTimer = new Timer(AppSettings.LIVEBOARD_REFRESH_INTERVAL * 1000, 1);
+					_refreshTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onRefreshLiveboard);
+					_refreshTimer.start();
+
+				}
 			}
 
 			private function stopTimer():void {
@@ -247,6 +259,6 @@
 					right="10"
 					height="220"
 					horizontalCenter="0"
-					visible="{this.currentState=='details'}"
+					visible="{this.currentState=='details' &amp;&amp; stationHasLocation}"
 					resize="mapComponentContainer_resizeHandler(event)"/>
 </s:Group>
