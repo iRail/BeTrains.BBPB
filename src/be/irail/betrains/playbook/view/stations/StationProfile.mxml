@@ -110,7 +110,6 @@
 			}
 
 			protected function liveBoard_clickHandler(event:MouseEvent):void {
-				service.addEventListener(IRailResultEvent.LIVEBOARD_RESULT, onLiveboardResult);
 				service.addEventListener(IRailErrorEvent.API_ERROR, onError);
 				service.addEventListener(IRailErrorEvent.IO_ERROR, onError);
 
@@ -119,6 +118,7 @@
 
 			private function loadLiveBoard():void {
 				service.getStationLiveboardByStationName(stationName);
+				service.addEventListener(IRailResultEvent.LIVEBOARD_RESULT, onLiveboardResult);
 				liveBoardBtn.isBusy = true;
 			}
 
@@ -128,24 +128,26 @@
 			}
 
 			private function onLiveboardResult(event:IRailResultEvent):void {
+				service.removeEventListener(IRailResultEvent.LIVEBOARD_RESULT, onLiveboardResult);
 				liveBoardBtn.isBusy = false;
 
-				if (!(event.result && event.result.data && event.result.data.station))
+				if (!(event.result && event.result.data && event.result.data.station)) {
 					return;
+				}
 
-				//if (event.result.data.station.id == this.station.id) {
-				if (stationsLiveboard) {
+				if (stationsLiveboard && stationsLiveboard.parent) {
 					stationsLiveboard.liveBoard = null;
 				} else {
 					stationsLiveboard = new StationsLiveboardInfo();
 					stationsLiveboard.addEventListener(CloseEvent.CLOSE, onLiveboardPopupClose);
 					PopUpManager.addPopUp(stationsLiveboard, FlexGlobals.topLevelApplication as DisplayObject, true);
 					PopUpManager.centerPopUp(stationsLiveboard);
+
 				}
 
 				stationsLiveboard.liveBoard = (event.result.data as Liveboard);
+
 				startRefreshTimer();
-				//}
 			}
 
 			private function onLiveboardPopupClose(event:CloseEvent):void {
@@ -153,16 +155,17 @@
 				service.removeEventListener(IRailErrorEvent.API_ERROR, onError);
 				service.removeEventListener(IRailErrorEvent.IO_ERROR, onError);
 
+				stopTimer();
+
 				stationsLiveboard.removeEventListener(CloseEvent.CLOSE, onLiveboardPopupClose);
 				stationsLiveboard = null;
 
-				stopTimer();
 			}
 
 			private function startRefreshTimer():void {
 				stopTimer();
 
-				if (stationsLiveboard != null) {
+				if (stationsLiveboard && stationsLiveboard.parent) {
 
 					_refreshTimer = new Timer(AppSettings.LIVEBOARD_REFRESH_INTERVAL * 1000, 1);
 					_refreshTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onRefreshLiveboard);
@@ -172,14 +175,22 @@
 			}
 
 			private function stopTimer():void {
-				if (_refreshTimer && _refreshTimer.running) {
+				if (_refreshTimer) {
+					_refreshTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onRefreshLiveboard);
 					_refreshTimer.stop();
 				}
 				_refreshTimer = null;
 			}
 
 			private function onRefreshLiveboard(e:TimerEvent):void {
-				loadLiveBoard();
+				_refreshTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onRefreshLiveboard);
+
+				if (stationsLiveboard && stationsLiveboard.parent) {
+					loadLiveBoard();
+				} else {
+					stationsLiveboard.liveBoard = null;
+					stationsLiveboard = null;
+				}
 			}
 
 			protected function group1_creationCompleteHandler(event:FlexEvent):void {

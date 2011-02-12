@@ -27,6 +27,9 @@ package be.irail.betrains.playbook.utils {
 				case "fr":
 					return LanguageCode.FRENCH;
 					break;
+				case "de":
+					return LanguageCode.GERMAN;
+					break;
 				default:
 					return LanguageCode.ENGLISH;
 					break;
