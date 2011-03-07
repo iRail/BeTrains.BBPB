@@ -1,7 +1,15 @@
 <qnx>
 	<initialWindow>
-		<systemChrome>none</systemChrome>
+		<systemChrome>standard</systemChrome>
 		<transparent>false</transparent>
+		<visible>true</visible>
+		<fullScreen>true</fullScreen>
+		<autoOrients>true</autoOrients>
+		<aspectRatio>landscape</aspectRatio>
+		<renderMode>auto</renderMode>
+		<maximizable>false</maximizable>
+		<minimizable>true</minimizable>
+		<resizable>false</resizable>
 	</initialWindow>
 	<category>core.Internet</category>
 	<publisher>Joris Timmerman</publisher>
