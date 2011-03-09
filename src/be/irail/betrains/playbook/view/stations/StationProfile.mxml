@@ -14,6 +14,8 @@
 	</s:states>
 	<fx:Script>
 		<![CDATA[
+			include "../resource_wrapper.as"
+
 			import be.irail.api.data.liveboard.Liveboard;
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.api.event.IRailErrorEvent;
@@ -30,8 +32,6 @@
 			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
 			import mx.managers.PopUpManager;
-
-			import qnx.locale.LocaleManager;
 
 			private var _mapReady:Boolean;
 
@@ -230,7 +230,7 @@
 			 horizontalCenter="0"
 			 verticalCenter="0"
 			 includeIn="none"
-			 text="{LocaleManager.localeManager.getResource('station.profile.none')}"/>
+			 text="{r('station.profile.none')}"/>
 
 	<s:Group includeIn="details"
 			 top="10"
@@ -253,14 +253,14 @@
 				 color="#1F1F1F"
 				 alpha=".4"
 				 fontWeight="bold"
-				 text="{LocaleManager.localeManager.getResource('station.profile.type.station')}"/>
+				 text="{r('station.profile.type.station')}"/>
 
 		<stations1:StationDataButton id="liveBoardBtn"
 									 y="150"
 									 left="0"
 									 right="10"
 									 horizontalCenter="0"
-									 label="{LocaleManager.localeManager.getResource('station.profile.liveboardbtn')}"
+									 label="{r('station.profile.liveboardbtn')}"
 									 click="liveBoard_clickHandler(event)"/>
 	</s:Group>
 

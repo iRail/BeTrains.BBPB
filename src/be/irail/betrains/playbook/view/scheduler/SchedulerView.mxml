@@ -15,6 +15,8 @@
 	</components:states>
 	<fx:Script>
 		<![CDATA[
+			include "../resource_wrapper.as"
+
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
@@ -31,9 +33,6 @@
 			import spark.events.IndexChangeEvent;
 
 			private var _popup:StationListPopUp;
-
-			[Bindable]
-			private var _locale:LocaleManager = LocaleManager.localeManager;
 
 			public function setDataByFavourite(fav:FavouriteConnection):void {
 				presentationModel.to = fav.to;
@@ -139,7 +138,7 @@
 			 visible="{!presentationModel.isLoading}"
 			 includeInLayout="{!presentationModel.isLoading}"
 			 includeIn="none"
-			 text="{LocaleManager.localeManager.getResource('scheduler.none')}"/>
+			 text="{r('scheduler.none')}"/>
 
 	<components:ConnectionsList id="resultList"
 								includeIn="hasConnections"
@@ -200,19 +199,19 @@
 			<components1:ChooseStationButton id="fromStation"
 											 width="100%"
 											 height="60"
-											 infoLabel="{_locale.getResource('scheduler.station1.label')}"
+											 infoLabel="{r('scheduler.station1.label')}"
 											 station="{presentationModel.from}"
 											 click="selectFromStation_clickHandler(event)"/>
 
 			<components1:ChooseStationButton width="100%"
 											 height="60"
-											 infoLabel="{_locale.getResource('scheduler.station2.label')}"
+											 infoLabel="{r('scheduler.station2.label')}"
 											 station="{presentationModel.to}"
 											 click="selectToStation_clickHandler(event)"/>
 		</s:VGroup>
 
 
-		<mx:Spacer height="20"/>
+		<mx:Spacer height="20"/>	
 
 		<!--Date Selector-->
 		<s:VGroup width="90%"

@@ -7,6 +7,8 @@
 				height="74">
 	<fx:Script>
 		<![CDATA[
+			include "../../resource_wrapper.as"
+
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.betrains.playbook.utils.FormatUtil;
 
@@ -71,7 +73,7 @@
 					return "";
 				}
 
-				return LocaleManager.localeManager.getResource("scheduler.results.platform") + " " + _connection.departure.platform.platformNo;
+				return r("scheduler.results.platform") + " " + _connection.departure.platform.platformNo;
 			}
 
 			[Bindable(event="connectionChange")]
@@ -115,7 +117,7 @@
 					return "";
 				}
 
-				return LocaleManager.localeManager.getResource("scheduler.results.platform") + " " + _connection.arrival.platform.platformNo;
+				return r("scheduler.results.platform") + " " + _connection.arrival.platform.platformNo;
 			}
 
 			[Bindable(event="connectionChange")]
@@ -129,12 +131,12 @@
 
 			[Bindable(event="connectionChange")]
 			public function get duration():String {
-				return LocaleManager.localeManager.getResource("scheduler.results.duration") + " " + TimeFormatter.formatSeconds(_connection.duration);
+				return r("scheduler.results.duration") + " " + TimeFormatter.formatSeconds(_connection.duration);
 			}
 
 			[Bindable(event="connectionChange")]
 			public function get numVias():String {
-				return LocaleManager.localeManager.getResource("scheduler.results.change", _connection.vias.length);
+				return r("scheduler.results.change", _connection.vias.length);
 			}
 
 			[Bindable(event="connectionChange")]

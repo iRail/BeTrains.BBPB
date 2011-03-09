@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:mx="library://ns.adobe.com/flex/mx"
+					  xmlns:ns="http://ns.renaun.com/mxml/2010"
+					  xmlns:picker="qnx.ui.picker.*"
+					  backgroundAlpha="0.2"
+					  backgroundColor="0"
+					  show="showHandler()"
+					  click="bodyClick(event)"
+					  creationComplete="createComponents()">
+
+	<fx:Metadata>
+		[Event(name="hideBar",type="flash.events.Event")]
+	</fx:Metadata>
+	<s:filters>
+		<s:DropShadowFilter blurX="6"
+							blurY="6"
+							strength=".4"
+							quality="3"
+							angle="0"
+							distance="3"/>
+	</s:filters>
+	<fx:Script>
+		<![CDATA[
+			import be.irail.api.core.IRailAPISettings;
+			import be.irail.betrains.playbook.controller.AppSettings;
+			import be.irail.betrains.playbook.utils.LocalisationUtil;
+
+			import com.greensock.TweenLite;
+			import com.greensock.easing.Circ;
+			import com.greensock.easing.Expo;
+
+			import qnx.locale.LocaleManager;
+			import qnx.ui.data.DataProvider;
+			import qnx.ui.picker.Picker;
+			import qnx.ui.skins.picker.PickerListBackgroundWhite;
+
+			include "../resource_wrapper.as";
+
+			private var _isOpen:Boolean;
+
+			private function get currentLocale():String {
+				return LocaleManager.localeManager.getCurrentLocale();
+			}
+
+			private function askHide():void {
+				if (_isOpen) {
+					_isOpen = false
+					saveSettings();
+					doHide();
+				}
+			}
+
+			private function doHide():void {
+				TweenLite.to(settingsData, .4, {alpha: 0, ease: Expo.easeOut});
+				TweenLite.to(background, .4, {height: 0, delay: .2, ease: Circ.easeInOut});
+				TweenLite.to(this, .2, {alpha: 0, delay: .6, ease: Expo.easeOut, onComplete: sendHideNotification});
+			}
+
+			private function sendHideNotification():void {
+				dispatchEvent(new Event("hideBar"));
+			}
+
+			private function saveSettings():void {
+				var rpicker:Picker = recentInputContainter.getChildByName("recentsPicker") as Picker;
+				AppSettings.MAX_NUM_STORED_RECENTS = rpicker.selectedItems[0].value;
+			}
+
+			private function showHandler():void {
+				background.height = 0;
+				this.alpha = 1;
+				_isOpen = false;
+				settingsData.alpha = 0;
+				TweenLite.to(background, .4, {height: 150, ease: Circ.easeOut, onComplete: introComplete});
+				TweenLite.to(settingsData, .4, {alpha: 1, delay: .2, ease: Expo.easeIn});
+			}
+
+			private function introComplete():void {
+				_isOpen = true;
+
+				var picker:Picker = langPickerContainter.getChildByName("langPicker") as Picker;
+				if (picker) {
+					var langs:Array = [], currIdx:int;
+					for each (var lang:String in AppSettings.supportedLanguagesLocale) {
+						langs.push({label: r('system.languages.' + lang), value: lang});
+						if (lang == currentLocale) {
+							currIdx = langs.length - 1;
+						}
+					}
+
+					var dp:DataProvider = new DataProvider([new DataProvider(langs)]);
+					picker.dataProvider = dp
+					picker.selectedIndices[currIdx];
+				}
+
+				var rpicker:Picker = recentInputContainter.getChildByName("recentsPicker") as Picker;
+				if (rpicker) {
+					rpicker.selectedIndices = [(AppSettings.MAX_NUM_STORED_RECENTS / 5) - 1];
+				}
+			}
+
+			private function bodyClick(e:MouseEvent):void {
+				if (e.localY > 150) {
+					askHide();
+				}
+			}
+
+			private function createTimePicker():void {
+				var picker:Picker = new Picker();
+				picker.setListBackgroundSkin(PickerListBackgroundWhite);
+				picker.name = "langPicker";
+				picker.width = 200;
+				picker.height = 50;
+
+				picker.setListWidth(0, 200);
+
+				var langs:Array = [], currIdx:int;
+				for each (var lang:String in AppSettings.supportedLanguagesLocale) {
+					langs.push({label: r('system.languages.' + lang), value: lang});
+					if (lang == currentLocale) {
+						currIdx = langs.length - 1;
+					}
+				}
+				var dp:DataProvider = new DataProvider([new DataProvider(langs)]);
+				picker.dataProvider = dp
+
+				picker.addEventListener(Event.SELECT, handleLangSelect);
+
+				picker.selectedIndices = [currIdx];
+
+				langPickerContainter.addChild(picker);
+
+			}
+
+			private function createRecentsPicker():void {
+				var picker:Picker = new Picker();
+				picker.setListBackgroundSkin(PickerListBackgroundWhite);
+				picker.name = "recentsPicker";
+				picker.width = 150;
+				picker.height = 50;
+
+				picker.setListWidth(0, 200);
+
+				var values:Array = [];
+				var max:int = 20;
+				var i:int = 0;
+				for (i = 0; i < max; i += 5) {
+					var itemVal:int = i + 5;
+					values.push({label: "" + itemVal, value: itemVal});
+				}
+
+				var dp:DataProvider = new DataProvider([new DataProvider(values)]);
+				picker.dataProvider = dp
+
+				picker.selectedIndices = [(AppSettings.MAX_NUM_STORED_RECENTS / 5) - 1];
+
+				recentInputContainter.addChild(picker);
+			}
+
+			private function handleLangSelect(event:Event):void {
+				var picker:Picker = event.currentTarget as Picker;
+				if (picker.selectedItems[0]) {
+					var result:Object = picker.selectedItems[0];
+					var newLang:String = result.value;
+					if (newLang != currentLocale) {
+						IRailAPISettings.mainLanguage = LocalisationUtil.getIRailLangByDeviceLocale(newLang);
+						LocaleManager.localeManager.setLocale(LocalisationUtil.getLocalisationByDeviceLocale(newLang));
+					}
+				}
+			}
+
+			private function createComponents():void {
+				createTimePicker();
+				createRecentsPicker();
+			}
+		]]>
+	</fx:Script>
+
+	<s:Rect id="background"
+			left="0"
+			right="0">
+		<s:fill>
+			<s:BitmapFill source="@Embed(source='images/bg.png')"
+						  fillMode="scale"
+						  smooth="true"/>
+		</s:fill>
+	</s:Rect>
+	<s:Group id="settingsData"
+			 left="0"
+			 right="0"
+			 top="0"
+			 height="150">
+
+		<s:Label styleName="noneLabel"
+				 alpha=".3"
+				 left="20"
+				 verticalCenter="0"
+				 text="{r('application.settings')}"/>
+
+		<s:BitmapImage verticalCenter="0"
+					   right="20"
+					   source="@Embed(source='blackberry-tablet-icon.png')"/>
+
+		<s:HGroup gap="5"
+				  x="220"
+				  verticalCenter="0"
+				  height="100%"
+				  verticalAlign="middle">
+			<s:Label text="{r('application.settings.language')}"
+					 width="100"
+					 textAlign="right"
+					 maxDisplayedLines="{NaN}"
+					 fontSize="18"/>
+			<mx:UIComponent id="langPickerContainter"
+							height="50"
+							width="200"/>
+		</s:HGroup>
+
+		<s:HGroup gap="5"
+				  x="570"
+				  verticalCenter="0"
+				  height="100%"
+				  verticalAlign="middle">
+			<s:Label width="150"
+					 textAlign="right"
+					 maxDisplayedLines="{NaN}"
+					 text="{r('application.settings.numRecent')}"
+					 fontSize="18"/>
+			<mx:UIComponent id="recentInputContainter"
+							height="50"
+							width="150"/>
+		</s:HGroup>
+	</s:Group>
+
+
+</s:SkinnableContainer>

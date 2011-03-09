@@ -11,6 +11,8 @@
 	</fx:Metadata>
 	<fx:Script>
 		<![CDATA[
+			include "../resource_wrapper.as";
+
 			import be.irail.api.data.stations.IRStation;
 
 			import mx.collections.ArrayCollection;

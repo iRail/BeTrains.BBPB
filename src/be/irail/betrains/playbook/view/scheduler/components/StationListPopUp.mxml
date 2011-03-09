@@ -16,6 +16,8 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			include "../../resource_wrapper.as"
+
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 
@@ -144,7 +146,7 @@
 			<text:TextInput id="txtInput"
 							width="760"
 							height="50"
-							prompt="{LocaleManager.localeManager.getResource('station.search.prompt')}"
+							prompt="{r('station.search.prompt')}"
 							change="stationName_changeHandler(event)"
 							clearIconMode="{TextInputIconMode.ALWAYS}"/>
 		</ns:QContainer>

@@ -21,6 +21,8 @@
 
 	<fx:Script>
 		<![CDATA[
+			include "../resource_wrapper.as"
+
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
 			import be.irail.betrains.playbook.view.favs.itemrenderer.FavouriteConnectionItem;
@@ -104,7 +106,7 @@
 			 verticalCenter="0"
 			 fontWeight="bold"
 			 includeIn="none"
-			 text="{LocaleManager.localeManager.getResource('favs.none')}"/>
+			 text="{r('favs.none')}"/>
 
 
 	<s:Group width="100%"
@@ -160,7 +162,7 @@
 				 alpha=".3"
 				 fontWeight="bold"
 				 includeIn="favourites"
-				 text="{LocaleManager.localeManager.getResource('favs.selected.none')}"/>
+				 text="{r('favs.selected.none')}"/>
 
 		<favs:FavouriteOptions id="options"
 							   includeIn="favouriteselect"

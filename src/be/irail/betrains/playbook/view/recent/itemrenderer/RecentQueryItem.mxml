@@ -12,6 +12,8 @@
 	</s:states>
 	<fx:Script>
 		<![CDATA[
+			include "../../resource_wrapper.as"
+
 			import be.irail.betrains.playbook.data.SchedulerQuery;
 			import be.irail.betrains.playbook.utils.DateUtils;
 
@@ -54,6 +56,7 @@
 			// ----------------------------
 
 			[Bindable(event="queryItemChange")]
+			[Bindable(event="localeChange")]
 			public function get departureStation():String {
 				if (!queryItem || !queryItem.from) {
 					return "";
@@ -62,6 +65,7 @@
 			}
 
 			[Bindable(event="queryItemChange")]
+			[Bindable(event="localeChange")]
 			public function get arrivalStation():String {
 				if (!queryItem || !queryItem.to) {
 					return "";
@@ -74,11 +78,12 @@
 			// ----------------------------
 
 			[Bindable(event="queryItemChange")]
+			[Bindable(event="localeChange")]
 			public function get when():String {
 				if (!queryItem || !queryItem.when) {
 					return "";
 				}
-				return DateUtils.dateTimeFormat(queryItem.when, LocaleManager.localeManager.getResource("recent.when.mask"));
+				return DateUtils.dateTimeFormat(queryItem.when, r("recent.when.mask"));
 			}
 
 			// ----------------------------
@@ -86,11 +91,12 @@
 			// ----------------------------
 
 			[Bindable(event="queryItemChange")]
+			[Bindable(event="localeChange")]
 			public function get arrDepart():String {
 				if (!queryItem || !queryItem.departArrival) {
 					return "";
 				}
-				return LocaleManager.localeManager.getResource("recent." + queryItem.departArrival);
+				return r("recent." + queryItem.departArrival);
 			}
 		]]>
 	</fx:Script>
@@ -136,7 +142,7 @@
 						 color="0"
 						 height="100%"
 						 verticalAlign="middle"/>
-				<s:Label text="{LocaleManager.localeManager.getResource('recent.depArrAt')}"
+				<s:Label text="{r('recent.depArrAt')}"
 						 fontSize="12"
 						 color="0"
 						 height="100%"

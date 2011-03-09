@@ -16,6 +16,8 @@
 
 	<fx:Script>
 		<![CDATA[
+			include "../resource_wrapper.as"
+
 			import be.irail.betrains.playbook.collection.RecentQueriesCollection;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.SchedulerQuery;
@@ -73,7 +75,7 @@
 			 width="100%"
 			 height="100%"
 			 includeIn="none"
-			 text="{LocaleManager.localeManager.getResource('recent.none')}"/>
+			 text="{r('recent.none')}"/>
 
 	<s:Group left="0"
 			 right="0"
@@ -151,7 +153,7 @@
 				 width="614"
 				 height="100%"
 				 includeIn="recents"
-				 text="{LocaleManager.localeManager.getResource('recent.noneSelected')}"/>
+				 text="{r('recent.noneSelected')}"/>
 
 	</s:Group>
 

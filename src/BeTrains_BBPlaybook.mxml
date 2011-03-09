@@ -25,6 +25,7 @@
 			import be.irail.betrains.playbook.collection.RecentQueriesCollection;
 			import be.irail.betrains.playbook.controller.AppSettings;
 			import be.irail.betrains.playbook.controller.ModelLocator;
+			import be.irail.betrains.playbook.data.BeTrainsApplicationSettings;
 			import be.irail.betrains.playbook.utils.LocalisationUtil;
 			import be.irail.betrains.playbook.utils.SerializeUtil;
 			import be.irail.betrains.playbook.view.MainView;
@@ -37,7 +38,7 @@
 
 			private function preinitializeHandler():void {
 				setupResourceManager();
-				readStations();
+				readSettings();
 				readRecents();
 				readFavs();
 			}
@@ -45,7 +46,6 @@
 			private function creationCompleteHandler():void {
 				NativeApplication.nativeApplication.addEventListener(Event.EXITING, onApplicationExiting);
 				callLater(setupMainView);
-
 			/* var deviceFonts:Array = Font.enumerateFonts(true);
 			trace("device fonts: ", deviceFonts); */
 
@@ -65,7 +65,7 @@
 				if (AppSettings.STATIONSDATA_STORAGE_LOCATION.resolvePath(dataFile).exists) {
 					stream.openAsync(AppSettings.STATIONSDATA_STORAGE_LOCATION.resolvePath(dataFile), FileMode.READ);
 					stream.addEventListener(Event.COMPLETE, stationDataReadHandler);
-					stream.addEventListener(IOErrorEvent.IO_ERROR, readStationsIOErrorHandler);
+					stream.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 				}
 			}
 
@@ -76,7 +76,7 @@
 					var stream:FileStream = new FileStream();
 					stream.openAsync(AppSettings.RECENT_STORAGE_LOCATION, FileMode.READ);
 					stream.addEventListener(Event.COMPLETE, recentDataReadHandler);
-					stream.addEventListener(IOErrorEvent.IO_ERROR, readRecentIOErrorHandler);
+					stream.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 				}
 
 			}
@@ -88,9 +88,18 @@
 					var stream:FileStream = new FileStream();
 					stream.openAsync(AppSettings.FAVOURITES_STORAGE_LOCATION, FileMode.READ);
 					stream.addEventListener(Event.COMPLETE, favsDataReadHandler);
-					stream.addEventListener(IOErrorEvent.IO_ERROR, favsIOErrorHandler);
+					stream.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 				}
 
+			}
+
+			private function readSettings():void {
+				if (AppSettings.SETTINGS_STORAGE_LOCATION.exists) {
+					var stream:FileStream = new FileStream();
+					stream.openAsync(AppSettings.SETTINGS_STORAGE_LOCATION, FileMode.READ);
+					stream.addEventListener(Event.COMPLETE, readSettingsHandler);
+					stream.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+				}
 			}
 
 			private function writeRecents():void {
@@ -115,6 +124,24 @@
 					var stream:FileStream = new FileStream();
 					var ba:ByteArray = SerializeUtil.serialize(_model.favourites.toArray());
 					stream.open(AppSettings.FAVOURITES_STORAGE_LOCATION, FileMode.WRITE);
+					stream.writeBytes(ba);
+				}
+			}
+
+			private function writeSettings():void {
+				if (AppSettings.SETTINGS_STORAGE_LOCATION.exists) {
+					AppSettings.SETTINGS_STORAGE_LOCATION.deleteFile();
+				}
+
+				if (_model.favourites.length > 0) {
+					var stream:FileStream = new FileStream();
+					var settings:BeTrainsApplicationSettings = new BeTrainsApplicationSettings();
+
+					settings.language = LocaleManager.localeManager.getCurrentLocale();
+					settings.maxRecents = AppSettings.MAX_NUM_STORED_RECENTS;
+
+					var ba:ByteArray = SerializeUtil.serialize(settings);
+					stream.open(AppSettings.SETTINGS_STORAGE_LOCATION, FileMode.WRITE);
 					stream.writeBytes(ba);
 				}
 			}
@@ -159,22 +186,31 @@
 				}
 			}
 
-			private function readStationsIOErrorHandler(event:IOErrorEvent):void {
+			private function readSettingsHandler(event:Event):void {
 				var stream:FileStream = event.target as FileStream;
-				stream.close();
+				if (stream.bytesAvailable > 0) {
+					var ba:ByteArray = new ByteArray();
+
+					stream.readBytes(ba, 0, stream.bytesAvailable);
+					stream.close();
+
+					var data:Object = SerializeUtil.deserialize(ba);
+					var settings:BeTrainsApplicationSettings = data as BeTrainsApplicationSettings;
+
+					LocaleManager.localeManager.setLocale(LocalisationUtil.getLocalisationByDeviceLocale(settings.language));
+					AppSettings.MAX_NUM_STORED_RECENTS = settings.maxRecents;
+				} else {
+					AppSettings.MAX_NUM_STORED_RECENTS = 5;
+				}
 			}
 
-			private function readRecentIOErrorHandler(event:IOErrorEvent):void {
-				var stream:FileStream = event.target as FileStream;
-				stream.close();
-			}
-
-			private function favsIOErrorHandler(event:IOErrorEvent):void {
+			private function ioErrorHandler(event:IOErrorEvent):void {
 				var stream:FileStream = event.target as FileStream;
 				stream.close();
 			}
 
 			private function onApplicationExiting(event:Event):void {
+				writeSettings();
 				writeRecents();
 				writeFavourites();
 			}
@@ -182,10 +218,14 @@
 			private function setupResourceManager():void {
 				var deviceLocale:String = LocaleManager.localeManager.getDeviceLocale();
 
-				IRailAPISettings.mainLanguage = LocalisationUtil.getIRailLangByDeviceLocale(deviceLocale);
-				LocaleManager.localeManager.setLocale(LocalisationUtil.getLocalisationByDeviceLocale(deviceLocale));
+				LocaleManager.localeManager.addEventListener(Event.CHANGE, onLocaleChange);
 
-				LocaleManager.localeManager.dispatchEvent(new Event(Event.CHANGE));
+				LocaleManager.localeManager.setLocale(LocalisationUtil.getLocalisationByDeviceLocale(deviceLocale));
+			}
+
+			private function onLocaleChange(event:Event):void {
+				IRailAPISettings.mainLanguage = LocalisationUtil.getIRailLangByDeviceLocale(LocaleManager.localeManager.getCurrentLocale());
+				readStations();
 			}
 
 			protected function applicationCompleteHandler():void {

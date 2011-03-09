@@ -10,6 +10,8 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			include "../resource_wrapper.as"
+
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.api.data.scheduler.gate.ViaIRGate;
 			import be.irail.api.data.stations.IRStation;
@@ -19,16 +21,10 @@
 			import be.irail.api.event.IRailResultEvent;
 			import be.irail.api.methodgroup.Vehicles;
 			import be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem;
-			
+
 			import com.adobe.utils.ArrayUtil;
-			
-			import flash.utils.setTimeout;
-			
+
 			import mx.collections.ArrayCollection;
-			
-			import org.as3commons.lang.ArrayUtils;
-			
-			import qnx.locale.LocaleManager;
 
 			private var _service:Vehicles = new Vehicles();
 
@@ -57,7 +53,7 @@
 
 			[Bindable(event="connectionChange")]
 			public function get connectionTitle():String {
-				return LocaleManager.localeManager.getResource("scheduler.details.title", connection.departure.station.formattedName, connection.arrival.station.formattedName);
+				return r("scheduler.details.title", connection.departure.station.formattedName, connection.arrival.station.formattedName);
 			}
 
 			private function parseConnection(conn:IRConnection):void {

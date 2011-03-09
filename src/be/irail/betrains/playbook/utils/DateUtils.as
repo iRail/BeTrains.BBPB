@@ -40,45 +40,45 @@ package be.irail.betrains.playbook.utils {
 
 	public class DateUtils {
 
-		// Days of week LocaleManager.localeManager.getResource("");
-		public static const MONDAY:String = LocaleManager.localeManager.getResource("system.days.monday");
+		// Days of week "");
+		public static const MONDAY:String = "system.days.monday";
 
-		public static const TUESDAY:String = LocaleManager.localeManager.getResource("system.days.tuesday");
+		public static const TUESDAY:String = "system.days.tuesday";
 
-		public static const WEDNESDAY:String = LocaleManager.localeManager.getResource("system.days.wednesday");
+		public static const WEDNESDAY:String = "system.days.wednesday";
 
-		public static const THURSDAY:String = LocaleManager.localeManager.getResource("system.days.thursday");
+		public static const THURSDAY:String = "system.days.thursday";
 
-		public static const FRIDAY:String = LocaleManager.localeManager.getResource("system.days.friday");
+		public static const FRIDAY:String = "system.days.friday";
 
-		public static const SATURDAY:String = LocaleManager.localeManager.getResource("system.days.saturday");
+		public static const SATURDAY:String = "system.days.saturday";
 
-		public static const SUNDAY:String = LocaleManager.localeManager.getResource("system.days.sunday");
+		public static const SUNDAY:String = "system.days.sunday";
 
 		// Months of year
-		public static const JANUARY:String = LocaleManager.localeManager.getResource("system.months.january");
+		public static const JANUARY:String = "system.months.january";
 
-		public static const FEBRUARY:String = LocaleManager.localeManager.getResource("system.months.february");
+		public static const FEBRUARY:String = "system.months.february";
 
-		public static const MARCH:String = LocaleManager.localeManager.getResource("system.months.march");
+		public static const MARCH:String = "system.months.march";
 
-		public static const APRIL:String = LocaleManager.localeManager.getResource("system.months.april");
+		public static const APRIL:String = "system.months.april";
 
-		public static const MAY:String = LocaleManager.localeManager.getResource("system.months.may");
+		public static const MAY:String = "system.months.may";
 
-		public static const JUNE:String = LocaleManager.localeManager.getResource("system.months.june");
+		public static const JUNE:String = "system.months.june";
 
-		public static const JULY:String = LocaleManager.localeManager.getResource("system.months.july");
+		public static const JULY:String = "system.months.july";
 
-		public static const AUGUST:String = LocaleManager.localeManager.getResource("system.months.august");
+		public static const AUGUST:String = "system.months.august";
 
-		public static const SEPTEMBER:String = LocaleManager.localeManager.getResource("system.months.september");
+		public static const SEPTEMBER:String = "system.months.september";
 
-		public static const OCTOBER:String = LocaleManager.localeManager.getResource("system.months.october");
+		public static const OCTOBER:String = "system.months.october";
 
-		public static const NOVEMBER:String = LocaleManager.localeManager.getResource("system.months.november");
+		public static const NOVEMBER:String = "system.months.november";
 
-		public static const DECEMBER:String = LocaleManager.localeManager.getResource("system.months.december");
+		public static const DECEMBER:String = "system.months.december";
 
 		// Date parts
 		public static const YEAR:String = "fullYear";

@@ -6,7 +6,8 @@
 						 xmlns:traffic="be.irail.betrains.playbook.view.traffic.*"
 						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
 						 xmlns:ns="http://ns.renaun.com/mxml/2010"
-						 xmlns:display="qnx.ui.display.*">
+						 xmlns:display="qnx.ui.display.*" 
+						 >
 	<components:states>
 		<s:State name="none"/>
 		<s:State name="loading"/>
@@ -14,12 +15,15 @@
 	</components:states>
 
 	<fx:Script>
-
 		<![CDATA[
+			include "../resource_wrapper.as"
+			
 			import be.irail.betrains.playbook.view.traffic.itemrenderer.TrafficIssueRSSItem;
-
+			
+			import mx.events.FlexEvent;
+			
 			import qnx.locale.LocaleManager;
-
+			
 			import spark.events.IndexChangeEvent;
 
 			protected function rssFeedList_changeHandler(event:IndexChangeEvent):void {
@@ -45,6 +49,8 @@
 			private function presentationModel_rssFeedLoadingHandler(event:Event):void {
 				this.currentState = "loading";
 			}
+
+
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -58,7 +64,7 @@
 			 width="100%"
 			 height="100%"
 			 includeIn="none"
-			 text="{LocaleManager.localeManager.getResource('rrrss.none')}"/>
+			 text="{r('rrrss.none')}"/>
 
 	<controls:Spinner horizontalCenter="0"
 					  verticalCenter="0"

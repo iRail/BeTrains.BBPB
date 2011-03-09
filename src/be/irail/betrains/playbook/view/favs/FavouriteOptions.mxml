@@ -7,9 +7,9 @@
 		 xmlns:favs="be.irail.betrains.playbook.view.favs.*">
 	<fx:Script>
 		<![CDATA[
-			import be.irail.betrains.playbook.data.FavouriteConnection;
+			include "../resource_wrapper.as"
 
-			import qnx.locale.LocaleManager;
+			import be.irail.betrains.playbook.data.FavouriteConnection;
 
 
 			// ----------------------------
@@ -86,13 +86,13 @@
 								  width="100%"
 								  icon="normal"
 								  click="dispatchEvent(new FavouriteEvent(FavouriteEvent.SCHEDULE_ROUTE));"
-								  label="{LocaleManager.localeManager.getResource('favs.selected.use')}"/>
+								  label="{r('favs.selected.use')}"/>
 
 			<favs:FavActionButton id="remove"
 								  width="100%"
 								  icon="delete"
 								  click="dispatchEvent(new FavouriteEvent(FavouriteEvent.DELETE));"
-								  label="{LocaleManager.localeManager.getResource('favs.selected.remove')}"/>
+								  label="{r('favs.selected.remove')}"/>
 		</s:VGroup>
 	</s:Group>
 

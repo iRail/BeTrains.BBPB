@@ -23,6 +23,8 @@
 	</s:filters>
 	<fx:Script>
 		<![CDATA[
+			include "../resource_wrapper.as"
+
 			import be.irail.api.data.liveboard.Liveboard;
 			import be.irail.betrains.playbook.utils.FormatUtil;
 			import be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer;
@@ -78,10 +80,11 @@
 			}
 
 			[Bindable(event="liveBoardChange")]
+			[Bindable(event="localeChange")]
 			public function get title():String {
 				if (!liveBoard)
 					return "";
-				return LocaleManager.localeManager.getResource("liveboard.departTitle");
+				return r("liveboard.departTitle");
 			}
 
 			protected function group1_creationCompleteHandler(event:FlexEvent):void {

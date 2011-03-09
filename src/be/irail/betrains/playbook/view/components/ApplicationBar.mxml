@@ -6,7 +6,8 @@
 					  height="54"
 					  skinClass="be.irail.betrains.playbook.view.components.skins.ApplicationBarSkin"
 					  xmlns:components="be.irail.betrains.playbook.view.components.*"
-					  creationComplete="creationCompleteHandler()" xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
+					  creationComplete="creationCompleteHandler()"
+					  xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -16,6 +17,8 @@
 
 	<fx:Script>
 		<![CDATA[
+			include "../resource_wrapper.as";
+
 			import be.irail.betrains.playbook.view.components.controls.ApplicationBarButton;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 
@@ -29,9 +32,6 @@
 			import spark.events.IndexChangeEvent;
 
 			public const ABOUT_INDEX:uint = 100;
-
-			[Bindable]
-			private var _locale:LocaleManager = LocaleManager.localeManager;
 
 			[Bindable]
 			private var _model:ModelLocator = ModelLocator.getInstance();
@@ -193,35 +193,36 @@
 									angle="90"/>
 			</s:filters>
 		</s:Rect>
+
 		<controls:ApplicationBarButton id="recents"
-										 label="{LocaleManager.localeManager.getResource('application.controlbar.recent')}"
-										 image="@Embed(source='images/time.png')"
-										 change="changeHandler(event)"/>
+									   label="{r('application.controlbar.recent')}"
+									   image="@Embed(source='images/time.png')"
+									   change="changeHandler(event)"/>
 		<controls:ApplicationBarButton id="favs"
-										 label="{LocaleManager.localeManager.getResource('application.controlbar.favs')}"
-										 image="@Embed(source='images/favs.png')"
-										 change="changeHandler(event)"/>
+									   label="{r('application.controlbar.favs')}"
+									   image="@Embed(source='images/favs.png')"
+									   change="changeHandler(event)"/>
 		<controls:ApplicationBarButton id="schedule"
-										 label="{_locale.getResource('application.controlbar.scheduler')}"
-										 image="@Embed(source='images/train.png')"
-										 change="changeHandler(event)"/>
+									   label="{r('application.controlbar.scheduler')}"
+									   image="@Embed(source='images/train.png')"
+									   change="changeHandler(event)"/>
 		<controls:ApplicationBarButton id="stations"
-										 label="{_locale.getResource('application.controlbar.stations')}"
-										 image="@Embed(source='images/stations.png')"
-										 change="changeHandler(event)"/>
+									   label="{r('application.controlbar.stations')}"
+									   image="@Embed(source='images/stations.png')"
+									   change="changeHandler(event)"/>
 		<controls:ApplicationBarButton id="works"
-										 label="{LocaleManager.localeManager.getResource('application.controlbar.works')}"
-										 image="@Embed(source='images/warning.png')"
-										 change="changeHandler(event)"/>
+									   label="{r('application.controlbar.works')}"
+									   image="@Embed(source='images/warning.png')"
+									   change="changeHandler(event)"/>
 		<!--<components:ApplicationBarButton id="chat"
-										 label="{LocaleManager.localeManager.getResource('application.controlbar.chat')}"
+										 label="{r('application.controlbar.chat')}"
 										 image="@Embed(source='images/chat.png')"
 										 change="changeHandler(event)"
 										 enabled="{_model.loggedIn}"/>-->
 	</s:Group>
 	<controls:ApplicationBarButton id="about"
-									 label="{LocaleManager.localeManager.getResource('application.controlbar.about')}"
-									 image="@Embed(source='images/about.png')"
-									 right="40"
-									 change="changeHandler(event)"/>
+								   label="{r('application.controlbar.about')}"
+								   image="@Embed(source='images/about.png')"
+								   right="40"
+								   change="changeHandler(event)"/>
 </s:SkinnableContainer>

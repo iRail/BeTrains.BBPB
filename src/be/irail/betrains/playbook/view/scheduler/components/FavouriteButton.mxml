@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <controls:TouchButton xmlns:fx="http://ns.adobe.com/mxml/2009"
-						xmlns:s="library://ns.adobe.com/flex/spark"
-						xmlns:mx="library://ns.adobe.com/flex/mx"
-						xmlns:components="be.irail.betrains.playbook.view.components.*"
-						height="50" xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:mx="library://ns.adobe.com/flex/mx"
+					  xmlns:components="be.irail.betrains.playbook.view.components.*"
+					  height="50"
+					  xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<fx:Script>
 		<![CDATA[
+			include "../../resource_wrapper.as"
 			import qnx.locale.LocaleManager;
 		]]>
 	</fx:Script>
@@ -24,6 +26,6 @@
 		<s:Label fontSize="18"
 				 verticalAlign="middle"
 				 height="100%"
-				 text="{LocaleManager.localeManager.getResource('scheduler.favourites.add')}"/>
+				 text="{r('scheduler.favourites.add')}"/>
 	</s:HGroup>
 </controls:TouchButton>

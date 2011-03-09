@@ -8,6 +8,8 @@
 
 	<fx:Script>
 		<![CDATA[
+			include "../../resource_wrapper.as"
+
 			import be.irail.api.data.liveboard.LiveboardDeparture;
 			import be.irail.betrains.playbook.utils.FormatUtil;
 
@@ -91,7 +93,7 @@
 					return "";
 				}
 
-				return (liveboardItem.platform.platformNo > 0) ? "" + liveboardItem.platform.platformNo : LocaleManager.localeManager.getResource("liveboard.unknown");
+				return (liveboardItem.platform.platformNo > 0) ? "" + liveboardItem.platform.platformNo : r("liveboard.unknown");
 			}
 
 			// ----------------------------

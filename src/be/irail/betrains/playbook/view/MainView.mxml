@@ -13,12 +13,11 @@
 		 height="100%"
 		 creationComplete="creationCompleteHandler(event)">
 	<fx:Declarations>
-		<mx:Fade id="slider"
-				 duration="100"
-				 easingFunction="Exponential.easeInOut"/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			include "resource_wrapper.as"
+
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
 			import be.irail.betrains.playbook.view.about.AboutPopup;
@@ -35,12 +34,31 @@
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 
-			import qnx.locale.LocaleManager;
+			import qnx.events.QNXApplicationEvent;
+			import qnx.system.QNXApplication;
 
 			import spark.events.IndexChangeEvent;
 
 			[Bindable]
 			private var _model:ModelLocator = ModelLocator.getInstance();
+
+			// ----------------------------
+			// showSettings
+			// ----------------------------
+
+			private var _showSettings:Boolean;
+
+			[Bindable(event="showSettingsChange")]
+			public function get showSettings():Boolean {
+				return _showSettings;
+			}
+
+			public function set showSettings(value:Boolean):void {
+				if (value !== _showSettings) {
+					_showSettings = value;
+					dispatchEvent(new Event("showSettingsChange"));
+				}
+			}
 
 			private function applicationBar_changeHandler(event:IndexChangeEvent):void {
 				if (event.newIndex != applicationBar.ABOUT_INDEX) {
@@ -81,12 +99,27 @@
 
 			private function destroySD():void {
 				doDestroySD();
+				detectSwipeDown();
+			}
+
+			private function detectSwipeDown():void {
+				QNXApplication.qnxApplication.addEventListener(QNXApplicationEvent.SWIPE_DOWN, onSwipeDown);
+			}
+
+			private function onSwipeDown(event:QNXApplicationEvent):void {
+				if (!showSettings) {
+					this.showSettings = true;
+				}
 			}
 
 			private function doDestroySD():void {
 				splashDuplicate.includeInLayout = false;
 				this.removeElement(splashDuplicate);
 				splashDuplicate = null;
+			}
+
+			protected function settingspanel1_hideBarHandler(event:Event):void {
+				this.showSettings = false;
 			}
 		]]>
 	</fx:Script>
@@ -97,19 +130,19 @@
 							   bottom="54"
 							   change="vs_changeHandler(event)">
 		<recent:RecentSchedulerQueries id="recent"
-									   title="{LocaleManager.localeManager.getResource('recent.title')}"/>
+									   title="{r('recent.title')}"/>
 		<favs:FavouritesView id="favourites"
 							 favourites="{_model.favourites}"
 							 favouriteChange="favourites_favouriteChangeHandler(event)"
-							 title="{LocaleManager.localeManager.getResource('favs.title')}"/>
+							 title="{r('favs.title')}"/>
 		<scheduler:SchedulerView id="scheduler"
-								 title="{LocaleManager.localeManager.getResource('scheduler.title')}"/>
+								 title="{r('scheduler.title')}"/>
 		<stations:StationsView id="stations"
-							   title="{LocaleManager.localeManager.getResource('liveboard.title')}"/>
+							   title="{r('liveboard.title')}"/>
 		<traffic:TrafficIssuesView id="works"/>
 		<!--
 			<chat:ChatView id="chat"
-						   title="{LocaleManager.localeManager.getResource('chat.title')}"/>
+						   title="{r('chat.title')}"/>
 		-->
 	</components:SparkViewStack>
 
@@ -119,6 +152,13 @@
 							   bottom="0"
 							   change="applicationBar_changeHandler(event)">
 	</components:ApplicationBar>
+
+	<components:SettingsPanel left="0"
+							  right="0"
+							  top="0"
+							  bottom="0"
+							  hideBar="settingspanel1_hideBarHandler(event)"
+							  visible="{showSettings}"/>
 
 	<s:BitmapImage id="splashDuplicate"
 				   source="@Embed('splash.png')"

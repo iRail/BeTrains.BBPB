@@ -27,6 +27,10 @@
 					dispatchEvent(new Event("imageChange"));
 				}
 			}
+
+			override public function set label(value:String):void {
+				super.label = value;
+			}
 		]]>
 	</fx:Script>
 

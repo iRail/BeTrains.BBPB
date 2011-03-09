@@ -7,7 +7,8 @@
 						 xmlns:stations="be.irail.betrains.playbook.view.stations.*"
 						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
 						 xmlns:ns="http://ns.renaun.com/mxml/2010"
-						 xmlns:text="qnx.ui.text.*">
+						 xmlns:text="qnx.ui.text.*"
+						 contentCreationComplete="creationCompleteHandler(event)">
 	<fx:Declarations>
 		<stations:StationsViewPresentationModel id="presentationModel"/>
 	</fx:Declarations>
@@ -17,6 +18,8 @@
 
 			import com.adobe.utils.StringUtil;
 
+			import flash.utils.setTimeout;
+
 			import mx.events.FlexEvent;
 
 			import qnx.locale.LocaleManager;
@@ -24,8 +27,15 @@
 			import qnx.ui.text.TextInput;
 			import qnx.ui.text.TextInputIconMode;
 
-			protected function mainvixewitem1_creationCompleteHandler(event:FlexEvent):void {
+			include "../resource_wrapper.as";
+
+			private function creationCompleteHandler(event:FlexEvent):void {
 				presentationModel.init();
+				LocaleManager.localeManager.addEventListener(Event.CHANGE, onLocaleChange);
+			}
+
+			private function onLocaleChange(event:Event):void {
+				setTimeout(presentationModel.init, 100);
 			}
 
 			private function onSearchInputChange(event:KeyboardEvent):void {
@@ -107,7 +117,7 @@
 				<text:TextInput id="searchInput"
 								width="{stationListGrp.width}"
 								height="40"
-								prompt="{LocaleManager.localeManager.getResource('station.search.prompt')}"
+								prompt="{r('station.search.prompt')}"
 								returnKeyType="{ReturnKeyType.SEARCH}"
 								keyDown="onSearchInputChange(event)"
 								change="searchInput_changeHandler(event)"

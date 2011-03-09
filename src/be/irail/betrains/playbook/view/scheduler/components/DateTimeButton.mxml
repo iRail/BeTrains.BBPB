@@ -12,6 +12,8 @@
 </fx:Metadata>
 	<fx:Script>
 		<![CDATA[
+			include "../../resource_wrapper.as"
+
 			import be.irail.api.data.scheduler.DateTimeIndicator;
 
 			import mx.events.FlexEvent;
@@ -20,11 +22,7 @@
 			import qnx.ui.buttons.ToggleSwitch;
 			import qnx.ui.data.DataProvider;
 			import qnx.ui.picker.Picker;
-			import qnx.ui.skins.SkinStates;
 			import qnx.ui.skins.picker.PickerListBackgroundWhite;
-
-			[Bindable]
-			private var _locale:LocaleManager = LocaleManager.localeManager;
 
 			private var currentYear:Number = new Date().getFullYear();
 
@@ -74,7 +72,26 @@
 				createTimePicker();
 				createSwitch();
 
+				LocaleManager.localeManager.addEventListener(Event.CHANGE, onLocaleChange);
+
 				parseDateForPicker(selectedDate.date, selectedDate.month, selectedDate.fullYear, selectedDate.hours, selectedDate.minutes);
+			}
+
+			private function onLocaleChange(event:Event):void {
+				var datePicker:Picker = pickerContainer.getChildByName("datePicker") as Picker;
+				var switchBtn:ToggleSwitch = arrDepToggleSwitchContainer.getChildByName("arrDepSwitch") as ToggleSwitch;
+
+				if (datePicker) {
+					datePicker.dataProvider = getDatePickerDataProvider();
+					datePicker.setListWidth(0, 200);
+					datePicker.setListWidth(1, 300);
+				}
+
+				if (switchBtn) {
+					switchBtn.defaultLabel = r("scheduler.arrdepart.arrival");
+					switchBtn.selectedLabel = r("scheduler.arrdepart.depart");
+				}
+
 			}
 
 			private function createPicker():void {
@@ -86,6 +103,18 @@
 				picker.width = 200;
 				picker.height = 50;
 
+				picker.dataProvider = getDatePickerDataProvider();
+
+				picker.x = -2;
+
+				picker.setListWidth(0, 200);
+				picker.setListWidth(1, 300);
+
+				picker.addEventListener(Event.SELECT, handleSelect);
+				pickerContainer.addChild(picker);
+			}
+
+			private function getDatePickerDataProvider():DataProvider {
 				var arrDay:Array = [];
 
 				// Populate the month array and create the
@@ -96,18 +125,18 @@
 				}
 
 				var months:Array = [
-					{label: _locale.getResource('system.months.january'), value: 0},
-					{label: _locale.getResource('system.months.february'), value: 1},
-					{label: _locale.getResource('system.months.march'), value: 2},
-					{label: _locale.getResource('system.months.april'), value: 3},
-					{label: _locale.getResource('system.months.may'), value: 4},
-					{label: _locale.getResource('system.months.june'), value: 5},
-					{label: _locale.getResource('system.months.july'), value: 6},
-					{label: _locale.getResource('system.months.august'), value: 7},
-					{label: _locale.getResource('system.months.september'), value: 8},
-					{label: _locale.getResource('system.months.october'), value: 9},
-					{label: _locale.getResource('system.months.november'), value: 10},
-					{label: _locale.getResource('system.months.december'), value: 11}
+					{label: r('system.months.january'), value: 0},
+					{label: r('system.months.february'), value: 1},
+					{label: r('system.months.march'), value: 2},
+					{label: r('system.months.april'), value: 3},
+					{label: r('system.months.may'), value: 4},
+					{label: r('system.months.june'), value: 5},
+					{label: r('system.months.july'), value: 6},
+					{label: r('system.months.august'), value: 7},
+					{label: r('system.months.september'), value: 8},
+					{label: r('system.months.october'), value: 9},
+					{label: r('system.months.november'), value: 10},
+					{label: r('system.months.december'), value: 11}
 					];
 
 				var dayDP:DataProvider = new DataProvider(arrDay),
@@ -117,16 +146,7 @@
 				dpp.push(dayDP);
 				dpp.push(monthDP);
 
-				picker.dataProvider = new DataProvider(dpp);
-
-				pickerContainer.addChild(picker);
-
-				picker.x = -2;
-
-				picker.setListWidth(0, 200);
-				picker.setListWidth(1, 300);
-
-				picker.addEventListener(Event.SELECT, handleSelect);
+				return new DataProvider(dpp);
 			}
 
 			private function createTimePicker():void {
@@ -169,8 +189,9 @@
 
 			private function createSwitch():void {
 				arrDepSwitch = new ToggleSwitch();
-				arrDepSwitch.defaultLabel = _locale.getResource("scheduler.arrdepart.arrival");
-				arrDepSwitch.selectedLabel = _locale.getResource("scheduler.arrdepart.depart");
+				arrDepSwitch.name = "arrDepSwitch"
+				arrDepSwitch.defaultLabel = r("scheduler.arrdepart.arrival");
+				arrDepSwitch.selectedLabel = r("scheduler.arrdepart.depart");
 				arrDepSwitch.width = arrDepToggleSwitchContainer.width;
 
 				arrDepToggleSwitchContainer.height = arrDepSwitch.height;
@@ -241,7 +262,7 @@
 			<mx:Spacer width="15"/>
 			<mx:UIComponent id="arrDepToggleSwitchContainer"
 							width="180"/>
-			<s:Label text="{LocaleManager.localeManager.getResource('scheduler.arrdepart.at')}"
+			<s:Label text="{r('scheduler.arrdepart.at')}"
 					 width="40"
 					 height="100%"
 					 verticalAlign="middle"
