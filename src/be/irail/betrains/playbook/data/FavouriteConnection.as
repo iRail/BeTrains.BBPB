@@ -6,40 +6,39 @@ package be.irail.betrains.playbook.data {
 	public class FavouriteConnection {
 
 		public function FavouriteConnection(from:IRStation = null, to:IRStation = null):void {
-			this.from = from;
-			this.to = to;
+			this.fromStationId = "" + (from ? from.id : -1);
+			this.toStationId = "" + (to ? to.id : -1);
 		}
 
 		// ----------------------------
-		// from
+		// fromStationId
 		// ----------------------------
 
-		private var _from:IRStation;
+		private var _fromStationId:String;
 
-		public function get from():IRStation {
-			return _from;
+		public function get fromStationId():String {
+			return _fromStationId;
 		}
 
-		public function set from(value:IRStation):void {
-			if (value != _from) {
-				_from = value;
+		public function set fromStationId(value:String):void {
+			if (value !== _fromStationId) {
+				_fromStationId = value;
 			}
 		}
 
-
 		// ----------------------------
-		// to
+		// toStationId
 		// ----------------------------
 
-		private var _to:IRStation;
+		private var _toStationId:String;
 
-		public function get to():IRStation {
-			return _to;
+		public function get toStationId():String {
+			return _toStationId;
 		}
 
-		public function set to(value:IRStation):void {
-			if (value != _to) {
-				_to = value;
+		public function set toStationId(value:String):void {
+			if (value !== _toStationId) {
+				_toStationId = value;
 			}
 		}
 	}

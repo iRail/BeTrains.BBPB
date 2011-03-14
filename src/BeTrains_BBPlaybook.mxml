@@ -23,14 +23,13 @@
 			import be.irail.api.core.IRailAPISettings;
 			import be.irail.betrains.playbook.collection.FavouriteConnectionCollection;
 			import be.irail.betrains.playbook.collection.RecentQueriesCollection;
+			import be.irail.betrains.playbook.collection.StationCollection;
 			import be.irail.betrains.playbook.controller.AppSettings;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.BeTrainsApplicationSettings;
 			import be.irail.betrains.playbook.utils.LocalisationUtil;
 			import be.irail.betrains.playbook.utils.SerializeUtil;
 			import be.irail.betrains.playbook.view.MainView;
-
-			import mx.collections.ArrayCollection;
 
 			import qnx.locale.LocaleManager;
 
@@ -57,7 +56,7 @@
 			}
 
 			private function readStations():void {
-				_model.stations = new ArrayCollection();
+				_model.stations = new StationCollection();
 
 				var stream:FileStream = new FileStream();
 				var dataFile:String = "stations_" + IRailAPISettings.mainLanguage + ".bpd";
@@ -153,7 +152,7 @@
 				stream.close();
 
 				var data:Object = SerializeUtil.deserialize(ba);
-				_model.stations = new ArrayCollection((data.data) as Array);
+				_model.stations = new StationCollection((data.data) as Array);
 			}
 
 			private function recentDataReadHandler(event:Event):void {

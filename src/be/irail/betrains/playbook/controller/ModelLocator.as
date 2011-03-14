@@ -1,7 +1,8 @@
 package be.irail.betrains.playbook.controller {
 
-	import be.irail.betrains.playbook.collection.RecentQueriesCollection;
 	import be.irail.betrains.playbook.collection.FavouriteConnectionCollection;
+	import be.irail.betrains.playbook.collection.RecentQueriesCollection;
+	import be.irail.betrains.playbook.collection.StationCollection;
 
 	import flash.errors.IllegalOperationError;
 
@@ -18,7 +19,7 @@ package be.irail.betrains.playbook.controller {
 		public var loggedIn:Boolean;
 
 		[Bindable]
-		public var stations:ArrayCollection;
+		public var stations:StationCollection;
 
 		[Bindable]
 		public var recentSchedulerQueries:RecentQueriesCollection;

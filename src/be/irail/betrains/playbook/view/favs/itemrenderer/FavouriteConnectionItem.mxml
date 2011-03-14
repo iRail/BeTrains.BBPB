@@ -14,8 +14,10 @@
 	</s:states>
 	<fx:Script>
 		<![CDATA[
+			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
-			import be.irail.betrains.playbook.view.favs.FavouriteEvent;
+
+			private var _model:ModelLocator = ModelLocator.getInstance();
 
 			override public function set data(value:Object):void {
 				super.data = value;
@@ -53,7 +55,9 @@
 
 			[Bindable(event="connectionChange")]
 			public function get from():String {
-				return _connection.from.formattedName;
+				if (!_connection)
+					return "";
+				return _model.stations.getStationById(_connection.fromStationId).formattedName;
 			}
 
 			// ----------------------------
@@ -62,7 +66,9 @@
 
 			[Bindable(event="connectionChange")]
 			public function get to():String {
-				return _connection.to.formattedName;
+				if (!_connection)
+					return "";
+				return _model.stations.getStationById(_connection.toStationId).formattedName;
 			}
 		]]>
 	</fx:Script>

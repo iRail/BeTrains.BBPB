@@ -14,7 +14,7 @@ package be.irail.betrains.playbook.collection {
 			var numFavs:int = length;
 			while (--numFavs > -1) {
 				var fav:FavouriteConnection = FavouriteConnection(getItemAt(numFavs));
-				if (fav.from.id == from.id && fav.to.id == to.id) {
+				if (fav.fromStationId == from.id && fav.toStationId == to.id) {
 					return true;
 				}
 			}

@@ -15,10 +15,9 @@
 	</components:states>
 	<fx:Script>
 		<![CDATA[
-			include "../resource_wrapper.as"
-
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.api.data.stations.IRStation;
+			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
 			import be.irail.betrains.playbook.view.components.ConnectionDetails;
 			import be.irail.betrains.playbook.view.scheduler.components.StationListPopUp;
@@ -27,16 +26,19 @@
 			import mx.events.CloseEvent;
 			import mx.managers.PopUpManager;
 
-			import qnx.locale.LocaleManager;
 			import qnx.ui.buttons.IconButton;
 
 			import spark.events.IndexChangeEvent;
 
+			include "../resource_wrapper.as";
+
 			private var _popup:StationListPopUp;
 
+			private var _model:ModelLocator = ModelLocator.getInstance();
+
 			public function setDataByFavourite(fav:FavouriteConnection):void {
-				presentationModel.to = fav.to;
-				presentationModel.from = fav.from;
+				presentationModel.to = _model.stations.getStationById(fav.toStationId);
+				presentationModel.from = _model.stations.getStationById(fav.fromStationId);
 			}
 
 			private function selectFromStation_clickHandler(event:MouseEvent):void {
@@ -211,7 +213,7 @@
 		</s:VGroup>
 
 
-		<mx:Spacer height="20"/>	
+		<mx:Spacer height="20"/>
 
 		<!--Date Selector-->
 		<s:VGroup width="90%"

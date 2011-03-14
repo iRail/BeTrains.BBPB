@@ -11,9 +11,9 @@
 	</fx:Metadata>
 	<fx:Script>
 		<![CDATA[
-			include "../resource_wrapper.as";
-
 			import be.irail.api.data.stations.IRStation;
+
+			import flash.utils.setTimeout;
 
 			import mx.collections.ArrayCollection;
 			import mx.events.ResizeEvent;
@@ -21,7 +21,10 @@
 			import qnx.ui.data.SectionDataProvider;
 			import qnx.ui.events.ListEvent;
 			import qnx.ui.listClasses.ListSelectionMode;
-			import qnx.ui.skins.listClasses.SectionListHeaderSkinWhite;
+
+			include "../resource_wrapper.as";
+
+			private var _listData:Array;
 
 			// ----------------------------
 			// dataProvider
@@ -54,7 +57,6 @@
 
 			public function set selectedItem(value:Object):void {
 				if (list) {
-
 					if (!value) {
 						list.selectedItems = [];
 						dispatchEvent(new Event(Event.CHANGE));
@@ -62,17 +64,23 @@
 						return;
 					}
 
-					var numDPItems:int = list.dataProvider.length, i:int;
-					for (i = 0; i < numDPItems; i++) {
-						var val:Object = list.dataProvider.getItemAt(i);
-						if (val.value == value) {
-							list.selectedItem = val;
+					var items:int = _listData.length;
+					while (--items > -1) {
+						var stationItem:Object = _listData[items];
+						if (stationItem.value == value) {
+							list.selectedItem = stationItem;
+							list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, 1);
+							setTimeout(dispatchSelectItem, 70);
 							break;
 						}
 					}
-					dispatchEvent(new Event(Event.CHANGE));
-					dispatchEvent(new Event("selectedItemChange"));
+
 				}
+			}
+
+			private function dispatchSelectItem():void {
+				dispatchEvent(new Event(Event.CHANGE));
+				dispatchEvent(new Event("selectedItemChange"));
 			}
 
 			// ----------------------------
@@ -88,19 +96,11 @@
 				return list.selectedIndex;
 			}
 
-			public function set selectedIndex(value:int):void {
-				if (value > -1) {
-					this.selectedItem = list.dataProvider.getItemAt(value);
-				} else {
-					this.selectedItem = null;
-				}
-				dispatchEvent(new Event("selectedIndexChange"));
-			}
 
 			private function createList():void {
 				list.setSize(this.width, this.height);
-				list.addEventListener(ListEvent.ITEM_CLICKED, onListItemClicked);
 				updateDataProvider();
+				list.addEventListener(ListEvent.ITEM_CLICKED, onListItemClicked);
 			}
 
 			private function onListItemClicked(event:ListEvent):void {
@@ -142,14 +142,20 @@
 					sectionDP.addItem({label: alphabet[sectionId]});
 				}
 
+				_listData = [];
+
 				var stationId:int = 0;
 				for (stationId = 0; stationId < dpNum; stationId++) {
 					station = dataProvider.getItemAt(stationId) as IRStation;
 					char = station.name.substr(0, 1).toUpperCase();
 
-					var sectionIndex:int = alphabet.indexOf(char);
-					sectionDP.addChildToIndex({label: station.formattedName, value: station}, sectionIndex);
+					var sectionIndex:int = alphabet.indexOf(char),
+						itemInSection:int = sectionDP.getChildrenAtIndex(sectionIndex) ? sectionDP.getChildrenAtIndex(sectionIndex).length : 0,
+						o:Object = {label: station.formattedName, value: station, itemIndex: itemInSection, sectIndex: sectionIndex};
 
+					_listData.push(o);
+
+					sectionDP.addChildToIndex(o, sectionIndex);
 					station = null;
 					char = null;
 				}

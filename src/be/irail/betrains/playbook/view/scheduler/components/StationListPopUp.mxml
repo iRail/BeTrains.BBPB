@@ -16,8 +16,6 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
-			include "../../resource_wrapper.as"
-
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 
@@ -28,12 +26,11 @@
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 
-			import qnx.locale.LocaleManager;
 			import qnx.ui.skins.text.TextInputSkinWhite;
 			import qnx.ui.text.TextInput;
 			import qnx.ui.text.TextInputIconMode;
 
-			import spark.events.IndexChangeEvent;
+			include "../../resource_wrapper.as"
 
 			public static const OK:uint = 0x0004;
 

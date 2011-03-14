@@ -21,8 +21,6 @@
 
 	<fx:Script>
 		<![CDATA[
-			include "../resource_wrapper.as"
-
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
 			import be.irail.betrains.playbook.view.favs.itemrenderer.FavouriteConnectionItem;
@@ -30,9 +28,9 @@
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 
-			import qnx.locale.LocaleManager;
-
 			import spark.events.IndexChangeEvent;
+
+			include "../resource_wrapper.as"
 
 			public function get favourites():ArrayCollection {
 				return presentationModel.favourites;
@@ -60,20 +58,18 @@
 			}
 
 			public function set selectedFavourite(value:FavouriteConnection):void {
-				if (value != _selectedFavourite) {
-					if (!value) {
-						this.currentState = "favourites";
-					} else {
-						this.currentState = "favouriteselect";
-					}
-					_selectedFavourite = value;
-					dispatchEvent(new Event("selectedFavouriteChange"));
+				if (!value) {
+					this.currentState = "favourites";
+				} else {
+					this.currentState = "favouriteselect";
 				}
+				_selectedFavourite = value;
+				dispatchEvent(new Event("selectedFavouriteChange"));
 			}
 
 			override public function make():void {
 				this.favourites = ModelLocator.getInstance().favourites;
-				favDataGroup.selectedItem = selectedFavourite;
+				favDataGroup.selectedItem = null;
 			}
 
 			private function favDataGroup_changeHandler(event:IndexChangeEvent):void {

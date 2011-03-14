@@ -7,10 +7,15 @@
 		 xmlns:favs="be.irail.betrains.playbook.view.favs.*">
 	<fx:Script>
 		<![CDATA[
-			include "../resource_wrapper.as"
-
+			import be.irail.api.data.stations.IRStation;
+			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
 
+			import flash.utils.setTimeout;
+
+			include "../resource_wrapper.as";
+
+			private var _model:ModelLocator = ModelLocator.getInstance();
 
 			// ----------------------------
 			// favourite
@@ -24,19 +29,34 @@
 			}
 
 			[Bindable(event="favouriteChange")]
-			public function get favouriteFrom():String {
+			public function get favouriteFrom():IRStation {
 				if (!_favourite)
-					return "";
+					return null;
 
-				return _favourite.from.formattedName;
+				return _model.stations.getStationById(_favourite.fromStationId);
 			}
 
 			[Bindable(event="favouriteChange")]
-			public function get favouriteTo():String {
+			public function get favouriteFromLabel():String {
+				if (!_favourite)
+					return "";
+				return favouriteFrom.formattedName;
+			}
+
+			[Bindable(event="favouriteChange")]
+			public function get favouriteTo():IRStation {
+				if (!_favourite)
+					return null;
+
+				return _model.stations.getStationById(_favourite.toStationId);
+			}
+
+			[Bindable(event="favouriteChange")]
+			public function get favouriteToLabel():String {
 				if (!_favourite)
 					return "";
 
-				return _favourite.to.formattedName;
+				return favouriteTo.formattedName;
 			}
 
 			public function set favourite(value:FavouriteConnection):void {
@@ -44,6 +64,10 @@
 					_favourite = value;
 					dispatchEvent(new Event("favouriteChange"));
 				}
+			}
+
+			private function selectStation(station:IRStation):void {
+				dispatchEvent(new FavouriteEvent(FavouriteEvent.SEE_STATION, station));
 			}
 		]]>
 	</fx:Script>
@@ -63,7 +87,7 @@
 					 alpha=".6"
 					 fontWeight="bold"
 					 maxDisplayedLines="1"
-					 text="{favouriteFrom}"/>
+					 text="{favouriteFromLabel}"/>
 
 			<s:Label textAlign="right"
 					 paddingRight="10"
@@ -73,20 +97,32 @@
 					 alpha=".6"
 					 fontWeight="bold"
 					 maxDisplayedLines="1"
-					 text="{favouriteTo}"/>
+					 text="{favouriteToLabel}"/>
 
 		</s:VGroup>
 
 		<s:VGroup y="150"
 				  left="40"
 				  right="40"
-				  gap="40">
+				  gap="30">
 
 			<favs:FavActionButton id="see"
 								  width="100%"
 								  icon="normal"
 								  click="dispatchEvent(new FavouriteEvent(FavouriteEvent.SCHEDULE_ROUTE));"
 								  label="{r('favs.selected.use')}"/>
+
+			<favs:FavActionButton id="infoOnFrom"
+								  width="100%"
+								  icon="station"
+								  click="selectStation(favouriteFrom);"
+								  label="{r('favs.selected.seeFrom',favouriteFromLabel)}"/>
+
+			<favs:FavActionButton id="infoOnTo"
+								  width="100%"
+								  icon="station"
+								  click="selectStation(favouriteTo);"
+								  label="{r('favs.selected.seeTo',favouriteToLabel)}"/>
 
 			<favs:FavActionButton id="remove"
 								  width="100%"

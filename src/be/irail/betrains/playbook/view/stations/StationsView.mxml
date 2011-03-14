@@ -29,6 +29,8 @@
 
 			include "../resource_wrapper.as";
 
+			private var _selectStation:IRStation;
+
 			private function creationCompleteHandler(event:FlexEvent):void {
 				presentationModel.init();
 				LocaleManager.localeManager.addEventListener(Event.CHANGE, onLocaleChange);
@@ -50,6 +52,11 @@
 
 			override public function make():void {
 				presentationModel.refreshList();
+				setTimeout(changeSelectedStation, 50);
+			}
+
+			override public function destroy():void {
+				_selectStation = null;
 			}
 
 			private function search():void {
@@ -61,12 +68,20 @@
 				presentationModel.refreshList();
 			}
 
-			protected function searchInput_changeHandler(event:Event):void {
+			private function searchInput_changeHandler(event:Event):void {
 				search();
 
 				if (searchInput.text.length == 0) {
-					stationsList.selectedIndex = -1;
+					stationsList.selectedItem = null;
 				}
+			}
+
+			public function selectStation(station:IRStation):void {
+				_selectStation = station;
+			}
+
+			private function changeSelectedStation():void {
+				stationsList.selectedItem = _selectStation;
 			}
 		]]>
 	</fx:Script>
