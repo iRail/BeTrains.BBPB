@@ -6,25 +6,21 @@
 						 xmlns:traffic="be.irail.betrains.playbook.view.traffic.*"
 						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
 						 xmlns:ns="http://ns.renaun.com/mxml/2010"
-						 xmlns:display="qnx.ui.display.*" 
-						 >
+						 xmlns:display="qnx.ui.display.*">
 	<components:states>
 		<s:State name="none"/>
+		<s:State name="error"/>
 		<s:State name="loading"/>
 		<s:State name="hasRSS"/>
 	</components:states>
 
 	<fx:Script>
 		<![CDATA[
-			include "../resource_wrapper.as"
-			
 			import be.irail.betrains.playbook.view.traffic.itemrenderer.TrafficIssueRSSItem;
-			
-			import mx.events.FlexEvent;
-			
-			import qnx.locale.LocaleManager;
-			
+
 			import spark.events.IndexChangeEvent;
+
+			include "../resource_wrapper.as";
 
 			protected function rssFeedList_changeHandler(event:IndexChangeEvent):void {
 				callLater(unselect);
@@ -32,6 +28,11 @@
 
 			override public function make():void {
 				presentationModel.loadRSSFeed();
+				presentationModel.startRefreshTimer();
+			}
+
+			override public function destroy():void {
+				presentationModel.stopRefreshTimer();
 			}
 
 			private function unselect():void {
@@ -50,21 +51,25 @@
 				this.currentState = "loading";
 			}
 
-
+			private function presentationModel_rssFeedErrorHandler(event:Event):void {
+				this.currentState = "error";
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<traffic:TrafficIssuesPresentationModel id="presentationModel"
 												rssFeedLoading="presentationModel_rssFeedLoadingHandler(event)"
-												rssFeedChange="presentationModel_rssFeedChangeHandler(event)"/>
+												rssFeedChange="presentationModel_rssFeedChangeHandler(event)"
+												rssFeedError="presentationModel_rssFeedErrorHandler(event)"/>
 	</fx:Declarations>
 
 	<s:Label styleName="noneLabel"
 			 alpha=".3"
 			 width="100%"
 			 height="100%"
-			 includeIn="none"
-			 text="{r('rrrss.none')}"/>
+			 includeIn="none,error"
+			 text.none="{r('rrrss.none')}"
+			 text.error="{r('rrrss.error')}"/>
 
 	<controls:Spinner horizontalCenter="0"
 					  verticalCenter="0"

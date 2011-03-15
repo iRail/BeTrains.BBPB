@@ -270,6 +270,6 @@
 					right="10"
 					height="245"
 					horizontalCenter="0"
-					visible="{this.currentState=='details' &amp;&amp; stationHasLocation}"
+					visible="{stationHasLocation}"
 					resize="mapComponentContainer_resizeHandler(event)"/>
 </s:Group>

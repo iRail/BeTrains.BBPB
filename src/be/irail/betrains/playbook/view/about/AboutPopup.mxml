@@ -17,6 +17,8 @@
 
 			import qnx.media.QNXStageWebView;
 
+			include "../resource_wrapper.as";
+
 			private var webView:QNXStageWebView;
 
 			// ----------------------------
@@ -42,36 +44,75 @@
 				}
 			}
 
-			private function init():void {
-				webView = new QNXStageWebView();
-				webView.enableCookies = true;
+			// ----------------------------
+			// isError
+			// ----------------------------
 
-				webView.addEventListener(Event.COMPLETE, loadWebView);
-				webView.addEventListener(ErrorEvent.ERROR, onError);
-				webView.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+			private var _isError:Boolean;
+
+			[Bindable(event="isErrorChange")]
+			public function get isError():Boolean {
+				return _isError;
+			}
+
+			public function set isError(value:Boolean):void {
+				if (value !== _isError) {
+					_isError = value;
+					dispatchEvent(new Event("isErrorChange"));
+				}
+			}
+
+			private function init():void {
+				if (!webView) {
+					webView = new QNXStageWebView();
+
+					webView.addEventListener(Event.COMPLETE, loadWebView);
+					webView.addEventListener(ErrorEvent.ERROR, onError);
+					webView.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+				}
+				webView.visible = false;
+				webView.stage = this.stage;
 
 				webView.loadURL(AppSettings.ABOUT_PAGE_URL);
 				isLoading = true;
 			}
 
 			private function onError(event:ErrorEvent):void {
+				trace("WebView Error: ", event.text);
+				if (webView) {
+					webView.stop();
+					webView.executeJavaScript("self.close();");
+					webView.visible = false;
+				}
 				isLoading = false;
-				close();
+				isError = true;
 			}
 
 			private function onIOError(event:IOErrorEvent):void {
+				trace("WebView IOError: ", event.text);
+				if (webView) {
+					webView.stop();
+					webView.executeJavaScript("self.close();");
+					webView.visible = false;
+				}
 				isLoading = false;
-				close();
+				isError = true;
 			}
 
 			private function close():void {
-				webView.dispose();
+				if (webView) {
+					webView.stop();
+					webView.executeJavaScript("self.close();");
+					webView = null;
+				}
 				PopUpManager.removePopUp(this);
 			}
 
 			private function loadWebView(event:Event):void {
-				webView.viewPort = new Rectangle(x + 10, y + 10, this.width - 20, this.height - 20);
-				webView.stage = this.stage;
+				if (webView) {
+					webView.visible = true;
+					webView.viewPort = new Rectangle(x + 10, y + 10, this.width - 20, this.height - 20);
+				}
 				isLoading = false;
 			}
 		]]>
@@ -100,10 +141,19 @@
 	</s:Rect>
 
 	<controls:Spinner id="spinner"
-					  autoPlay="false"
+					  autoPlay="true"
 					  visible="{isLoading}"
 					  horizontalCenter="0"
 					  verticalCenter="0"/>
+
+	<s:Label styleName="noneLabel"
+			 alpha=".3"
+			 width="100%"
+			 height="100%"
+			 visible="{isError}"
+			 horizontalCenter="0"
+			 verticalCenter="0"
+			 text="{r('about.error')}"/>
 
 	<controls:CloseButton id="closeBtnGrp"
 						  top="-15"

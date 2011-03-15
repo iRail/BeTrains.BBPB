@@ -8,7 +8,8 @@
 					  backgroundColor="0"
 					  show="showHandler()"
 					  click="bodyClick(event)"
-					  creationComplete="createComponents()">
+					  creationComplete="createComponents()"
+					  scrollRect="{new Rectangle(0,0,width,150)}">
 
 	<fx:Metadata>
 		[Event(name="hideBar",type="flash.events.Event")]
@@ -233,8 +234,8 @@
 			</s:filters>
 		</s:Line>
 
-		<s:Group left="270"
-				 width="630"
+		<s:Group left="280"
+				 width="620"
 				 verticalCenter="0">
 			<s:layout>
 				<s:TileLayout columnAlign="justifyUsingWidth"

@@ -104,7 +104,7 @@
 		<s:VGroup y="150"
 				  left="40"
 				  right="40"
-				  gap="30">
+				  gap="0">
 
 			<favs:FavActionButton id="see"
 								  width="100%"
@@ -112,17 +112,23 @@
 								  click="dispatchEvent(new FavouriteEvent(FavouriteEvent.SCHEDULE_ROUTE));"
 								  label="{r('favs.selected.use')}"/>
 
+			<mx:Spacer height="30"/>
+
 			<favs:FavActionButton id="infoOnFrom"
 								  width="100%"
 								  icon="station"
 								  click="selectStation(favouriteFrom);"
 								  label="{r('favs.selected.seeFrom',favouriteFromLabel)}"/>
 
+			<mx:Spacer height="10"/>
+
 			<favs:FavActionButton id="infoOnTo"
 								  width="100%"
 								  icon="station"
 								  click="selectStation(favouriteTo);"
 								  label="{r('favs.selected.seeTo',favouriteToLabel)}"/>
+
+			<mx:Spacer height="30"/>
 
 			<favs:FavActionButton id="remove"
 								  width="100%"

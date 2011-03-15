@@ -5,19 +5,19 @@ package be.irail.betrains.playbook.view.traffic {
 
 	import com.adobe.utils.XMLUtil;
 	import com.adobe.xml.syndication.rss.IImage;
-	import com.adobe.xml.syndication.rss.Image20;
 	import com.adobe.xml.syndication.rss.RSS20;
 
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Matrix;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
+	import flash.utils.Timer;
 
 	import mx.collections.ArrayCollection;
 
@@ -26,8 +26,11 @@ package be.irail.betrains.playbook.view.traffic {
 
 	[Event(name="rssFeedChange", type="flash.events.Event")]
 	[Event(name="rssFeedLoading", type="flash.events.Event")]
+	[Event(name="rssFeedError", type="flash.events.Event")]
 	public class TrafficIssuesPresentationModel extends EventDispatcher {
 		private var _model:ModelLocator = ModelLocator.getInstance();
+
+		private var _refreshTimer:Timer;
 
 		private var _providerImage:IImage;
 
@@ -166,6 +169,28 @@ package be.irail.betrains.playbook.view.traffic {
 			dispatchEvent(new Event("rssFeedLoading"));
 		}
 
+		public function startRefreshTimer():void {
+			stopRefreshTimer();
+
+			_refreshTimer = new Timer(AppSettings.RSS_REFRESH_INTERVAL * 1000);
+			_refreshTimer.addEventListener(TimerEvent.TIMER, onRefreshTimer);
+			_refreshTimer.start();
+		}
+
+		public function stopRefreshTimer():void {
+			if (_refreshTimer) {
+				if (_refreshTimer.running) {
+					_refreshTimer.stop();
+				}
+				_refreshTimer.removeEventListener(TimerEvent.TIMER, onRefreshTimer);
+				_refreshTimer = null;
+			}
+		}
+
+		private function onRefreshTimer(event:TimerEvent):void {
+			loadRSSFeed();
+		}
+
 		//called once the data has loaded from the feed
 		private function onDataLoad(e:Event):void {
 			//get the raw string data from the feed
@@ -210,14 +235,20 @@ package be.irail.betrains.playbook.view.traffic {
 		}
 
 		private function onIOError(e:IOErrorEvent):void {
-			rssFeed = new ArrayCollection();
+			if (!rssFeed || rssFeed.length == 0) {
+				rssFeed = new ArrayCollection();
+				dispatchEvent(new Event("rssFeedError"));
+			}
 			trace("IOError : " + e.text);
 		}
 
 		private function onSecurityError(e:SecurityErrorEvent):void {
-			rssFeed = new ArrayCollection();
+			if (!rssFeed || rssFeed.length == 0) {
+				rssFeed = new ArrayCollection();
+				dispatchEvent(new Event("rssFeedError"));
+			}
+
 			trace("SecurityError : " + e.text);
 		}
-
 	}
 }
