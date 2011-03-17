@@ -103,8 +103,6 @@
 				detectSwipeDown();
 
 				this.addEventListener(FavouriteEvent.SEE_STATION, onFavStationSelect);
-
-				applicationBar.enabled = true;
 			}
 
 			private function detectSwipeDown():void {
@@ -166,7 +164,6 @@
 							   left="0"
 							   right="0"
 							   bottom="0"
-							   enabled="false"
 							   change="applicationBar_changeHandler(event)">
 	</components:ApplicationBar>
 

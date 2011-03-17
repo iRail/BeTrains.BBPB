@@ -4,7 +4,6 @@ package be.irail.betrains.playbook.view.scheduler {
 	import be.irail.api.event.IRailErrorEvent;
 	import be.irail.api.event.IRailResultEvent;
 	import be.irail.api.methodgroup.Scheduler;
-	import be.irail.betrains.playbook.controller.AppSettings;
 	import be.irail.betrains.playbook.controller.ModelLocator;
 	import be.irail.betrains.playbook.data.FavouriteConnection;
 	import be.irail.betrains.playbook.data.SchedulerQuery;

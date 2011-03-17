@@ -5,13 +5,12 @@
 					  xmlns:scheduler="be.irail.api.data.scheduler.*"
 					  width="400"
 					  height="500"
-					  xmlns:components="be.irail.betrains.playbook.view.components.*">
+					  xmlns:components="be.irail.betrains.playbook.view.components.*"
+					  xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
-			include "../resource_wrapper.as"
-
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.api.data.scheduler.gate.ViaIRGate;
 			import be.irail.api.data.stations.IRStation;
@@ -25,6 +24,9 @@
 			import com.adobe.utils.ArrayUtil;
 
 			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+
+			include "../resource_wrapper.as"
 
 			private var _service:Vehicles = new Vehicles();
 
@@ -52,8 +54,9 @@
 			}
 
 			[Bindable(event="connectionChange")]
+			[Bindable(event="localeChange")]
 			public function get connectionTitle():String {
-				return r("scheduler.details.title", connection.departure.station.formattedName, connection.arrival.station.formattedName);
+				return LocaleManager.localeManager.getResource("scheduler.details.title", connection.departure.station.formattedName, connection.arrival.station.formattedName);
 			}
 
 			private function parseConnection(conn:IRConnection):void {
@@ -155,31 +158,26 @@
 
 				var tmp:Array = ArrayUtil.copyArray(list),
 					numListItems:int = tmp.length,
-					firstIndex:int, firstIndexSet:Boolean,
-					lastIndex:int, lastIndexSet:Boolean,
+					firstIndexSet:Boolean,
+					lastIndexSet:Boolean,
 					i:int = 0;
 
+				var diff:Array = [];
 				for (i = 0; i < numListItems; i++) {
-
-					if (VehicleStop(tmp[i]).station.id == last.id) {
-						lastIndex = i;
-						lastIndexSet = true;
-					} else if (VehicleStop(tmp[i]).station.id == first.id) {
-						firstIndex = i;
+					if (VehicleStop(tmp[i]).station.id == first.id) {
 						firstIndexSet = true;
 					}
 
-				}
-
-				var diff:Array;
-
-				if (firstIndexSet) {
-					if (!lastIndexSet) {
-						lastIndex = tmp.length - 1;
+					if (VehicleStop(tmp[i]).station.id == last.id) {
+						lastIndexSet = true;
 					}
-					diff = tmp.splice(firstIndex, (lastIndex - firstIndex) + 1);
-				} else {
-					diff = tmp;
+
+					if (firstIndexSet && !lastIndexSet) {
+						diff.push(tmp[i]);
+					} else if (firstIndexSet && lastIndexSet) {
+						diff.push(tmp[i]);
+						break;
+					}
 				}
 
 				return diff;
@@ -250,6 +248,10 @@
 
 				return false;
 			}
+
+			private function close():void {
+				PopUpManager.removePopUp(this);
+			}
 		]]>
 	</fx:Script>
 	<s:Rect radiusX="4"
@@ -291,4 +293,8 @@
 							  gap="0"/>
 		</components:layout>
 	</components:BeTrainsList>
+
+	<controls:CloseButton top="-15"
+						  right="-15"
+						  close="close()"/>
 </s:SkinnableContainer>

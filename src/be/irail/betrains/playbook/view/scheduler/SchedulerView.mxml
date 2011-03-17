@@ -150,7 +150,8 @@
 								width="615"
 								visible="{presentationModel.hasConnections}"
 								includeInLayout="{presentationModel.hasConnections}"
-								dataProvider="{presentationModel.connections}">
+								dataProvider="{presentationModel.connections}"
+								change="resultList_changeHandler(event)">
 		<!--change="resultList_changeHandler(event)"-->
 	</components:ConnectionsList>
 
