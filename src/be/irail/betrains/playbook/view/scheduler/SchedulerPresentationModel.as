@@ -136,13 +136,13 @@ package be.irail.betrains.playbook.view.scheduler {
 			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"]);
 			_schedule.addEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
 			_schedule.addEventListener(IRailErrorEvent.IO_ERROR, onIoError);
+			_schedule.addEventListener(IRailErrorEvent.API_ERROR, onIoError);
 
 			_query = new SchedulerQuery(from, to, when, dateArrDep);
 			isLoading = true;
 		}
 
 		private function onIoError(event:IRailErrorEvent):void {
-			_schedule.removeEventListener(IRailErrorEvent.IO_ERROR, onIoError);
 			isLoading = false;
 			_connections = new ArrayCollection();
 			dispatchEvent(new Event("connectionsChange"));

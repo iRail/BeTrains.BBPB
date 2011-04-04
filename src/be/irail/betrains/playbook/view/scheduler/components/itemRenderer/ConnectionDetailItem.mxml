@@ -4,7 +4,7 @@
 				xmlns:mx="library://ns.adobe.com/flex/mx"
 				autoDrawBackground="false"
 				height="50"
-				width="95%">
+				width="100%">
 	<s:states>
 		<s:State name="stop"/>
 		<s:State name="first"/>
@@ -95,23 +95,15 @@
 		]]>
 	</fx:Script>
 
-	<s:Rect radiusX="4"
-			radiusY="4"
-			left="0"
+	<s:Rect left="0"
 			right="0"
 			top="2"
 			bottom="2">
 		<s:fill>
-			<s:SolidColor color="white"/>
+			<s:BitmapFill source="@Embed(source='images/cellBg.png')"
+						  fillMode="repeat"
+						  smooth="true"/>
 		</s:fill>
-		<s:filters>
-			<s:DropShadowFilter blurX="6"
-								blurY="6"
-								strength=".4"
-								quality="3"
-								angle="45"
-								distance="3"/>
-		</s:filters>
 	</s:Rect>
 
 	<s:Line x="25"
@@ -121,6 +113,7 @@
 			bottom.last="{this.height/2}">
 		<s:stroke>
 			<s:SolidColorStroke color="0"
+								pixelHinting="true"
 								weight="1"/>
 		</s:stroke>
 	</s:Line>
@@ -146,7 +139,8 @@
 									alpha=".8"
 									weight="{isEssentialStation ? 2 : 1}"
 									weight.first="2"
-									weight.last="2"/>
+									weight.last="2"
+									pixelHinting="true"/>
 			</s:stroke>
 		</s:Ellipse>
 

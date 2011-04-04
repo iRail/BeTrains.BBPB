@@ -21,7 +21,6 @@
 
 			private var _lastIndex:int = -99;
 
-
 			private function list_clickHandler(event:MouseEvent):void {
 				if (this.selectedIndex == _lastIndex) {
 					this.selectedIndex = -1;
