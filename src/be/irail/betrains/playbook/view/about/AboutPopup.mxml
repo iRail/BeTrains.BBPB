@@ -84,6 +84,7 @@
 
 			protected function webView_completeHandler(event:Event):void {
 				currentState = "webview";
+				webView.reposition();
 			}
 		]]>
 	</fx:Script>

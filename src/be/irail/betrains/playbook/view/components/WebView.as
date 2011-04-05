@@ -57,7 +57,6 @@ package be.irail.betrains.playbook.view.components {
 		 * When the stage property is available add it to the web view
 		 * */
 		public function addedToStageHandler(event:Event):void {
-			invalidateDisplayList();
 		}
 
 		public function removedToStageHandler(event:Event):void {
@@ -220,7 +219,6 @@ package be.irail.betrains.playbook.view.components {
 			_loadSucces = true;
 
 			show();
-			invalidateDisplayList();
 
 			dispatchEvent(event.clone());
 		}
