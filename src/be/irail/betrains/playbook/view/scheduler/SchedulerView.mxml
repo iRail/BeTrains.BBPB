@@ -110,7 +110,13 @@
 				var details:ConnectionDetails = new ConnectionDetails();
 				details.connection = connection;
 
-				PopUpUtil.openPopUp(details, true)
+				PopUpUtil.openPopUp(details, true);
+				details.addEventListener(CloseEvent.CLOSE, onDetailsClose);
+			}
+
+			private function onDetailsClose(event:CloseEvent):void {
+				event.currentTarget.removeEventListener(CloseEvent.CLOSE, onDetailsClose);
+				resultList.selectedIndex = -1;
 			}
 
 			private function presentationModel_connectionsChangeHandler(event:Event):void {
@@ -148,7 +154,6 @@
 								includeInLayout="{presentationModel.hasConnections}"
 								dataProvider="{presentationModel.connections}"
 								change="resultList_changeHandler(event)">
-		<!--change="resultList_changeHandler(event)"-->
 	</components:ConnectionsList>
 
 	<s:Group top="0"

@@ -65,6 +65,11 @@ package be.irail.betrains.playbook.utils {
 
 		private static function removePopupToIndex(popup:IFlexDisplayObject):void {
 			popup.removeEventListener(CloseEvent.CLOSE, onCloseEvent);
+
+			var e:CloseEvent = new CloseEvent(CloseEvent.CLOSE);
+			e.detail = 0x0008;
+			popup.dispatchEvent(e);
+
 			var popupIndex:int = popups.indexOf(popup);
 			if (popupIndex > -1) {
 				popups.splice(popupIndex, 1);
