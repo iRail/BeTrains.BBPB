@@ -40,11 +40,6 @@ package be.irail.betrains.playbook.view.components {
 
 		public function WebView() {
 			addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
-
-			// not sure if this is the place to give it a minimum size
-			// if we don't do this without a defined size its 0 x 0
-			width = 480;
-			height = 300;
 		}
 
 		private function onCreationComplete(event:FlexEvent):void {
@@ -219,6 +214,7 @@ package be.irail.betrains.playbook.view.components {
 			_loadSucces = true;
 
 			show();
+			invalidateDisplayList();
 
 			dispatchEvent(event.clone());
 		}
@@ -228,7 +224,10 @@ package be.irail.betrains.playbook.view.components {
 		 * */
 		protected function errorHandler(event:ErrorEvent):void {
 			_loadSucces = false;
+
+			reposition(1, 1);
 			hide();
+
 			dispatchEvent(event.clone());
 		}
 
@@ -239,7 +238,8 @@ package be.irail.betrains.playbook.view.components {
 
 			// because the webview is positioned according to the stage rather than the container 
 			// the component is apart of we get the adjusted position
-			reposition(unscaledWidth, unscaledHeight);
+			if (webView.stage)
+				reposition(unscaledWidth, unscaledHeight);
 		}
 
 		public function reposition(w:Number = -1, h:Number = -1):void {

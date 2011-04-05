@@ -10,24 +10,29 @@
 	<s:layout>
 		<s:VerticalLayout useVirtualLayout="false"
 						  gap="0"
-						  verticalAlign="{getStyle('verticalAlignContent')?getStyle('verticalAlignContent'):'middle'}"
+						  verticalAlign="{getStyle('verticalAlignContent') ? getStyle('verticalAlignContent') : 'middle'}"
 						  variableRowHeight="false"/>
 	</s:layout>
+
 	<fx:Metadata>
-[Style(name="verticalAlignContent",format="String",enumeration="bottom,middle,top")]</fx:Metadata>
+		[Style(name="verticalAlignContent",format="String",enumeration="bottom,middle,top")]
+	</fx:Metadata>
+
 	<fx:Script>
 		<![CDATA[
+			import spark.components.IItemRenderer;
 			import spark.events.IndexChangeEvent;
 
 			private var _lastIndex:int = -99;
 
 			private function list_clickHandler(event:MouseEvent):void {
-				if (this.selectedIndex == _lastIndex) {
+				if (this.selectedIndex == _lastIndex && (event.target is IItemRenderer && IItemRenderer(event.target).selected)) {
 					this.selectedIndex = -1;
 
 					var e:IndexChangeEvent = new IndexChangeEvent(IndexChangeEvent.CHANGE);
 					e.oldIndex = _lastIndex;
 					e.newIndex = selectedIndex;
+
 					dispatchEvent(e);
 				}
 				_lastIndex = this.selectedIndex;
