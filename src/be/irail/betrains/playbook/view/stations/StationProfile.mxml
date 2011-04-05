@@ -14,24 +14,23 @@
 	</s:states>
 	<fx:Script>
 		<![CDATA[
-			include "../resource_wrapper.as"
-
 			import be.irail.api.data.liveboard.Liveboard;
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.api.event.IRailErrorEvent;
 			import be.irail.api.event.IRailResultEvent;
 			import be.irail.api.methodgroup.Liveboards;
 			import be.irail.betrains.playbook.controller.AppSettings;
+			import be.irail.betrains.playbook.utils.PopUpUtil;
 
 			import com.yahoo.maps.api.YahooMap;
 			import com.yahoo.maps.api.YahooMapEvent;
 			import com.yahoo.maps.api.core.location.LatLon;
 
-			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
-			import mx.managers.PopUpManager;
+
+			include "../resource_wrapper.as"
 
 			private var _mapReady:Boolean;
 
@@ -140,9 +139,7 @@
 				} else {
 					stationsLiveboard = new StationsLiveboardInfo();
 					stationsLiveboard.addEventListener(CloseEvent.CLOSE, onLiveboardPopupClose);
-					PopUpManager.addPopUp(stationsLiveboard, FlexGlobals.topLevelApplication as DisplayObject, true);
-					PopUpManager.centerPopUp(stationsLiveboard);
-
+					PopUpUtil.openPopUp(stationsLiveboard, true);
 				}
 
 				stationsLiveboard.liveBoard = (event.result.data as Liveboard);

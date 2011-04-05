@@ -19,6 +19,7 @@
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
+			import be.irail.betrains.playbook.utils.PopUpUtil;
 			import be.irail.betrains.playbook.view.about.AboutPopup;
 			import be.irail.betrains.playbook.view.components.MainViewItem;
 			import be.irail.betrains.playbook.view.favs.FavouriteEvent;
@@ -31,7 +32,6 @@
 
 			import mx.core.*;
 			import mx.events.FlexEvent;
-			import mx.managers.PopUpManager;
 
 			import qnx.events.QNXApplicationEvent;
 			import qnx.system.QNXApplication;
@@ -66,8 +66,7 @@
 					vs.selectedIndex = event.newIndex;
 				} else {
 					applicationBar.selectedIndex = event.oldIndex;
-					var popup:IFlexDisplayObject = PopUpManager.createPopUp(FlexGlobals.topLevelApplication as DisplayObject, AboutPopup, true);
-					PopUpManager.centerPopUp(popup);
+					PopUpUtil.createPopUp(AboutPopup, true);
 				}
 			}
 
@@ -94,6 +93,8 @@
 			}
 
 			private function creationCompleteHandler(event:FlexEvent):void {
+				PopUpUtil.registerPopUpParent(popUpParent);
+
 				TweenPlugin.activate([AutoAlphaPlugin]);
 				TweenLite.to(splashDuplicate, .8, {autoAlpha: 0, ease: Expo.easeInOut, delay: 1, onComplete: destroySD});
 			}
@@ -110,7 +111,7 @@
 			}
 
 			private function onSwipeDown(event:QNXApplicationEvent):void {
-				if (!showSettings) {
+				if (!showSettings && !PopUpUtil.hasOpenPopUps) {
 					this.showSettings = true;
 				}
 			}
@@ -173,6 +174,12 @@
 							  bottom="0"
 							  hideBar="settingspanel1_hideBarHandler(event)"
 							  visible="{showSettings}"/>
+
+	<mx:UIComponent id="popUpParent"
+					left="0"
+					right="0"
+					top="0"
+					bottom="54"/>
 
 	<s:BitmapImage id="splashDuplicate"
 				   source="@Embed('splash.png')"

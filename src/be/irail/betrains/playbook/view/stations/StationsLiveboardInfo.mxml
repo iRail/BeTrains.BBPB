@@ -2,12 +2,12 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 width="900"
-		 height="540"
-		 xmlns:liveboard="be.irail.api.data.liveboard.*"
-		 creationComplete="group1_creationCompleteHandler(event)"
 		 xmlns:components="be.irail.betrains.playbook.view.components.*"
-		 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
+		 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
+		 width="800"
+		 height="480"
+		 xmlns:liveboard="be.irail.api.data.liveboard.*"
+		 creationComplete="creationCompleteHandler()">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Metadata>
@@ -23,17 +23,16 @@
 	</s:filters>
 	<fx:Script>
 		<![CDATA[
-			include "../resource_wrapper.as"
-
 			import be.irail.api.data.liveboard.Liveboard;
 			import be.irail.betrains.playbook.utils.FormatUtil;
+			import be.irail.betrains.playbook.utils.PopUpUtil;
 			import be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer;
 
 			import mx.collections.ArrayCollection;
-			import mx.events.FlexEvent;
-			import mx.managers.PopUpManager;
 
 			import qnx.locale.LocaleManager;
+
+			include "../resource_wrapper.as"
 
 			private var _t:Timer;
 
@@ -87,7 +86,7 @@
 				return r("liveboard.departTitle");
 			}
 
-			protected function group1_creationCompleteHandler(event:FlexEvent):void {
+			protected function creationCompleteHandler():void {
 				dispatchEvent(new Event("timeChange"));
 
 				_t = new Timer(1000);
@@ -119,7 +118,7 @@
 			}
 
 			private function close():void {
-				PopUpManager.removePopUp(this);
+				PopUpUtil.removePopUp(this);
 			}
 		]]>
 	</fx:Script>

@@ -19,12 +19,12 @@
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
+			import be.irail.betrains.playbook.utils.PopUpUtil;
 			import be.irail.betrains.playbook.view.components.ConnectionDetails;
 			import be.irail.betrains.playbook.view.scheduler.components.StationListPopUp;
 
 			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
-			import mx.managers.PopUpManager;
 
 			import qnx.ui.buttons.IconButton;
 
@@ -46,7 +46,7 @@
 					_popup.close();
 				}
 
-				_popup = PopUpManager.createPopUp(FlexGlobals.topLevelApplication as DisplayObject, StationListPopUp, true) as StationListPopUp;
+				_popup = PopUpUtil.createPopUp(StationListPopUp, true) as StationListPopUp;
 				_popup.addEventListener(CloseEvent.CLOSE, onFromStationsClose);
 			}
 
@@ -64,10 +64,7 @@
 
 				_popup = new StationListPopUp();
 
-				_popup.x = 0;
-				_popup.y = 0;
-
-				PopUpManager.addPopUp(_popup, FlexGlobals.topLevelApplication as DisplayObject, true);
+				PopUpUtil.openPopUp(_popup, true);
 
 				_popup.addEventListener(CloseEvent.CLOSE, onToStationsClose);
 			}
@@ -113,8 +110,7 @@
 				var details:ConnectionDetails = new ConnectionDetails();
 				details.connection = connection;
 
-				PopUpManager.addPopUp(details, FlexGlobals.topLevelApplication as DisplayObject, true)
-				PopUpManager.centerPopUp(details);
+				PopUpUtil.openPopUp(details, true)
 			}
 
 			private function presentationModel_connectionsChangeHandler(event:Event):void {

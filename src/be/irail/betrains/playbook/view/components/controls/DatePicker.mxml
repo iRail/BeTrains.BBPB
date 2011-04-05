@@ -9,8 +9,6 @@
 
 	<fx:Script>
 		<![CDATA[
-			import mx.managers.PopUpManager;
-
 			[Bindable]
 			public var day:int;
 

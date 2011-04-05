@@ -26,12 +26,12 @@
 			import be.irail.api.event.IRailResultEvent;
 			import be.irail.api.methodgroup.Vehicles;
 			import be.irail.betrains.playbook.utils.FormatUtil;
+			import be.irail.betrains.playbook.utils.PopUpUtil;
 			import be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem;
 
 			import com.adobe.utils.ArrayUtil;
 
 			import mx.collections.ArrayCollection;
-			import mx.managers.PopUpManager;
 
 			include "../resource_wrapper.as"
 
@@ -288,7 +288,7 @@
 			}
 
 			private function close():void {
-				PopUpManager.removePopUp(this);
+				PopUpUtil.removePopUp(this);
 			}
 		]]>
 	</fx:Script>

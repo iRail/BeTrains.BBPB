@@ -2,24 +2,27 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library:/	/ns.adobe.com/flex/mx"
+		 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
+		 xmlns:components="be.irail.betrains.playbook.view.components.*"
 		 width="800"
 		 height="500"
-		 creationComplete="init()"
-		 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
-		 xmlns:components="be.irail.betrains.playbook.view.components.*">
+		 creationComplete="init()">
 	<fx:Declarations>
 	</fx:Declarations>
+	<s:states>
+		<s:State name="loading"/>
+		<s:State name="error"/>
+		<s:State name="webview"/>
+	</s:states>
+
 	<fx:Script>
 		<![CDATA[
 			import be.irail.betrains.playbook.controller.AppSettings;
+			import be.irail.betrains.playbook.utils.PopUpUtil;
 
-			import mx.managers.PopUpManager;
-
-			import qnx.media.QNXStageWebView;
+			import mx.events.MoveEvent;
 
 			include "../resource_wrapper.as";
-
-			private var webView:QNXStageWebView;
 
 			// ----------------------------
 			// isLoading
@@ -35,11 +38,14 @@
 			public function set isLoading(value:Boolean):void {
 				if (value != _isLoading) {
 					_isLoading = value;
+
 					if (value) {
-						spinner.play()
+						spinner.play();
+						currentState = "loading";
 					} else {
 						spinner.stop();
 					}
+
 					dispatchEvent(new Event("isLoadingChange"));
 				}
 			}
@@ -63,57 +69,21 @@
 			}
 
 			private function init():void {
-				if (!webView) {
-					webView = new QNXStageWebView();
-
-					webView.addEventListener(Event.COMPLETE, loadWebView);
-					webView.addEventListener(ErrorEvent.ERROR, onError);
-					webView.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
-				}
-				webView.visible = false;
-				webView.stage = this.stage;
-
-				webView.loadURL(AppSettings.ABOUT_PAGE_URL);
 				isLoading = true;
 			}
 
-			private function onError(event:ErrorEvent):void {
-				trace("WebView Error: ", event.text);
-				if (webView) {
-					webView.stop();
-					webView.executeJavaScript("self.close();");
-					webView.visible = false;
-				}
-				isLoading = false;
-				isError = true;
-			}
-
-			private function onIOError(event:IOErrorEvent):void {
-				trace("WebView IOError: ", event.text);
-				if (webView) {
-					webView.stop();
-					webView.executeJavaScript("self.close();");
-					webView.visible = false;
-				}
-				isLoading = false;
-				isError = true;
-			}
-
 			private function close():void {
-				if (webView) {
-					webView.stop();
-					webView.executeJavaScript("self.close();");
-					webView = null;
-				}
-				PopUpManager.removePopUp(this);
+				webView.dispose();
+				PopUpUtil.removePopUp(this);
 			}
 
-			private function loadWebView(event:Event):void {
-				if (webView) {
-					webView.visible = true;
-					webView.viewPort = new Rectangle(x + 10, y + 10, this.width - 20, this.height - 20);
-				}
-				isLoading = false;
+			protected function webView_errorHandler(event:ErrorEvent):void {
+				currentState = "error";
+			}
+
+
+			protected function webView_completeHandler(event:Event):void {
+				currentState = "webview";
 			}
 		]]>
 	</fx:Script>
@@ -139,6 +109,15 @@
 								distance="3"/>
 		</s:filters>
 	</s:Rect>
+
+	<components:WebView id="webView"
+						source="{AppSettings.ABOUT_PAGE_URL}"
+						x="5"
+						y="5"
+						width="{this.width-20}"
+						height="{this.height-20}"
+						complete="webView_completeHandler(event)"
+						error="webView_errorHandler(event)"/>
 
 	<controls:Spinner id="spinner"
 					  autoPlay="true"

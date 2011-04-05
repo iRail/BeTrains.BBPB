@@ -18,13 +18,13 @@
 		<![CDATA[
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.controller.ModelLocator;
+			import be.irail.betrains.playbook.utils.PopUpUtil;
 
 			import com.adobe.utils.StringUtil;
 
 			import mx.collections.ArrayCollection;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
-			import mx.managers.PopUpManager;
 
 			import qnx.ui.skins.text.TextInputSkinWhite;
 			import qnx.ui.text.TextInput;
@@ -69,7 +69,7 @@
 
 			public function close(detail:uint = 0x0008):void {
 				stage.focus = null;
-				PopUpManager.removePopUp(this);
+				PopUpUtil.removePopUp(this);
 				dispatchEvent(new CloseEvent(CloseEvent.CLOSE, false, false, detail));
 			}
 
