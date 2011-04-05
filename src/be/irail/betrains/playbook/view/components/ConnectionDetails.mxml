@@ -339,7 +339,7 @@
 								 height="100%"
 								 horizontalCenter="0"
 								 changing="refreshStationsView()"
-								 excludeFrom="none"
+								 excludeFrom="none,loading"
 								 itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem">
 			<components:layout>
 				<s:VerticalLayout rowHeight="50"
