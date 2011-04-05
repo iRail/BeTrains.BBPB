@@ -16,8 +16,6 @@
 
 	<fx:Script>
 		<![CDATA[
-			include "../resource_wrapper.as"
-
 			import be.irail.betrains.playbook.collection.RecentQueriesCollection;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.SchedulerQuery;
@@ -27,6 +25,7 @@
 			import qnx.locale.LocaleManager;
 
 			import spark.events.IndexChangeEvent;
+			include "../resource_wrapper.as";
 
 			// ----------------------------
 			// recents
@@ -49,6 +48,7 @@
 
 			override public function make():void {
 				this.recents = ModelLocator.getInstance().recentSchedulerQueries;
+				recentsList.selectedIndex = -1;
 			}
 
 			override public function destroy():void {
@@ -63,10 +63,12 @@
 			protected function recentsList_changeHandler(event:IndexChangeEvent):void {
 				presentationModel.selectedQuery = recentsList.selectedItem as SchedulerQuery;
 
-				if (presentationModel.selectedQuery)
+				if (presentationModel.selectedQuery) {
 					this.currentState = "recentItemSelected";
-				else
+					connList.selectedIndex = -1;
+				} else {
 					this.currentState = "recents";
+				}
 			}
 		]]>
 	</fx:Script>
@@ -102,7 +104,8 @@
 			</s:filters>
 		</s:Rect>
 
-		<components:ConnectionsList includeIn="recentItemSelected"
+		<components:ConnectionsList id="connList"
+									includeIn="recentItemSelected"
 									dataProvider="{presentationModel.schedulerItems}"
 									left="410"
 									width="614"
