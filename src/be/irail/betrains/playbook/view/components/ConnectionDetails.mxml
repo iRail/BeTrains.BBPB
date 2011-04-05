@@ -124,8 +124,8 @@
 				if (allDataLoaded) {
 					_service.removeEventListener(IRailResultEvent.VEHICLE_INFO_RESULT, onResultEvent);
 					_service.removeEventListener(IRailErrorEvent.IO_ERROR, onIOErrorEvent);
-					filterTrainStops();
 					this.currentState = "connections";
+					filterTrainStops();
 				}
 			}
 
