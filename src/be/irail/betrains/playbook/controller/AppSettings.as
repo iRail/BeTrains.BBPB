@@ -5,17 +5,20 @@ package be.irail.betrains.playbook.controller {
 	public class AppSettings {
 		public static const supportedLanguagesLocale:Array = ["en_US", "fr_FR", "nl_NL"];
 
+		//prefix to indicate compatible data storages
+		public static const FILE_VERSION_PREFIX:String = "1.1_";
+
 		// Cached stationslist location
 		public static const STATIONSDATA_STORAGE_LOCATION:File = File.applicationDirectory.resolvePath("data/");
 
 		// Recent scheduler location 
-		public static const RECENT_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath("recents.bpd");
+		public static const RECENT_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath(FILE_VERSION_PREFIX + "recents.bpd");
 
 		// Favourites  location 
-		public static const FAVOURITES_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath("favourites.bpd");
+		public static const FAVOURITES_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath(FILE_VERSION_PREFIX + "favourites.bpd");
 
 		// Settings  location 
-		public static const SETTINGS_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath("settings.bpd");
+		public static const SETTINGS_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath(FILE_VERSION_PREFIX + "settings.bpd");
 
 		public static const ABOUT_PAGE_URL:String = "http://www.betrains.com/api/iphone_app_pages/about_playbook.php";
 

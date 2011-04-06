@@ -37,8 +37,8 @@ package be.irail.betrains.playbook.utils {
 			addPopupToIndex(window);
 		}
 
-		public static function removePopUp(popup:IFlexDisplayObject):void {
-			removePopupToIndex(popup);
+		public static function removePopUp(popup:IFlexDisplayObject, dispatchEvent:Boolean = true):void {
+			removePopupToIndex(popup, dispatchEvent);
 			PopUpManager.removePopUp(popup);
 		}
 
@@ -63,12 +63,14 @@ package be.irail.betrains.playbook.utils {
 			removePopupToIndex(event.currentTarget as IFlexDisplayObject);
 		}
 
-		private static function removePopupToIndex(popup:IFlexDisplayObject):void {
+		private static function removePopupToIndex(popup:IFlexDisplayObject, dispatchEvent:Boolean = true):void {
 			popup.removeEventListener(CloseEvent.CLOSE, onCloseEvent);
 
-			var e:CloseEvent = new CloseEvent(CloseEvent.CLOSE);
-			e.detail = 0x0008;
-			popup.dispatchEvent(e);
+			if (dispatchEvent) {
+				var e:CloseEvent = new CloseEvent(CloseEvent.CLOSE);
+				e.detail = 0x0008;
+				popup.dispatchEvent(e);
+			}
 
 			var popupIndex:int = popups.indexOf(popup);
 			if (popupIndex > -1) {

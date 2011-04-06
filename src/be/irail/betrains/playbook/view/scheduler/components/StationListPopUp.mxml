@@ -69,7 +69,7 @@
 
 			public function close(detail:uint = 0x0008):void {
 				stage.focus = null;
-				PopUpUtil.removePopUp(this);
+				PopUpUtil.removePopUp(this, false);
 				dispatchEvent(new CloseEvent(CloseEvent.CLOSE, false, false, detail));
 			}
 
