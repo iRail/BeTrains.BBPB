@@ -19,11 +19,12 @@ package be.irail.betrains.playbook.utils {
 			label.invalidateSize();
 			label.validateNow();
 
-			while ((getTextWidth(label.text, fontSize, label.styleDeclaration) > label.width) && fontSize > 0) {
+			while ((getTextWidth(label.text, fontSize, label.styleDeclaration) > label.width) && fontSize > 10) {
 				fontSize = fontSize - 0.5;
-				label.setStyle("fontSize", fontSize);
 			}
 
+			label.setStyle("fontSize", fontSize);
+			label.validateNow();
 		}
 
 		public static function getTextWidth(text:String, fontSize:Number, style:CSSStyleDeclaration):Number {
