@@ -4,7 +4,7 @@
 		<transparent>false</transparent>
 		<visible>true</visible>
 		<fullScreen>true</fullScreen>
-		<autoOrients>true</autoOrients>
+		<autoOrients>false</autoOrients>
 		<aspectRatio>landscape</aspectRatio>
 		<renderMode>auto</renderMode>
 		<maximizable>false</maximizable>
