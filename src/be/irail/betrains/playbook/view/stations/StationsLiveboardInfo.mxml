@@ -4,8 +4,8 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="be.irail.betrains.playbook.view.components.*"
 		 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
-		 width="800"
-		 height="480"
+		 width="900"
+		 height="540"
 		 xmlns:liveboard="be.irail.api.data.liveboard.*"
 		 creationComplete="creationCompleteHandler()">
 	<fx:Declarations>
@@ -25,10 +25,12 @@
 		<![CDATA[
 			import be.irail.api.data.liveboard.Liveboard;
 			import be.irail.betrains.playbook.utils.FormatUtil;
+			import be.irail.betrains.playbook.utils.LabelUtil;
 			import be.irail.betrains.playbook.utils.PopUpUtil;
 			import be.irail.betrains.playbook.view.stations.itemrenderer.LiveboardDepartureItemRenderer;
 
 			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
 
 			import qnx.locale.LocaleManager;
 
@@ -61,6 +63,10 @@
 					_liveBoard = value;
 					if (value) {
 						liveboardItems.dataProvider = new ArrayCollection(liveBoard.departures);
+
+						stationNameLabel.text = value.station.name.toUpperCase();
+
+						callLater(evalStationName);
 						callLater(evalDate);
 					}
 					dispatchEvent(new Event("liveBoardChange"));
@@ -120,6 +126,11 @@
 			private function close():void {
 				PopUpUtil.removePopUp(this);
 			}
+
+			private function evalStationName():void {
+				stationNameLabel.setStyle("fontSize", 30);
+				LabelUtil.constrainTextToWidth(stationNameLabel);
+			}
 		]]>
 	</fx:Script>
 
@@ -128,10 +139,11 @@
 				   right="0"
 				   top="0"
 				   bottom="0"
+				   smooth="true"
 				   source="@Embed(source='images/tvscreen.png')"/>
 
-	<controls:CloseButton top="-15"
-						  right="-15"
+	<controls:CloseButton top="15"
+						  right="15"
 						  close="close()"/>
 
 	<s:Group left="54"
@@ -148,38 +160,43 @@
 			</s:fill>
 		</s:Rect>
 
-		<s:Label color="0xFFFFFF"
-				 text="{title}"
-				 top="20"
-				 paddingLeft="10"
-				 paddingRight="10"
-				 width="100%"
-				 textAlign="center"
-				 fontSize="50"
-				 verticalAlign="bottom"
-				 maxDisplayedLines="1"/>
-
-		<s:Label color="0xFFFFFF"
-				 text="{time}"
-				 top="20"
-				 paddingBottom="10"
-				 paddingLeft="10"
-				 paddingRight="10"
-				 textAlign="center"
-				 fontSize="50"
-				 verticalAlign="bottom"
-				 maxDisplayedLines="1"/>
-
-		<s:Label color="0xFFFFFF"
-				 text="{stationName}"
+		<s:Group left="0"
 				 right="0"
-				 top="35"
-				 paddingLeft="10"
-				 paddingRight="10"
-				 textAlign="right"
-				 fontSize="30"
-				 verticalAlign="bottom"
-				 maxDisplayedLines="1"/>
+				 top="0"
+				 height="75">
+
+			<s:Label text="{title}"
+					 color="0xFFFFFF"
+					 bottom="5"
+					 paddingLeft="10"
+					 paddingRight="10"
+					 paddingBottom="0"
+					 horizontalCenter="0"
+					 textAlign="center"
+					 fontSize="50"
+					 maxDisplayedLines="1"/>
+
+			<s:Label color="0xFFFFFF"
+					 text="{time}"
+					 bottom="5"
+					 paddingLeft="10"
+					 paddingRight="10"
+					 paddingBottom="0"
+					 textAlign="left"
+					 fontSize="50"
+					 maxDisplayedLines="1"/>
+
+			<s:Label id="stationNameLabel"
+					 color="0xFFFFFF"
+					 bottom="5"
+					 right="0"
+					 paddingRight="10"
+					 paddingBottom="0"
+					 textAlign="right"
+					 fontSize="30"
+					 width="280"
+					 maxDisplayedLines="1"/>
+		</s:Group>
 
 		<s:Group left="0"
 				 right="0"

@@ -48,7 +48,8 @@
 
 			override public function make():void {
 				this.recents = ModelLocator.getInstance().recentSchedulerQueries;
-				recentsList.selectedIndex = -1;
+				if (recentsList)
+					recentsList.selectedIndex = -1;
 			}
 
 			override public function destroy():void {
