@@ -21,9 +21,9 @@ package be.irail.betrains.playbook.utils {
 
 			while ((getTextWidth(label.text, fontSize, label.styleDeclaration) > label.width) && fontSize > 10) {
 				fontSize = fontSize - 0.5;
+				label.setStyle("fontSize", fontSize);
 			}
 
-			label.setStyle("fontSize", fontSize);
 			label.validateNow();
 		}
 
