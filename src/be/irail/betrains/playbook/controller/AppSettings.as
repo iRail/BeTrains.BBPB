@@ -9,16 +9,16 @@ package be.irail.betrains.playbook.controller {
 		public static const FILE_VERSION_PREFIX:String = "1.1_";
 
 		// Cached stationslist location
-		public static const STATIONSDATA_STORAGE_LOCATION:File = File.applicationDirectory.resolvePath("data/");
+		public static const STATIONSDATA_STORAGE_LOCATION:File = File.applicationStorageDirectory.resolvePath("data/");
 
 		// Recent scheduler location 
-		public static const RECENT_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath(FILE_VERSION_PREFIX + "recents.bpd");
+		public static const RECENT_STORAGE_LOCATION:File = File.applicationStorageDirectory.resolvePath(FILE_VERSION_PREFIX + "recents.bpd");
 
 		// Favourites  location 
-		public static const FAVOURITES_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath(FILE_VERSION_PREFIX + "favourites.bpd");
+		public static const FAVOURITES_STORAGE_LOCATION:File = File.applicationStorageDirectory.resolvePath(FILE_VERSION_PREFIX + "favourites.bpd");
 
 		// Settings  location 
-		public static const SETTINGS_STORAGE_LOCATION:File = File.documentsDirectory.resolvePath(FILE_VERSION_PREFIX + "settings.bpd");
+		public static const SETTINGS_STORAGE_LOCATION:File = File.applicationStorageDirectory.resolvePath(FILE_VERSION_PREFIX + "settings.bpd");
 
 		public static const ABOUT_PAGE_URL:String = "http://www.betrains.com/api/iphone_app_pages/about_playbook.php";
 

@@ -1,7 +1,6 @@
 package be.irail.betrains.playbook.view.favs {
 
 	import be.irail.betrains.playbook.data.FavouriteConnection;
-	import be.irail.betrains.playbook.utils.DataStorageUtil;
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -34,8 +33,6 @@ package be.irail.betrains.playbook.view.favs {
 		public function deleteFav(fav:FavouriteConnection):void {
 			favourites.removeItemAt(favourites.getItemIndex(fav));
 			dispatchEvent(new Event("favouritesChange"));
-
-			DataStorageUtil.writeFavourites();
 		}
 	}
 }

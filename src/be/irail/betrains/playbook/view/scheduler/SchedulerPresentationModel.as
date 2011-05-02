@@ -7,7 +7,6 @@ package be.irail.betrains.playbook.view.scheduler {
 	import be.irail.betrains.playbook.controller.ModelLocator;
 	import be.irail.betrains.playbook.data.FavouriteConnection;
 	import be.irail.betrains.playbook.data.SchedulerQuery;
-	import be.irail.betrains.playbook.utils.DataStorageUtil;
 
 	import com.adobe.utils.DateUtil;
 
@@ -158,7 +157,6 @@ package be.irail.betrains.playbook.view.scheduler {
 			if (from != null && to != null) {
 				_model.favourites.addItem(new FavouriteConnection(from, to));
 				dispatchEvent(new Event("connectionFavd"));
-				DataStorageUtil.writeFavourites();
 			}
 		}
 
@@ -171,7 +169,6 @@ package be.irail.betrains.playbook.view.scheduler {
 			if (_connections.length) {
 				_query.result = event.result;
 				_model.recentSchedulerQueries.addItem(_query);
-				DataStorageUtil.writeRecents();
 			}
 
 			_query = null;

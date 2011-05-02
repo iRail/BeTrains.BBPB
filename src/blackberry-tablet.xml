@@ -6,7 +6,6 @@
 		<fullScreen>true</fullScreen>
 		<autoOrients>false</autoOrients>
 		<aspectRatio>landscape</aspectRatio>
-		<renderMode>auto</renderMode>
 		<resizable>false</resizable>
 	</initialWindow>
 	<author>Joris Timmerman</author>

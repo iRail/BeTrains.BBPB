@@ -27,6 +27,7 @@
 			import be.irail.betrains.playbook.controller.AppSettings;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.BeTrainsApplicationSettings;
+			import be.irail.betrains.playbook.utils.DataStorageUtil;
 			import be.irail.betrains.playbook.utils.LocalisationUtil;
 			import be.irail.betrains.playbook.utils.SerializeUtil;
 			import be.irail.betrains.playbook.view.MainView;
@@ -43,6 +44,7 @@
 			}
 
 			private function creationCompleteHandler():void {
+				NativeApplication.nativeApplication.addEventListener(Event.EXITING, onApplicationExiting);
 				callLater(setupMainView);
 			/* var deviceFonts:Array = Font.enumerateFonts(true);
 			trace("device fonts: ", deviceFonts); */
@@ -161,6 +163,11 @@
 			private function ioErrorHandler(event:IOErrorEvent):void {
 				var stream:FileStream = event.target as FileStream;
 				stream.close();
+			}
+
+			private function onApplicationExiting(event:Event):void {
+				DataStorageUtil.writeFavourites();
+				DataStorageUtil.writeRecents();
 			}
 
 			private function setupResourceManager():void {
