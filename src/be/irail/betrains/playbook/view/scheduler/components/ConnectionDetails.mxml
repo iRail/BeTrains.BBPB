@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:mx="library://ns.adobe.com/flex/mx"
+					  xmlns:scheduler="be.irail.api.data.scheduler.*"
+					  width="500"
+					  height="505"
+					  xmlns:components="be.irail.betrains.playbook.view.components.*"
+					  xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
+	<fx:Declarations>
+	</fx:Declarations>
+	<s:states>
+		<s:State name="none"/>
+		<s:State name="loading"/>
+		<s:State name="connections"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import be.irail.api.data.scheduler.IRConnection;
+			import be.irail.api.data.scheduler.gate.ViaIRGate;
+			import be.irail.api.data.stations.IRStation;
+			import be.irail.api.data.vehicle.IRVehicle;
+			import be.irail.api.data.vehicle.IRVehicleInformation;
+			import be.irail.api.data.vehicle.VehicleStop;
+			import be.irail.api.event.IRailErrorEvent;
+			import be.irail.api.event.IRailResultEvent;
+			import be.irail.api.methodgroup.Vehicles;
+			import be.irail.betrains.playbook.utils.FormatUtil;
+			import be.irail.betrains.playbook.utils.PopUpUtil;
+			import be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem;
+
+			import com.adobe.utils.ArrayUtil;
+
+			import mx.collections.ArrayCollection;
+
+			include "../../resource_wrapper.as"
+
+			private var _service:Vehicles = new Vehicles();
+
+			private var _vehicleStops:Dictionary = new Dictionary();
+
+			// ----------------------------
+			// connection
+			// ----------------------------
+
+			private var _connection:IRConnection;
+
+			[Bindable(event="connectionChange")]
+			public function get connection():IRConnection {
+				return _connection;
+			}
+
+			public function set connection(value:IRConnection):void {
+				if (value != _connection) {
+					_connection = value;
+
+					this.currentState = "loading";
+					parseConnection(value);
+
+					dispatchEvent(new Event("connectionChange"));
+				}
+			}
+
+			[Bindable(event="connectionChange")]
+			[Bindable(event="localeChange")]
+			public function get connectionTitle():String {
+				if (!connection) {
+					return "";
+				}
+				return LocaleManager.localeManager.getResource("scheduler.details.title", connection.departure.station.formattedName, connection.arrival.station.formattedName);
+			}
+
+			[Bindable(event="connectionChange")]
+			[Bindable(event="localeChange")]
+			public function get connectionTime():String {
+				if (!connection) {
+					return "";
+				}
+				var formattedDepart:String = FormatUtil.formatTime(connection.departure.dateTime);
+				var formattedArrival:String = FormatUtil.formatTime(connection.arrival.dateTime);
+				return LocaleManager.localeManager.getResource("scheduler.details.time", formattedDepart, formattedArrival);
+			}
+
+			[Bindable(event="connectionChange")]
+			[Bindable(event="localeChange")]
+			public function get connectionDuration():String {
+				if (!connection) {
+					return "";
+				}
+				var formattedDuration:String = FormatUtil.secondsToHoursMinutes(connection.duration);
+				return LocaleManager.localeManager.getResource("scheduler.details.duration", formattedDuration);
+			}
+
+			private function parseConnection(conn:IRConnection):void {
+				_vehicleStops = new Dictionary();
+
+				_vehicleStops[conn.departure.vehicle.vehicleCode] = null;
+
+				for each (var via:ViaIRGate in conn.vias) {
+					_vehicleStops[via.vehicle.vehicleCode] = null;
+				}
+
+				_vehicleStops[conn.arrival.vehicle.vehicleCode] = null;
+				getConnectionInfo();
+			}
+
+			private function getConnectionInfo():void {
+				_service.addEventListener(IRailResultEvent.VEHICLE_INFO_RESULT, onResultEvent);
+				_service.addEventListener(IRailErrorEvent.IO_ERROR, onIOErrorEvent);
+
+				for (var vehicleCode:String in _vehicleStops) {
+					_service.getVehicleInformationByVehicleCode(vehicleCode);
+				}
+			}
+
+			private function onIOErrorEvent(event:Event):void {
+				_service.removeEventListener(IRailResultEvent.VEHICLE_INFO_RESULT, onResultEvent);
+				_service.removeEventListener(IRailErrorEvent.IO_ERROR, onIOErrorEvent);
+				this.currentState = "none";
+			}
+
+
+			private function onResultEvent(event:IRailResultEvent):void {
+				var info:IRVehicleInformation = (event.result.data as IRVehicleInformation);
+				_vehicleStops[info.vehicle.vehicleCode] = info.stops;
+
+				if (allDataLoaded) {
+					_service.removeEventListener(IRailResultEvent.VEHICLE_INFO_RESULT, onResultEvent);
+					_service.removeEventListener(IRailErrorEvent.IO_ERROR, onIOErrorEvent);
+					this.currentState = "connections";
+					filterTrainStops();
+				}
+			}
+
+			private function getVehiculeStopsById(id:String):IRVehicle {
+				return _vehicleStops[id];
+			}
+
+			private function get allDataLoaded():Boolean {
+				for (var code:String in _vehicleStops) {
+					if (_vehicleStops[code] == null) {
+						return false;
+					}
+				}
+				return true;
+			}
+
+			private function filterTrainStops():void {
+				var allStops:Array = [],
+					depStation1:IRStation = connection.departure.station,
+					depStation2:IRStation,
+					arrStation1:IRStation,
+					arrStation2:IRStation = connection.arrival.station;
+
+				if (connection.vias.length > 0) {
+					depStation2 = connection.vias[0].station;
+					arrStation1 = connection.vias[connection.vias.length - 1].station;
+				} else {
+					depStation2 = connection.arrival.station;
+					arrStation1 = connection.departure.station;
+				}
+
+				var depTrainStops:Array = filterStops(_vehicleStops[connection.departure.vehicle.vehicleCode], depStation1, depStation2);
+
+				allStops = merge(allStops, depTrainStops);
+
+				var lastStation:IRStation = null;
+				for each (var via:ViaIRGate in connection.vias) {
+					if (lastStation) {
+						allStops = merge(allStops, filterStops(_vehicleStops[via.vehicle.vehicleCode], lastStation, via.station));
+					}
+					lastStation = via.station;
+				}
+
+				var arrTrainStops:Array = filterStops(_vehicleStops[connection.arrival.vehicle.vehicleCode], arrStation1, arrStation2);
+				allStops = merge(allStops, arrTrainStops);
+
+				allStops = removeDoubleStops(filterStops(allStops, depStation1, arrStation2));
+
+				connections.dataProvider = new ArrayCollection(allStops);
+
+				setTimeout(refreshStationsView, 100);
+			}
+
+
+			private function refreshStationsView():void {
+				for (var i:int = 0; i < connections.dataGroup.numElements; i++) {
+					var item:ConnectionDetailItem = ConnectionDetailItem(connections.dataGroup.getElementAt(i));
+					if (item) {
+						item.isEssentialStation = isEssentialStation(item.station);
+					}
+				}
+			}
+
+			private function filterStops(list:Array, first:IRStation, last:IRStation):Array {
+				if (first.id == last.id) {
+					return list;
+				}
+
+				var tmp:Array = ArrayUtil.copyArray(list),
+					numListItems:int = tmp.length,
+					firstIndexSet:Boolean,
+					lastIndexSet:Boolean,
+					i:int = 0;
+
+				var diff:Array = [];
+				for (i = 0; i < numListItems; i++) {
+					if (VehicleStop(tmp[i]).station.id == first.id) {
+						firstIndexSet = true;
+					}
+
+					if (VehicleStop(tmp[i]).station.id == last.id) {
+						lastIndexSet = true;
+					}
+
+					if (firstIndexSet && !lastIndexSet) {
+						diff.push(tmp[i]);
+					} else if (firstIndexSet && lastIndexSet) {
+						diff.push(tmp[i]);
+						break;
+					}
+				}
+
+				return diff;
+			}
+
+			private function merge(a1:Array, a2:Array):Array {
+				var result:Array = [],
+					i1:int = 0, i2:int = 0,
+					num1:int = a1.length, num2:int = a2.length;
+
+				for (i1 = 0; i1 < num1; i1++) {
+					result.push(a1[i1]);
+				}
+
+				for (i2 = 0; i2 < num2; i2++) {
+					result.push(a2[i2]);
+				}
+
+				return result;
+			}
+
+			private function removeDoubleStops(ac:Array):Array {
+				var tmp:Array = [],
+					numAc:int = ac.length,
+					i:int, j:int;
+
+				for (i = 0; i < numAc; i++) {
+					var stop:VehicleStop = ac[i] as VehicleStop,
+						alreadyStored:Boolean = false;
+
+					for (j = 0; j < tmp.length; j++) {
+						if (tmp[j].station.id == stop.station.id) {
+							alreadyStored = true;
+							break;
+						}
+					}
+
+					if (!alreadyStored) {
+						tmp.push(stop);
+					}
+
+				}
+
+				return tmp;
+			}
+
+			private function containsStation(lst:Array, station:IRStation):Boolean {
+				var numItems:int = lst.length;
+
+				while (--numItems > -1) {
+					if (lst[numItems].id == station.id) {
+						return true;
+					}
+				}
+				return false;
+			}
+
+			private function isEssentialStation(station:IRStation):Boolean {
+				if (station.id == connection.departure.station.id || station.id == connection.arrival.station.id) {
+					return true;
+				}
+
+				for each (var via:ViaIRGate in connection.vias) {
+					if (via.station.id == station.id) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			private function close():void {
+				PopUpUtil.removePopUp(this);
+			}
+		]]>
+	</fx:Script>
+	<s:Rect left="0"
+			bottom="0"
+			top="8"
+			right="0"
+			radiusX="4"
+			radiusY="4">
+		<s:fill>
+			<s:BitmapFill source="@Embed(source='images/bg.png')"
+						  fillMode="scale"
+						  smooth="true"/>
+		</s:fill>
+		<s:filters>
+			<s:DropShadowFilter blurX="6"
+								blurY="6"
+								strength=".4"
+								quality="3"
+								angle="45"
+								distance="3"/>
+		</s:filters>
+	</s:Rect>
+
+	<s:VGroup gap="5"
+			  top="20"
+			  left="10"
+			  right="10"
+			  bottom="10">
+		<s:Label id="title"
+				 width="100%"
+				 fontSize="16"
+				 fontWeight="bold"
+				 text="{connectionTitle}"
+				 maxDisplayedLines="{NaN}"/>
+		<s:Label id="time"
+				 fontSize="14"
+				 text="{connectionTime}"
+				 maxDisplayedLines="1"/>
+		<s:Label id="duration"
+				 fontSize="14"
+				 text="{connectionDuration}"
+				 maxDisplayedLines="1"/>
+		<mx:Spacer height="10"
+				   excludeFrom="none,loading"/>
+		<components:BeTrainsList id="connections"
+								 width="100%"
+								 horizontalCenter="0"
+								 changing="refreshStationsView()"
+								 excludeFrom="none,loading"
+								 itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem">
+			<components:layout>
+				<s:VerticalLayout rowHeight="50"
+								  requestedRowCount="8"
+								  gap="0"/>
+			</components:layout>
+		</components:BeTrainsList>
+
+		<s:Label styleName="noneLabel"
+				 alpha=".3"
+				 width="100%"
+				 height="100%"
+				 horizontalCenter="0"
+				 verticalCenter="0"
+				 includeIn="none"
+				 text="{r('scheduler.details.none')}"/>
+
+		<s:Label styleName="noneLabel"
+				 alpha=".3"
+				 width="100%"
+				 height="100%"
+				 horizontalCenter="0"
+				 verticalCenter="0"
+				 includeIn="loading"
+				 text="{r('scheduler.details.loading')}"/>
+	</s:VGroup>
+
+	<controls:CloseButton top="-7"
+						  right="-20"
+						  close="close()"/>
+</s:SkinnableContainer>
