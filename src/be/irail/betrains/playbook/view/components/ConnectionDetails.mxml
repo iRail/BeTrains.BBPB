@@ -4,7 +4,7 @@
 					  xmlns:mx="library://ns.adobe.com/flex/mx"
 					  xmlns:scheduler="be.irail.api.data.scheduler.*"
 					  width="500"
-					  height="500"
+					  height="505"
 					  xmlns:components="be.irail.betrains.playbook.view.components.*"
 					  xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
 	<fx:Declarations>
@@ -64,16 +64,18 @@
 			[Bindable(event="connectionChange")]
 			[Bindable(event="localeChange")]
 			public function get connectionTitle():String {
-				if (!connection)
+				if (!connection) {
 					return "";
+				}
 				return LocaleManager.localeManager.getResource("scheduler.details.title", connection.departure.station.formattedName, connection.arrival.station.formattedName);
 			}
 
 			[Bindable(event="connectionChange")]
 			[Bindable(event="localeChange")]
 			public function get connectionTime():String {
-				if (!connection)
+				if (!connection) {
 					return "";
+				}
 				var formattedDepart:String = FormatUtil.formatTime(connection.departure.dateTime);
 				var formattedArrival:String = FormatUtil.formatTime(connection.arrival.dateTime);
 				return LocaleManager.localeManager.getResource("scheduler.details.time", formattedDepart, formattedArrival);
@@ -82,8 +84,9 @@
 			[Bindable(event="connectionChange")]
 			[Bindable(event="localeChange")]
 			public function get connectionDuration():String {
-				if (!connection)
+				if (!connection) {
 					return "";
+				}
 				var formattedDuration:String = FormatUtil.secondsToHoursMinutes(connection.duration);
 				return LocaleManager.localeManager.getResource("scheduler.details.duration", formattedDuration);
 			}
@@ -336,13 +339,12 @@
 				   excludeFrom="none,loading"/>
 		<components:BeTrainsList id="connections"
 								 width="100%"
-								 height="100%"
 								 horizontalCenter="0"
 								 changing="refreshStationsView()"
 								 excludeFrom="none,loading"
 								 itemRenderer="be.irail.betrains.playbook.view.scheduler.components.itemRenderer.ConnectionDetailItem">
 			<components:layout>
-				<s:VerticalLayout rowHeight="50"
+				<s:VerticalLayout rowHeight="50" requestedMinRowCount="8"
 								  gap="0"/>
 			</components:layout>
 		</components:BeTrainsList>

@@ -7,11 +7,16 @@ package be.irail.betrains.playbook.view.scheduler {
 	import be.irail.betrains.playbook.controller.ModelLocator;
 	import be.irail.betrains.playbook.data.FavouriteConnection;
 	import be.irail.betrains.playbook.data.SchedulerQuery;
+	import be.irail.betrains.playbook.utils.DataStorageUtil;
+
+	import com.adobe.utils.DateUtil;
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 
 	import mx.collections.ArrayCollection;
+
+	import org.as3commons.lang.DateUtils;
 
 	[Event(name="connectionsChange", type="flash.events.Event")]
 	public class SchedulerPresentationModel extends EventDispatcher {
@@ -114,8 +119,9 @@ package be.irail.betrains.playbook.view.scheduler {
 		[Bindable(event="fromChange")]
 		[Bindable(event="connectionFavd")]
 		public function get canAddToFavourites():Boolean {
-			if (from == null || to == null)
+			if (from == null || to == null) {
 				return false;
+			}
 
 			var doesNotExist:Boolean = !_model.favourites.containsConnection(from, to);
 			return doesNotExist;
@@ -152,6 +158,7 @@ package be.irail.betrains.playbook.view.scheduler {
 			if (from != null && to != null) {
 				_model.favourites.addItem(new FavouriteConnection(from, to));
 				dispatchEvent(new Event("connectionFavd"));
+				DataStorageUtil.writeFavourites();
 			}
 		}
 
@@ -164,6 +171,7 @@ package be.irail.betrains.playbook.view.scheduler {
 			if (_connections.length) {
 				_query.result = event.result;
 				_model.recentSchedulerQueries.addItem(_query);
+				DataStorageUtil.writeRecents();
 			}
 
 			_query = null;

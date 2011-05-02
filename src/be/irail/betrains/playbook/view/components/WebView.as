@@ -162,16 +162,18 @@ package be.irail.betrains.playbook.view.components {
 		 * Hides the web view
 		 * */
 		public function hide():void {
-			if (webView && webView.stage != null)
+			if (webView && webView.stage != null) {
 				webView.stage = null;
+			}
 		}
 
 		/**
 		 * Displays the web view
 		 * */
 		public function show():void {
-			if (webView && webView.stage == null)
+			if (webView && webView.stage == null) {
 				webView.stage = stage;
+			}
 		}
 
 		/**
@@ -238,16 +240,19 @@ package be.irail.betrains.playbook.view.components {
 
 			// because the webview is positioned according to the stage rather than the container 
 			// the component is apart of we get the adjusted position
-			if (webView.stage)
+			if (webView.stage) {
 				reposition(unscaledWidth, unscaledHeight);
+			}
 		}
 
 		public function reposition(w:Number = -1, h:Number = -1):void {
-			if (w < 0)
+			if (w < 0) {
 				w = unscaledWidth;
+			}
 
-			if (h < 0)
+			if (h < 0) {
 				h = unscaledHeight;
+			}
 
 			if (webView) {
 				var position:Point = new Point(this.x, this.y);

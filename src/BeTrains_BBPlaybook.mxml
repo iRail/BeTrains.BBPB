@@ -4,7 +4,7 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:view="be.irail.betrains.playbook.view.*"
 			   skinClass="be.irail.betrains.playbook.view.components.skins.ApplicationSkin"
-			   frameRate="30"
+			   frameRate="40"
 			   width="1024"
 			   height="600"
 			   usePreloader="true"
@@ -43,7 +43,6 @@
 			}
 
 			private function creationCompleteHandler():void {
-				NativeApplication.nativeApplication.addEventListener(Event.EXITING, onApplicationExiting);
 				callLater(setupMainView);
 			/* var deviceFonts:Array = Font.enumerateFonts(true);
 			trace("device fonts: ", deviceFonts); */
@@ -98,50 +97,6 @@
 					stream.openAsync(AppSettings.SETTINGS_STORAGE_LOCATION, FileMode.READ);
 					stream.addEventListener(Event.COMPLETE, readSettingsHandler);
 					stream.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-				}
-			}
-
-			private function writeRecents():void {
-				if (AppSettings.RECENT_STORAGE_LOCATION.exists) {
-					AppSettings.RECENT_STORAGE_LOCATION.deleteFile();
-				}
-
-				if (_model.recentSchedulerQueries.length > 0) {
-					var stream:FileStream = new FileStream();
-					var ba:ByteArray = SerializeUtil.serialize(_model.recentSchedulerQueries.toArray());
-					stream.open(AppSettings.RECENT_STORAGE_LOCATION, FileMode.WRITE);
-					stream.writeBytes(ba);
-				}
-			}
-
-			private function writeFavourites():void {
-				if (AppSettings.FAVOURITES_STORAGE_LOCATION.exists) {
-					AppSettings.FAVOURITES_STORAGE_LOCATION.deleteFile();
-				}
-
-				if (_model.favourites.length > 0) {
-					var stream:FileStream = new FileStream();
-					var ba:ByteArray = SerializeUtil.serialize(_model.favourites.toArray());
-					stream.open(AppSettings.FAVOURITES_STORAGE_LOCATION, FileMode.WRITE);
-					stream.writeBytes(ba);
-				}
-			}
-
-			private function writeSettings():void {
-				if (AppSettings.SETTINGS_STORAGE_LOCATION.exists) {
-					AppSettings.SETTINGS_STORAGE_LOCATION.deleteFile();
-				}
-
-				if (_model.favourites.length > 0) {
-					var stream:FileStream = new FileStream();
-					var settings:BeTrainsApplicationSettings = new BeTrainsApplicationSettings();
-
-					settings.language = LocaleManager.localeManager.getCurrentLocale();
-					settings.maxRecents = AppSettings.MAX_NUM_STORED_RECENTS;
-
-					var ba:ByteArray = SerializeUtil.serialize(settings);
-					stream.open(AppSettings.SETTINGS_STORAGE_LOCATION, FileMode.WRITE);
-					stream.writeBytes(ba);
 				}
 			}
 
@@ -206,12 +161,6 @@
 			private function ioErrorHandler(event:IOErrorEvent):void {
 				var stream:FileStream = event.target as FileStream;
 				stream.close();
-			}
-
-			private function onApplicationExiting(event:Event):void {
-				writeSettings();
-				writeRecents();
-				writeFavourites();
 			}
 
 			private function setupResourceManager():void {

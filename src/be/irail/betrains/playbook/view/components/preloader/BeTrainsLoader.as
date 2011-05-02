@@ -153,8 +153,9 @@ package be.irail.betrains.playbook.view.components.preloader {
 
 			if (backgroundSize) {
 				var index:int = backgroundSize.indexOf("%");
-				if (index != -1)
+				if (index != -1) {
 					percentage = Number(backgroundSize.substr(0, index));
+				}
 			}
 
 			return percentage;

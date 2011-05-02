@@ -12,8 +12,6 @@
 </fx:Metadata>
 	<fx:Script>
 		<![CDATA[
-			include "../../resource_wrapper.as"
-
 			import be.irail.api.data.scheduler.DateTimeIndicator;
 
 			import mx.events.FlexEvent;
@@ -23,6 +21,8 @@
 			import qnx.ui.data.DataProvider;
 			import qnx.ui.picker.Picker;
 			import qnx.ui.skins.picker.PickerListBackgroundWhite;
+
+			include "../../resource_wrapper.as"
 
 			private var currentYear:Number = new Date().getFullYear();
 
@@ -102,6 +102,7 @@
 				picker.name = "datePicker";
 				picker.width = 200;
 				picker.height = 50;
+				picker.isOpen = true;
 
 				picker.dataProvider = getDatePickerDataProvider();
 
@@ -155,6 +156,7 @@
 				picker.name = "timePicker";
 				picker.width = 168;
 				picker.height = 50;
+				picker.isOpen = true;
 
 				var hours:Array = [],
 					minutes:Array = [],
@@ -210,16 +212,17 @@
 				}
 
 				var tmp:Date = this.selectedDate;
+				tmp.setFullYear(year);
 				tmp.setDate(day);
 				tmp.setMonth(month);
-				tmp.setFullYear(year);
+
+				/* if (new Date().getTime() > tmp.getTime()) {
+					tmp.setFullYear(year + 1);
+				} */
+
 				tmp.setHours(hours);
 				tmp.setMinutes(minutes);
 				tmp.setSeconds(0);
-
-				if (new Date().getTime() > tmp.getTime()) {
-					tmp.setFullYear(year + 1);
-				}
 
 				this.selectedDate = tmp;
 
@@ -269,7 +272,7 @@
 					 textAlign="center"
 					 fontSize="16"/>
 		</s:HGroup>
-		<mx:Spacer height="40"/>
+		<mx:Spacer height="50"/>
 		<mx:UIComponent id="pickerContainer"
 						height="60"/>
 	</s:VGroup>

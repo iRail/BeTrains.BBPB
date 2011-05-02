@@ -55,8 +55,9 @@
 
 			[Bindable(event="connectionChange")]
 			public function get from():String {
-				if (!_connection)
+				if (!_connection) {
 					return "";
+				}
 				return _model.stations.getStationById(_connection.fromStationId).formattedName;
 			}
 
@@ -66,8 +67,9 @@
 
 			[Bindable(event="connectionChange")]
 			public function get to():String {
-				if (!_connection)
+				if (!_connection) {
 					return "";
+				}
 				return _model.stations.getStationById(_connection.toStationId).formattedName;
 			}
 		]]>

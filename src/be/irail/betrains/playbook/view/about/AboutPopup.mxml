@@ -78,9 +78,9 @@
 			}
 
 			protected function webView_errorHandler(event:ErrorEvent):void {
-				currentState = "error";
+				currentState = "webview";
+				webView.reposition();
 			}
-
 
 			protected function webView_completeHandler(event:Event):void {
 				currentState = "webview";

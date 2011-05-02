@@ -79,16 +79,18 @@
 
 			[Bindable(event="liveBoardChange")]
 			public function get stationName():String {
-				if (!liveBoard)
+				if (!liveBoard) {
 					return "";
+				}
 				return liveBoard.station.name.toUpperCase();
 			}
 
 			[Bindable(event="liveBoardChange")]
 			[Bindable(event="localeChange")]
 			public function get title():String {
-				if (!liveBoard)
+				if (!liveBoard) {
 					return "";
+				}
 				return r("liveboard.departTitle");
 			}
 

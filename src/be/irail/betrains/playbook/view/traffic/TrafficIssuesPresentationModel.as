@@ -76,16 +76,18 @@ package be.irail.betrains.playbook.view.traffic {
 
 		[Bindable(event="imageDataChange")]
 		public function get imageDataWidth():Number {
-			if (!_imageData)
+			if (!_imageData) {
 				return 0;
+			}
 
 			return _imgWidth;
 		}
 
 		[Bindable(event="imageDataChange")]
 		public function get imageDataHeight():Number {
-			if (!_imageData)
+			if (!_imageData) {
 				return 0;
+			}
 
 			return _imgHeight;
 		}
@@ -131,8 +133,9 @@ package be.irail.betrains.playbook.view.traffic {
 
 		[Bindable(event="providerImageChange")]
 		public function get providerImageLink():String {
-			if (!_providerImage)
+			if (!_providerImage) {
 				return "";
+			}
 			return _providerImage.link;
 		}
 
@@ -221,8 +224,9 @@ package be.irail.betrains.playbook.view.traffic {
 
 			imageData = _model.imageCache.getImage(_providerImage.url, true);
 
-			if (!imageData)
+			if (!imageData) {
 				_model.imageCache.addEventListener(ImageCacheEvent.IMAGE_LOADED, onImageLoaded);
+			}
 
 			dispatchEvent(new Event("providerImageChange"));
 		}

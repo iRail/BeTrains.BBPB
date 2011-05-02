@@ -58,25 +58,22 @@
 		</s:fill>
 	</s:Rect>
 
-	<s:Group alpha=".9"
-			 horizontalCenter="0"
-			 top="2">
-		<s:BitmapImage width="30"
-					   height="30"
-					   horizontalCenter="0"
-					   source="{hostComponent.image}"
-					   smooth="true"/>
+	<s:BitmapImage top="5"
+				   width="35"
+				   height="35"
+				   horizontalCenter="0"
+				   smooth="true"
+				   source="{hostComponent.image}"/>
 
-		<s:Label id="labelDisplay"
-				 y="34"
-				 width="100%"
-				 fontSize="12"
-				 fontWeight="bold"
-				 paddingLeft="0"
-				 paddingRight="0"
-				 maxDisplayedLines="1"
-				 textAlign="center"
-				 color="white"/>
-	</s:Group>
+	<s:Label id="labelDisplay"
+			 bottom="3"
+			 fontSize="14"
+			 fontWeight="bold"
+			 paddingLeft="0"
+			 paddingRight="0"
+			 horizontalCenter="0"
+			 maxDisplayedLines="2"
+			 textAlign="center"
+			 color="white"/>
 
 </s:SparkSkin>

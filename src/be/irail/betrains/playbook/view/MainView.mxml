@@ -25,10 +25,7 @@
 			import be.irail.betrains.playbook.view.favs.FavouriteEvent;
 
 			import com.greensock.*;
-			import com.greensock.easing.Expo;
 			import com.greensock.plugins.*;
-
-			import flash.utils.setTimeout;
 
 			import mx.core.*;
 			import mx.events.FlexEvent;
@@ -95,11 +92,11 @@
 			private function creationCompleteHandler(event:FlexEvent):void {
 				PopUpUtil.registerPopUpParent(popUpParent);
 
-				TweenPlugin.activate([AutoAlphaPlugin]);
-				TweenLite.to(splashDuplicate, .8, {autoAlpha: 0, ease: Expo.easeInOut, delay: 1, onComplete: destroySD});
+				setTimeout(destroySD, 500);
 			}
 
 			private function destroySD():void {
+				splashDuplicate.visible = false;
 				doDestroySD();
 				detectSwipeDown();
 
@@ -142,7 +139,7 @@
 							   left="0"
 							   right="0"
 							   top="0"
-							   bottom="54"
+							   bottom="74"
 							   change="vs_changeHandler(event)">
 		<recent:RecentSchedulerQueries id="recent"
 									   title="{r('recent.title')}"/>

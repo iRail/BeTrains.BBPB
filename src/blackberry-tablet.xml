@@ -7,11 +7,12 @@
 		<autoOrients>false</autoOrients>
 		<aspectRatio>landscape</aspectRatio>
 		<renderMode>auto</renderMode>
-		<maximizable>false</maximizable>
-		<minimizable>true</minimizable>
 		<resizable>false</resizable>
 	</initialWindow>
-	<category>core.Internet</category>
+	<author>Joris Timmerman</author>
+	<authorId>gYAAgCD0qGYB5Hr7qg3d4p-L5hs</authorId>
+	<category>core.internet</category>
+	<action>read_geolocation</action>
 	<publisher>Joris Timmerman</publisher>
 	<icon>
 		<image>blackberry-tablet-icon.png</image>

@@ -1,4 +1,5 @@
 package be.irail.betrains.playbook.utils {
+
 	import flash.utils.ByteArray;
 
 	public class SerializeUtil {
@@ -13,5 +14,6 @@ package be.irail.betrains.playbook.utils {
 			value.uncompress();
 			return value.readObject();
 		}
+
 	}
 }

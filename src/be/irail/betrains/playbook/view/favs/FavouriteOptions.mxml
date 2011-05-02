@@ -30,31 +30,35 @@
 
 			[Bindable(event="favouriteChange")]
 			public function get favouriteFrom():IRStation {
-				if (!_favourite)
+				if (!_favourite) {
 					return null;
+				}
 
 				return _model.stations.getStationById(_favourite.fromStationId);
 			}
 
 			[Bindable(event="favouriteChange")]
 			public function get favouriteFromLabel():String {
-				if (!_favourite)
+				if (!_favourite) {
 					return "";
+				}
 				return favouriteFrom.formattedName;
 			}
 
 			[Bindable(event="favouriteChange")]
 			public function get favouriteTo():IRStation {
-				if (!_favourite)
+				if (!_favourite) {
 					return null;
+				}
 
 				return _model.stations.getStationById(_favourite.toStationId);
 			}
 
 			[Bindable(event="favouriteChange")]
 			public function get favouriteToLabel():String {
-				if (!_favourite)
+				if (!_favourite) {
 					return "";
+				}
 
 				return favouriteTo.formattedName;
 			}

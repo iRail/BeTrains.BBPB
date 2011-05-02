@@ -49,8 +49,9 @@
 
 			[Bindable(event="selectedItemChange")]
 			public function get selectedItem():Object {
-				if (!list || !list.selectedItem)
+				if (!list || !list.selectedItem) {
 					return null;
+				}
 
 				return list.selectedItem.value;
 			}
@@ -90,8 +91,9 @@
 
 			[Bindable(event="selectedIndexChange")]
 			public function get selectedIndex():int {
-				if (!list || !list.selectedItem)
+				if (!list || !list.selectedItem) {
 					return -1;
+				}
 
 				return list.selectedIndex;
 			}

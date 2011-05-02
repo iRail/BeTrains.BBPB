@@ -10,7 +10,6 @@ package be.irail.betrains.playbook.view.components {
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
 
-	import mx.containers.ViewStack;
 	import mx.core.ContainerCreationPolicy;
 	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
@@ -74,7 +73,7 @@ package be.irail.betrains.playbook.view.components {
 		// animateSelectedItemChange
 		// ----------------------------
 
-		private var _animateSelectedItemChange:Boolean = true;
+		private var _animateSelectedItemChange:Boolean = false;
 
 		public function get animateSelectedItemChange():Boolean {
 			return _animateSelectedItemChange;
@@ -129,11 +128,11 @@ package be.irail.betrains.playbook.view.components {
 				if (oldIndex > -1 && _content[oldIndex] != null) {
 					_content[oldIndex].alpha = .7;
 					TweenLite.to(_content[oldIndex], animationFadeOutDuration, {alpha: 0, useFrames: true, overwrite: true, onComplete: function():void {
-										 updateIndexChangeHandler(oldIndex, index);
-										 setTimeout(function():void {
-											 TweenLite.to(_content[index], animationFadeInDuration, {alpha: 1, delay: animationFadeOutFadeInDelay, overwrite: false, useFrames: true});
-										 }, 50);
-									 }});
+						updateIndexChangeHandler(oldIndex, index);
+						setTimeout(function():void {
+							TweenLite.to(_content[index], animationFadeInDuration, {alpha: 1, delay: animationFadeOutFadeInDelay, overwrite: false, useFrames: true});
+						}, 50);
+					}});
 
 				} else {
 					updateIndexChangeHandler(oldIndex, index);

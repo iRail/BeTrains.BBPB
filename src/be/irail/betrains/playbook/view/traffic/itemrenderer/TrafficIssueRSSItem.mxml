@@ -28,15 +28,17 @@
 
 			[Bindable(event="rssItemChange")]
 			public function get subject():String {
-				if (!rssItem)
+				if (!rssItem) {
 					return "";
+				}
 				return _rssItem.title;
 			}
 
 			[Bindable(event="rssItemChange")]
 			public function get description():String {
-				if (!rssItem)
+				if (!rssItem) {
 					return "";
+				}
 				return _rssItem.description;
 			}
 

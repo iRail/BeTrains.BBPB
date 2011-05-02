@@ -3,7 +3,7 @@
 					  xmlns:s="library://ns.adobe.com/flex/spark"
 					  xmlns:mx="library://ns.adobe.com/flex/mx"
 					  width="100%"
-					  height="54"
+					  height="74"
 					  skinClass="be.irail.betrains.playbook.view.components.skins.ApplicationBarSkin"
 					  xmlns:components="be.irail.betrains.playbook.view.components.*"
 					  creationComplete="creationCompleteHandler()"
@@ -75,8 +75,8 @@
 
 						if (!isFirst) {
 							TweenLite.to(indicator, .6, {x: newX, ease: Expo.easeOut, onComplete: function():void {
-												 btn.selected = true;
-											 }
+								btn.selected = true;
+							}
 										 });
 						} else {
 							indicator.x = newX;
@@ -102,8 +102,9 @@
 			}
 
 			private function getButtonIndex(btn:ApplicationBarButton):int {
-				if (btn == about)
+				if (btn == about) {
 					return ABOUT_INDEX;
+				}
 
 				var i:int = 0, count:int = 0, element:IVisualElement;
 				for (i = 0; i < buttons.numElements; i++) {

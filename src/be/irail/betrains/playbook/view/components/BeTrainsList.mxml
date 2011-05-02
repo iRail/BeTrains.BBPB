@@ -6,7 +6,8 @@
 		maxWidth="1024"
 		requireSelection="false"
 		allowMultipleSelection="false"
-		click="list_clickHandler(event)">
+		click="list_clickHandler(event)"
+		creationComplete="list1_creationCompleteHandler(event)">
 	<s:layout>
 		<s:VerticalLayout useVirtualLayout="false"
 						  gap="0"
@@ -20,6 +21,8 @@
 
 	<fx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
+
 			import spark.components.IItemRenderer;
 			import spark.events.IndexChangeEvent;
 
@@ -36,6 +39,41 @@
 					dispatchEvent(e);
 				}
 				_lastIndex = this.selectedIndex;
+			}
+
+			protected function list1_creationCompleteHandler(event:FlexEvent):void {
+				if (Multitouch.supportsTouchEvents) {
+					Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+
+					stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+					stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+					stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				}
+			}
+
+			private var prevY:Number;
+
+			private function onTouchBegin(event:TouchEvent):void {
+				prevY = event.stageY;
+			}
+
+			private function onTouchMove(event:TouchEvent):void {
+				var deltaY:Number = Math.round((prevY - event.stageY));
+				var scrollUp:Boolean = (deltaY < 0);
+				var desiredScrollPosition:Number = dataGroup.verticalScrollPosition + deltaY;
+
+				if (desiredScrollPosition < 0) {
+					desiredScrollPosition = 0;
+				} else if (desiredScrollPosition > dataGroup.contentHeight) {
+					desiredScrollPosition = dataGroup.contentHeight;
+				}
+
+				dataGroup.verticalScrollPosition = desiredScrollPosition;
+				prevY = event.stageY;
+			}
+
+			private function onTouchEnd(event:TouchEvent):void {
+
 			}
 		]]>
 	</fx:Script>

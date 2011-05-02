@@ -23,7 +23,7 @@
 				return currentState;
 			}
 
-			[Inspectable(name="icon", type="List", category="General", enumeration="normal,busy,delete,station")]
+			[Inspectable(name="icon", type="MyList", category="General", enumeration="normal,busy,delete,station")]
 			public function set icon(value:String):void {
 				if (value != icon) {
 					currentState = value;
