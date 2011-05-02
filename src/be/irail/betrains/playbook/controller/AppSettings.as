@@ -9,7 +9,7 @@ package be.irail.betrains.playbook.controller {
 		public static const FILE_VERSION_PREFIX:String = "1.1_";
 
 		// Cached stationslist location
-		public static const STATIONSDATA_STORAGE_LOCATION:File = File.applicationStorageDirectory.resolvePath("data/");
+		public static const STATIONSDATA_STORAGE_LOCATION:File = File.applicationDirectory.resolvePath("data/");
 
 		// Recent scheduler location 
 		public static const RECENT_STORAGE_LOCATION:File = File.applicationStorageDirectory.resolvePath(FILE_VERSION_PREFIX + "recents.bpd");
