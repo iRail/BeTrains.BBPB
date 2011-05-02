@@ -37,12 +37,14 @@
 			}
 
 			public function set favourites(value:ArrayCollection):void {
-				presentationModel.favourites = value;
+				if (presentationModel.favourites != value) {
+					presentationModel.favourites = value;
 
-				if (!value || value.length == 0) {
-					this.currentState = "none";
-				} else {
-					this.currentState = "favourites";
+					if (!value || value.length == 0) {
+						this.currentState = "none";
+					} else {
+						this.currentState = "favourites";
+					}
 				}
 			}
 
@@ -69,7 +71,20 @@
 
 			override public function make():void {
 				this.favourites = ModelLocator.getInstance().favourites;
-				favDataGroup.selectedItem = null;
+
+				if (!favourites || favourites.length == 0) {
+					this.currentState = "favourites";
+				} else {
+					selectFav();
+				}
+			}
+
+			private function selectFav():void {
+				if (selectedFavourite) {
+					favDataGroup.selectedItem = selectedFavourite;
+					this.currentState = "favouriteselect";
+					dispatchEvent(new Event("selectedFavouriteChange"));
+				}
 			}
 
 			private function favDataGroup_changeHandler(event:IndexChangeEvent):void {

@@ -138,7 +138,7 @@ package be.irail.betrains.playbook.view.scheduler {
 		}
 
 		public function getSchedule(dateArrDep:String = "depart"):void {
-			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"]);
+			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"], 7);
 			_schedule.addEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
 			_schedule.addEventListener(IRailErrorEvent.IO_ERROR, onIoError);
 			_schedule.addEventListener(IRailErrorEvent.API_ERROR, onIoError);

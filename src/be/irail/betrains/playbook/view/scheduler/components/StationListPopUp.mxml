@@ -83,6 +83,7 @@
 			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void {
 				_stationList = new ArrayCollection(_model.stations.toArray());
 				_stationList.filterFunction = filterList;
+
 				refreshList();
 			}
 

@@ -38,18 +38,23 @@
 			}
 
 			public function set recents(value:RecentQueriesCollection):void {
-				if (!value || value.length == 0) {
-					this.currentState = "none";
-				} else {
-					this.currentState = "recents";
+				if (presentationModel.recents != value) {
+					if (!value || value.length == 0) {
+						this.currentState = "none";
+					} else {
+						this.currentState = "recents";
+					}
+					presentationModel.recents = value;
 				}
-				presentationModel.recents = value;
 			}
 
 			override public function make():void {
 				this.recents = ModelLocator.getInstance().recentSchedulerQueries;
-				if (recentsList) {
-					recentsList.selectedIndex = -1;
+
+				if (!recents || recents.length == 0) {
+					this.currentState = "none";
+				} else if (presentationModel.selectedQuery) {
+					recentsList.selectedItem = presentationModel.selectedQuery;
 				}
 			}
 
@@ -59,13 +64,12 @@
 				}
 			}
 
-			private function selectSelectedItem():void {
-				recentsList.selectedItem = presentationModel.selectedQuery;
+			private function recentsList_changeHandler(event:IndexChangeEvent):void {
+				presentationModel.selectedQuery = recentsList.selectedItem as SchedulerQuery;
+				doSelectQuery();
 			}
 
-			protected function recentsList_changeHandler(event:IndexChangeEvent):void {
-				presentationModel.selectedQuery = recentsList.selectedItem as SchedulerQuery;
-
+			private function doSelectQuery():void {
 				if (presentationModel.selectedQuery) {
 					this.currentState = "recentItemSelected";
 					connList.selectedIndex = -1;

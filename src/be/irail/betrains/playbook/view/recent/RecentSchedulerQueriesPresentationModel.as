@@ -18,6 +18,10 @@ package be.irail.betrains.playbook.view.recent {
 
 		[Bindable(event="recentsChange")]
 		public function get recents():RecentQueriesCollection {
+			if (!_recents) {
+				return null;
+			}
+
 			var num:int = _recents.length;
 
 			while (num > AppSettings.MAX_NUM_STORED_RECENTS) {

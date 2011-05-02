@@ -13,8 +13,6 @@
 		<![CDATA[
 			import be.irail.api.data.stations.IRStation;
 
-			import flash.utils.setTimeout;
-
 			import mx.collections.ArrayCollection;
 			import mx.events.ResizeEvent;
 
@@ -25,6 +23,18 @@
 			include "../resource_wrapper.as";
 
 			private var _listData:Array;
+
+
+			private var _autoScrollToItem:Boolean = true;
+
+			public function set autoScrollToItem(val:Boolean):void {
+				_autoScrollToItem = val;
+			}
+
+			public function get autoScrollToItem():Boolean {
+				return _autoScrollToItem;
+			}
+
 
 			// ----------------------------
 			// dataProvider
@@ -38,9 +48,11 @@
 			}
 
 			public function set dataProvider(value:ArrayCollection):void {
-				_dataProvider = value;
-				updateDataProvider();
-				dispatchEvent(new Event("dataProviderChange"));
+				if (dataProvider != value) {
+					_dataProvider = value;
+					updateDataProvider();
+					dispatchEvent(new Event("dataProviderChange"));
+				}
 			}
 
 			// ----------------------------
@@ -70,8 +82,14 @@
 						var stationItem:Object = _listData[items];
 						if (stationItem.value == value) {
 							list.selectedItem = stationItem;
-							list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, 1);
-							setTimeout(dispatchSelectItem, 70);
+
+							if (autoScrollToItem) {
+								list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, 1);
+								setTimeout(dispatchSelectItem, 70);
+							} else {
+								dispatchSelectItem();
+							}
+
 							break;
 						}
 					}

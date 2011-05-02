@@ -20,7 +20,7 @@
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.FavouriteConnection;
 			import be.irail.betrains.playbook.utils.PopUpUtil;
-			import be.irail.betrains.playbook.view.components.ConnectionDetails;
+			import be.irail.betrains.playbook.view.scheduler.components.ConnectionDetails;
 			import be.irail.betrains.playbook.view.scheduler.components.StationListPopUp;
 
 			import mx.events.CloseEvent;

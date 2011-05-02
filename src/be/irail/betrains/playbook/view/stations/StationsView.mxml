@@ -52,10 +52,17 @@
 
 			override public function make():void {
 				presentationModel.refreshList();
-				setTimeout(changeSelectedStation, 50);
+				if (_selectStation) {
+					setTimeout(changeSelectedStation, 50);
+				} else {
+					stationsList.autoScrollToItem = false;
+					stationsList.selectedItem = presentationModel.selectedStation;
+					stationsList.autoScrollToItem = true;
+				}
 			}
 
 			override public function destroy():void {
+				searchInput.text = "";
 				_selectStation = null;
 			}
 
