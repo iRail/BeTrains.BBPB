@@ -162,7 +162,7 @@ package be.irail.betrains.playbook.view.components.preloader {
 		}
 
 		override protected function initCompleteHandler(event:Event):void {
-			setTimeout(passCompleted, 1000)
+			setTimeout(passCompleted, 2000)
 		}
 
 		private function passCompleted():void {

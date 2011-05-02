@@ -55,15 +55,19 @@
 				if (_selectStation) {
 					setTimeout(changeSelectedStation, 50);
 				} else {
-					stationsList.autoScrollToItem = false;
+					stationsList.animateScrollToItem = false;
 					stationsList.selectedItem = presentationModel.selectedStation;
-					stationsList.autoScrollToItem = true;
+					stationsList.animateScrollToItem = true;
 				}
 			}
 
 			override public function destroy():void {
 				searchInput.text = "";
-				_selectStation = null;
+				if (_selectStation) {
+					presentationModel.selectedStation = null;
+					_selectStation = null;
+				}
+
 			}
 
 			private function search():void {

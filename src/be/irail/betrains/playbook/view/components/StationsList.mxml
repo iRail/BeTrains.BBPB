@@ -25,14 +25,14 @@
 			private var _listData:Array;
 
 
-			private var _autoScrollToItem:Boolean = true;
+			private var _animateScrollToItem:Boolean = true;
 
-			public function set autoScrollToItem(val:Boolean):void {
-				_autoScrollToItem = val;
+			public function set animateScrollToItem(val:Boolean):void {
+				_animateScrollToItem = val;
 			}
 
-			public function get autoScrollToItem():Boolean {
-				return _autoScrollToItem;
+			public function get animateScrollToItem():Boolean {
+				return _animateScrollToItem;
 			}
 
 
@@ -83,10 +83,11 @@
 						if (stationItem.value == value) {
 							list.selectedItem = stationItem;
 
-							if (autoScrollToItem) {
+							if (animateScrollToItem) {
 								list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, 1);
 								setTimeout(dispatchSelectItem, 70);
 							} else {
+								list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, 0);
 								dispatchSelectItem();
 							}
 

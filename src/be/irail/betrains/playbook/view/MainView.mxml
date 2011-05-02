@@ -25,6 +25,7 @@
 			import be.irail.betrains.playbook.view.favs.FavouriteEvent;
 
 			import com.greensock.*;
+			import com.greensock.easing.Expo;
 			import com.greensock.plugins.*;
 
 			import mx.core.*;
@@ -92,7 +93,8 @@
 			private function creationCompleteHandler(event:FlexEvent):void {
 				PopUpUtil.registerPopUpParent(popUpParent);
 
-				setTimeout(destroySD, 500);
+				splashDuplicate.visible = true;
+				TweenLite.to(splashDuplicate, 2, {y: -600, ease: Expo.easeIn, delay: 0, onComplete: destroySD});
 			}
 
 			private function destroySD():void {
@@ -116,6 +118,7 @@
 			private function doDestroySD():void {
 				splashDuplicate.includeInLayout = false;
 				this.removeElement(splashDuplicate);
+				splashDuplicate.source = null;
 				splashDuplicate = null;
 			}
 

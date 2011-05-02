@@ -7,6 +7,7 @@
 		requireSelection="false"
 		allowMultipleSelection="false"
 		click="list_clickHandler(event)"
+		addedToStage="list1_addedToStageHandler(event)"
 		creationComplete="list1_creationCompleteHandler(event)">
 	<s:layout>
 		<s:VerticalLayout useVirtualLayout="false"
@@ -41,17 +42,23 @@
 				_lastIndex = this.selectedIndex;
 			}
 
-			protected function list1_creationCompleteHandler(event:FlexEvent):void {
-				if (Multitouch.supportsTouchEvents) {
-					Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			private function list1_creationCompleteHandler(event:FlexEvent):void {
+				if (registerTouchEvents) {
+					if (Multitouch.supportsTouchEvents) {
+						Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 
-					stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-					stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-					stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+						stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+						stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+						stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+					}
+					registerTouchEvents = false;
 				}
+				registerTouchEvents = true;
 			}
 
 			private var prevY:Number;
+
+			private var registerTouchEvents:Boolean;
 
 			private function onTouchBegin(event:TouchEvent):void {
 				prevY = event.stageY;
@@ -74,6 +81,20 @@
 
 			private function onTouchEnd(event:TouchEvent):void {
 
+			}
+
+			protected function list1_addedToStageHandler(event:Event):void {
+				if (registerTouchEvents) {
+					if (Multitouch.supportsTouchEvents) {
+						Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+
+						stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+						stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+						stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+					}
+					registerTouchEvents = false;
+				}
+				registerTouchEvents = true;
 			}
 		]]>
 	</fx:Script>
