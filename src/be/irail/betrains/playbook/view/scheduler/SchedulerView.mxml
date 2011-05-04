@@ -41,38 +41,31 @@
 			}
 
 			private function selectFromStation_clickHandler(event:MouseEvent):void {
-				if (_popup) {
-					_popup.close();
-				}
-
-				_popup = PopUpUtil.createPopUp(StationListPopUp, true) as StationListPopUp;
+				_popup = new StationListPopUp();
+				PopUpUtil.openPopUp(_popup, true);
 				_popup.addEventListener(CloseEvent.CLOSE, onFromStationsClose);
 			}
 
 			private function onFromStationsClose(event:CloseEvent):void {
-				if (event.detail == StationListPopUp.OK) {
+				if (_popup && event.detail == StationListPopUp.OK) {
+					_popup.removeEventListener(CloseEvent.CLOSE, onFromStationsClose);
 					presentationModel.from = _popup.selectedStation;
+					_popup = null;
 				}
-				_popup = null;
 			}
 
 			private function selectToStation_clickHandler(event:MouseEvent):void {
-				if (_popup) {
-					_popup.close();
-				}
-
 				_popup = new StationListPopUp();
-
 				PopUpUtil.openPopUp(_popup, true);
-
 				_popup.addEventListener(CloseEvent.CLOSE, onToStationsClose);
 			}
 
 			private function onToStationsClose(event:CloseEvent):void {
-				if (event.detail == StationListPopUp.OK) {
+				if (_popup && event.detail == StationListPopUp.OK) {
+					_popup.removeEventListener(CloseEvent.CLOSE, onToStationsClose);
 					presentationModel.to = _popup.selectedStation;
+					_popup = null;
 				}
-				_popup = null;
 			}
 
 			private function createSearchBtn():void {

@@ -1,6 +1,5 @@
 package be.irail.betrains.playbook.view.components {
 
-	import flash.display.Stage;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.LocationChangeEvent;

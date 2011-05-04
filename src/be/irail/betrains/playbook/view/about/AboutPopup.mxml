@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
-		 xmlns:mx="library:/	/ns.adobe.com/flex/mx"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
 		 xmlns:components="be.irail.betrains.playbook.view.components.*"
-		 width="800"
-		 height="500"
+		 width="900"
+		 height="550"
 		 creationComplete="init()">
 	<fx:Declarations>
 	</fx:Declarations>
@@ -19,8 +19,6 @@
 		<![CDATA[
 			import be.irail.betrains.playbook.controller.AppSettings;
 			import be.irail.betrains.playbook.utils.PopUpUtil;
-
-			import mx.events.MoveEvent;
 
 			include "../resource_wrapper.as";
 

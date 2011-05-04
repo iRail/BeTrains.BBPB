@@ -64,7 +64,9 @@
 					vs.selectedIndex = event.newIndex;
 				} else {
 					applicationBar.selectedIndex = event.oldIndex;
-					PopUpUtil.createPopUp(AboutPopup, true);
+
+					var popup:AboutPopup = new AboutPopup();
+					PopUpUtil.openPopUp(popup, true);
 				}
 			}
 
@@ -179,7 +181,7 @@
 					left="0"
 					right="0"
 					top="0"
-					bottom="54"/>
+					bottom="0"/>
 
 	<s:BitmapImage id="splashDuplicate"
 				   source="@Embed('splash.png')"

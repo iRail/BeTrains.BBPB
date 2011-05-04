@@ -2,35 +2,34 @@
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   width="1024"
-			   height="550"
-			   skinClass="be.irail.betrains.playbook.view.components.skins.StationPopupSkin"
-			   xmlns:stations="be.irail.api.data.stations.*"
-			   creationComplete="titlewindow1_creationCompleteHandler(event)"
-			   contentCreationComplete="titlewindow1_contentCreationCompleteHandler(event)"
 			   xmlns:components="be.irail.betrains.playbook.view.components.*"
 			   xmlns:ns="http://ns.renaun.com/mxml/2010"
 			   xmlns:text="qnx.ui.text.*"
-			   xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
+			   xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
+			   xmlns:stations="be.irail.api.data.stations.*"
+			   width="800"
+			   height="550"
+			   skinClass="be.irail.betrains.playbook.view.components.skins.StationPopupSkin"
+			   creationComplete="titlewindow1_creationCompleteHandler(event)"
+			   contentCreationComplete="titlewindow1_contentCreationCompleteHandler(event)">
 	<fx:Declarations>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import be.irail.api.data.stations.IRStation;
 			import be.irail.betrains.playbook.controller.ModelLocator;
-			import be.irail.betrains.playbook.utils.PopUpUtil;
 
 			import com.adobe.utils.StringUtil;
 
 			import mx.collections.ArrayCollection;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 
+			import qnx.locale.LocaleManager;
 			import qnx.ui.skins.text.TextInputSkinWhite;
 			import qnx.ui.text.TextInput;
 			import qnx.ui.text.TextInputIconMode;
-
-			include "../../resource_wrapper.as"
 
 			public static const OK:uint = 0x0004;
 
@@ -45,11 +44,6 @@
 			private var _stationList:ArrayCollection;
 
 			private var _nameFilter:String;
-
-			[Bindable(event="stationListChange")]
-			public function get stations():ArrayCollection {
-				return _stationList;
-			}
 
 			// ----------------------------
 			// selectedStation
@@ -69,7 +63,8 @@
 
 			public function close(detail:uint = 0x0008):void {
 				stage.focus = null;
-				PopUpUtil.removePopUp(this, false);
+				stationList.dataProvider = null;
+				PopUpManager.removePopUp(this);
 				dispatchEvent(new CloseEvent(CloseEvent.CLOSE, false, false, detail));
 			}
 
@@ -83,7 +78,6 @@
 			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void {
 				_stationList = new ArrayCollection(_model.stations.toArray());
 				_stationList.filterFunction = filterList;
-
 				refreshList();
 			}
 
@@ -94,14 +88,14 @@
 
 				var name:String = String(obj.name).toLowerCase().substr(0, _nameFilter.length),
 					test:RegExp = new RegExp(_nameFilter, "ig"),
-					result:Array = name.match(test);
+					result:Boolean = name.match(test).length > 0;
 
-				return (result && result.length > 0);
+				return result;
 			}
 
 			private function refreshList():void {
 				_stationList.refresh();
-				dispatchEvent(new Event("stationListChange"));
+				stationList.dataProvider = _stationList;
 			}
 
 			private function stationList_changeHandler(event:Event):void {
@@ -111,6 +105,11 @@
 
 			protected function titlewindow1_contentCreationCompleteHandler(event:FlexEvent):void {
 				txtInput.setSkin(TextInputSkinWhite);
+
+				var tF:TextFormat = txtInput.format;
+				tF.leftMargin = 10;
+
+				txtInput.format = tF;
 			}
 
 
@@ -120,46 +119,41 @@
 			}
 		]]>
 	</fx:Script>
-	<s:Group width="780"
-			 horizontalCenter="0">
+	<s:Rect left="0"
+			bottom="0"
+			top="0"
+			right="0"
+			radiusX="4"
+			radiusY="4">
+		<s:fill>
+			<s:BitmapFill source="@Embed(source='images/bg.png')"
+						  fillMode="scale"
+						  smooth="true"/>
+		</s:fill>
+	</s:Rect>
 
-		<s:Rect left="0"
-				bottom="0"
-				top="8"
-				right="0"
-				radiusX="4"
-				radiusY="4">
-			<s:fill>
-				<s:BitmapFill source="@Embed(source='images/bg.png')"
-							  fillMode="scale"
-							  smooth="true"/>
-			</s:fill>
-		</s:Rect>
+	<ns:QContainer width="760"
+				   height="50"
+				   y="7"
+				   x="20"
+				   padding="0">
+		<text:TextInput id="txtInput"
+						width="760"
+						height="50"
+						prompt="{LocaleManager.localeManager.getResource('station.search.prompt')}"
+						change="stationName_changeHandler(event)"
+						clearIconMode="{TextInputIconMode.ALWAYS}"/>
+	</ns:QContainer>
 
-		<ns:QContainer width="760"
-					   height="50"
-					   y="15"
-					   x="7"
-					   padding="0">
-			<text:TextInput id="txtInput"
-							width="760"
-							height="50"
-							prompt="{r('station.search.prompt')}"
-							change="stationName_changeHandler(event)"
-							clearIconMode="{TextInputIconMode.ALWAYS}"/>
-		</ns:QContainer>
+	<components:StationsList id="stationList"
+							 horizontalCenter="0"
+							 y="70"
+							 width="760"
+							 height="470"
+							 change="stationList_changeHandler(event)"/>
 
-		<components:StationsList id="stationList"
-								 y="70"
-								 width="760"
-								 height="470"
-								 horizontalCenter="0"
-								 dataProvider="{stations}"
-								 change="stationList_changeHandler(event)"/>
+	<controls:CloseButton right="-45"
+						  top="24"
+						  click="closeButtonClose()"/>
 
-		<controls:CloseButton right="-45"
-							  top="24"
-							  click="closeButtonClose()"/>
-
-	</s:Group>
 </s:TitleWindow>

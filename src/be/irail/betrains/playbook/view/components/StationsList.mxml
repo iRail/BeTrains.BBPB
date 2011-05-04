@@ -20,21 +20,7 @@
 			import qnx.ui.events.ListEvent;
 			import qnx.ui.listClasses.ListSelectionMode;
 
-			include "../resource_wrapper.as";
-
 			private var _listData:Array;
-
-
-			private var _animateScrollToItem:Boolean = true;
-
-			public function set animateScrollToItem(val:Boolean):void {
-				_animateScrollToItem = val;
-			}
-
-			public function get animateScrollToItem():Boolean {
-				return _animateScrollToItem;
-			}
-
 
 			// ----------------------------
 			// dataProvider
@@ -48,12 +34,11 @@
 			}
 
 			public function set dataProvider(value:ArrayCollection):void {
-				if (dataProvider != value) {
-					_dataProvider = value;
-					updateDataProvider();
-					dispatchEvent(new Event("dataProviderChange"));
-				}
+				_dataProvider = value;
+				updateDataProvider();
+				dispatchEvent(new Event("dataProviderChange"));
 			}
+
 
 			// ----------------------------
 			// selectedItem
@@ -70,6 +55,7 @@
 
 			public function set selectedItem(value:Object):void {
 				if (list) {
+
 					if (!value) {
 						list.selectedItems = [];
 						dispatchEvent(new Event(Event.CHANGE));
@@ -77,30 +63,17 @@
 						return;
 					}
 
-					var items:int = _listData.length;
-					while (--items > -1) {
-						var stationItem:Object = _listData[items];
-						if (stationItem.value == value) {
-							list.selectedItem = stationItem;
-
-							if (animateScrollToItem) {
-								list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, 1);
-								setTimeout(dispatchSelectItem, 70);
-							} else {
-								list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, 0);
-								dispatchSelectItem();
-							}
-
+					var numDPItems:int = list.dataProvider.length, i:int;
+					for (i = 0; i < numDPItems; i++) {
+						var val:Object = list.dataProvider.getItemAt(i);
+						if (val.value == value) {
+							list.selectedItem = val;
 							break;
 						}
 					}
-
+					dispatchEvent(new Event(Event.CHANGE));
+					dispatchEvent(new Event("selectedItemChange"));
 				}
-			}
-
-			private function dispatchSelectItem():void {
-				dispatchEvent(new Event(Event.CHANGE));
-				dispatchEvent(new Event("selectedItemChange"));
 			}
 
 			// ----------------------------
@@ -117,11 +90,19 @@
 				return list.selectedIndex;
 			}
 
+			public function set selectedIndex(value:int):void {
+				if (value > -1) {
+					this.selectedItem = list.dataProvider.getItemAt(value);
+				} else {
+					this.selectedItem = null;
+				}
+				dispatchEvent(new Event("selectedIndexChange"));
+			}
 
 			private function createList():void {
 				list.setSize(this.width, this.height);
-				updateDataProvider();
 				list.addEventListener(ListEvent.ITEM_CLICKED, onListItemClicked);
+				updateDataProvider();
 			}
 
 			private function onListItemClicked(event:ListEvent):void {
@@ -182,6 +163,27 @@
 				}
 
 				list.dataProvider = sectionDP;
+			}
+
+			public function selectItemAndScrollTo(item:Object):void {
+				var items:int = _listData.length;
+				while (--items > -1) {
+					var stationItem:Object = _listData[items];
+					if (stationItem.value == item) {
+						list.selectedItem = stationItem;
+
+						list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, 1);
+						setTimeout(dispatchSelectItem, 70);
+
+						break;
+					}
+				}
+
+			}
+
+			private function dispatchSelectItem():void {
+				dispatchEvent(new Event(Event.CHANGE));
+				dispatchEvent(new Event("selectedItemChange"));
 			}
 		]]>
 	</fx:Script>
