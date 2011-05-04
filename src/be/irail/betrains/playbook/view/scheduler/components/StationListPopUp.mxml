@@ -9,6 +9,7 @@
 			   xmlns:stations="be.irail.api.data.stations.*"
 			   width="800"
 			   height="550"
+			   visible="false"
 			   skinClass="be.irail.betrains.playbook.view.components.skins.StationPopupSkin"
 			   creationComplete="titlewindow1_creationCompleteHandler(event)"
 			   contentCreationComplete="titlewindow1_contentCreationCompleteHandler(event)">
@@ -20,6 +21,8 @@
 			import be.irail.betrains.playbook.controller.ModelLocator;
 
 			import com.adobe.utils.StringUtil;
+
+			import flash.utils.setTimeout;
 
 			import mx.collections.ArrayCollection;
 			import mx.events.CloseEvent;
@@ -78,7 +81,14 @@
 			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void {
 				_stationList = new ArrayCollection(_model.stations.toArray());
 				_stationList.filterFunction = filterList;
+
 				refreshList();
+
+				setTimeout(showMe, 100);
+			}
+
+			private function showMe():void {
+				this.visible = true;
 			}
 
 			private function filterList(obj:Object):Boolean {
@@ -134,7 +144,7 @@
 
 	<ns:QContainer width="760"
 				   height="50"
-				   y="7"
+				   y="9"
 				   x="20"
 				   padding="0">
 		<text:TextInput id="txtInput"

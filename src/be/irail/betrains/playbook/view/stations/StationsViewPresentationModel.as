@@ -5,6 +5,9 @@ package be.irail.betrains.playbook.view.stations {
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.GeolocationEvent;
+	import flash.geom.Point;
+	import flash.sensors.Geolocation;
 
 	import mx.collections.ArrayCollection;
 
@@ -14,6 +17,8 @@ package be.irail.betrains.playbook.view.stations {
 		private var _stationList:ArrayCollection;
 
 		private var _nameFilter:String;
+
+		private var _geo:Geolocation;
 
 		// ----------------------------
 		// selectedStation
@@ -69,7 +74,42 @@ package be.irail.betrains.playbook.view.stations {
 			_stationList.refresh();
 
 			dispatchEvent(new Event("stationListChange"));
+		}
 
+		public function getGeo():void {
+			if (Geolocation.isSupported) {
+				if (!_geo) {
+					_geo = new Geolocation();
+				}
+				if (!_geo.muted) {
+					_geo.addEventListener(GeolocationEvent.UPDATE, geoUpdate);
+					_geo.setRequestedUpdateInterval(2000);
+				}
+			}
+		}
+
+		private function geoUpdate(g:GeolocationEvent):void {
+			// g.latitude, g.longitude, g.speed, etc.
+			_geo.removeEventListener(GeolocationEvent.UPDATE, geoUpdate);
+
+		}
+
+		private function getClosest(latitude:Number, longitude:Number):IRStation {
+			var targetPoint:Point = new Point(latitude, longitude);
+
+			return null;
+		}
+
+		private function getDistance(p1:Point, p2:Point):Number {
+			var dist:Number,
+				dx:Number, dy:Number;
+
+			dx = p2.x - p1.x;
+			dy = p2.y - p1.y;
+
+			dist = Math.sqrt(dx * dx + dy * dy);
+
+			return dist;
 		}
 
 	}

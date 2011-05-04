@@ -18,8 +18,6 @@
 
 			import com.adobe.utils.StringUtil;
 
-			import flash.utils.setTimeout;
-
 			import mx.events.FlexEvent;
 
 			import qnx.locale.LocaleManager;
@@ -94,6 +92,10 @@
 			private function changeSelectedStation():void {
 				stationsList.selectItemAndScrollTo(_selectStation);
 			}
+
+			private function geoBtn_clickHandler(event:MouseEvent):void {
+				// TODO Auto-generated method stub
+			}
 		]]>
 	</fx:Script>
 	<s:Rect left="0"
@@ -138,16 +140,22 @@
 				 width="406"
 				 height="100%">
 			<ns:QContainer id="searchInputContainer"
-						   x="-3"
+						   x="1"
 						   padding="0">
 				<text:TextInput id="searchInput"
-								width="{stationListGrp.width}"
+								width="{stationListGrp.width -2}"
 								height="40"
 								prompt="{r('station.search.prompt')}"
 								returnKeyType="{ReturnKeyType.SEARCH}"
 								keyDown="onSearchInputChange(event)"
 								change="searchInput_changeHandler(event)"
 								clearIconMode="{TextInputIconMode.ALWAYS}"/>
+
+				<!--<s:Button id="geoBtn"
+						  x="{stationListGrp.width - 40}"
+						  width="40"
+						  height="40"
+						  click="geoBtn_clickHandler(event)"/>-->
 			</ns:QContainer>
 
 			<components:StationsList id="stationsList"
