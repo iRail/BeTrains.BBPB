@@ -40,8 +40,12 @@
 	<fx:Script>
 		<![CDATA[
 			private function setState(state:String):void {
-				if (hasState(state)) {
-					currentState = state;
+				if (hostComponent.enabled) {
+					if (hasState(state)) {
+						currentState = state;
+					}
+				} else {
+					currentState = "disabled";
 				}
 			}
 		]]>
