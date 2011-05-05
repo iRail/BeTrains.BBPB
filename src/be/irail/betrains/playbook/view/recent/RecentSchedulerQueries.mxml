@@ -116,7 +116,7 @@
 									dataProvider="{presentationModel.schedulerItems}"
 									left="410"
 									width="614"
-									mouseEnabled="false"
+									enabled="false"
 									height="100%"/>
 
 		<s:Rect left="0"
