@@ -77,12 +77,10 @@
 
 			protected function webView_errorHandler(event:ErrorEvent):void {
 				currentState = "webview";
-				webView.reposition();
 			}
 
 			protected function webView_completeHandler(event:Event):void {
 				currentState = "webview";
-				webView.reposition();
 			}
 		]]>
 	</fx:Script>
@@ -110,7 +108,7 @@
 	</s:Rect>
 
 	<components:WebView id="webView"
-						source="{AppSettings.ABOUT_PAGE_URL}"
+						url="{AppSettings.ABOUT_PAGE_URL}"
 						x="5"
 						y="5"
 						width="{this.width-20}"

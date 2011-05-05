@@ -24,8 +24,6 @@
 
 			include "../../resource_wrapper.as"
 
-			private var currentYear:Number = new Date().getFullYear();
-
 			private var arrDepSwitch:ToggleSwitch;
 
 			private var _minuteStep:int = 5;
@@ -42,8 +40,11 @@
 			}
 
 			public function set selectedDate(value:Date):void {
-				_date = value;
-				dispatchEvent(new Event("dateChange"));
+				if (value != _date) {
+					_date = value;
+					parseDateForPicker(_date.date, _date.month, _date.fullYear, _date.hours, _date.minutes);
+					dispatchEvent(new Event("dateChange"));
+				}
 			}
 
 			// ----------------------------
@@ -73,8 +74,6 @@
 				createSwitch();
 
 				LocaleManager.localeManager.addEventListener(Event.CHANGE, onLocaleChange);
-
-				parseDateForPicker(selectedDate.date, selectedDate.month, selectedDate.fullYear, selectedDate.hours, selectedDate.minutes);
 			}
 
 			private function onLocaleChange(event:Event):void {
@@ -216,20 +215,18 @@
 				tmp.setDate(day);
 				tmp.setMonth(month);
 
-				/* if (new Date().getTime() > tmp.getTime()) {
-					tmp.setFullYear(year + 1);
-				} */
-
 				tmp.setHours(hours);
 				tmp.setMinutes(minutes);
 				tmp.setSeconds(0);
 
-				this.selectedDate = tmp;
+				_date = tmp;
+
+				dispatchEvent(new Event("dateChange"));
 
 				var dayIndex:int = selectedDate.date - 1,
 					monthIndex:int = selectedDate.getMonth(),
 					hoursIndex:int = selectedDate.hours,
-					minutesIndex:int = (_minuteStep * Math.floor(selectedDate.minutes / _minuteStep)) / _minuteStep;
+					minutesIndex:int = (_minuteStep * Math.ceil(selectedDate.minutes / _minuteStep)) / _minuteStep;
 
 				picker.selectedIndices = [dayIndex, monthIndex];
 				timePicker.selectedIndices = [hoursIndex, minutesIndex];
@@ -241,7 +238,7 @@
 
 					day:int = picker.selectedIndices[0] + 1,
 					month:int = picker.selectedIndices[1],
-					year:int = currentYear,
+					year:int = new Date().getFullYear(),
 					hours:int = timePicker.selectedIndices[0],
 					minutes:int = timePicker.selectedIndices[1] * _minuteStep;
 

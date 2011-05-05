@@ -10,7 +10,7 @@ package be.irail.betrains.playbook.utils {
 	public class PopUpUtil {
 		private static const bgColor:uint = 0x060606;
 
-		private static const bgAlpha:Number = .4;
+		private static const bgAlpha:Number = .6;
 
 		private static var popups:Vector.<Object> = new Vector.<Object>();
 

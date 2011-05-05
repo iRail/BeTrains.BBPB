@@ -5,9 +5,9 @@
 						 xmlns:stations="be.irail.api.data.stations.*"
 						 xmlns:components="be.irail.betrains.playbook.view.components.*"
 						 xmlns:components1="be.irail.betrains.playbook.view.scheduler.components.*"
-						 creationComplete="mainviewitem1_creationCompleteHandler()"
 						 xmlns:scheduler="be.irail.betrains.playbook.view.scheduler.*"
-						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*">
+						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
+						 creationComplete="mainviewitem1_creationCompleteHandler()">
 	<components:states>
 		<s:State name="none"/>
 		<s:State name="loading"/>
@@ -23,6 +23,7 @@
 			import be.irail.betrains.playbook.view.scheduler.components.ConnectionDetails;
 			import be.irail.betrains.playbook.view.scheduler.components.StationListPopUp;
 
+			import mx.collections.ArrayCollection;
 			import mx.events.CloseEvent;
 
 			import qnx.ui.buttons.IconButton;
@@ -35,7 +36,12 @@
 
 			private var _model:ModelLocator = ModelLocator.getInstance();
 
+			override public function make():void {
+				dateSelector.selectedDate = new Date();
+			}
+
 			public function setDataByFavourite(fav:FavouriteConnection):void {
+				presentationModel.clearConnections();
 				presentationModel.to = _model.stations.getStationById(fav.toStationId);
 				presentationModel.from = _model.stations.getStationById(fav.fromStationId);
 			}

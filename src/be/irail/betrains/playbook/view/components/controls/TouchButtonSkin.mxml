@@ -24,9 +24,9 @@
 		xmlns:s="library://ns.adobe.com/flex/spark"
 		xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
 		alpha.disabled="0.5"
-		dragExit="currentState='normal'"
-		mouseDown="currentState=hostComponent.showDown ? 'down' : 'normal' "
-		mouseUp="currentState='normal'">
+		mouseOut="setState('normal')"
+		mouseDown="setState('down')"
+		mouseUp="setState('normal')">
 
 	<fx:Metadata>
 		<![CDATA[ 
@@ -37,6 +37,15 @@
     ]]>
 	</fx:Metadata>
 
+	<fx:Script>
+		<![CDATA[
+			private function setState(state:String):void {
+				if (hasState(state)) {
+					currentState = state;
+				}
+			}
+		]]>
+	</fx:Script>
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="down"/>

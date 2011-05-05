@@ -192,6 +192,7 @@
 
 			private function setupMainView():void {
 				var mv:MainView = new MainView();
+				mv.scrollRect = new Rectangle(0, 0, 1024, 600);
 				this.addElement(mv);
 			}
 		]]>

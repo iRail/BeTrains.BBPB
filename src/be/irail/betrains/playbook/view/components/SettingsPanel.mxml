@@ -61,7 +61,7 @@
 				saveSettings();
 
 				settings.y = 0;
-				TweenLite.to(settings, .3, {y: -settings.height, ease: Expo.easeOut, onComplete: sendHideNotification});
+				TweenLite.to(settings, .6, {y: -settings.height, ease: Expo.easeOut, onComplete: sendHideNotification});
 			}
 
 			private function sendHideNotification():void {
@@ -96,7 +96,8 @@
 			private function showHandler():void {
 				_isOpen = false;
 				settings.y = -settings.height;
-				TweenLite.to(settings, .3, {y: 0, ease: Expo.easeOut, onComplete: introComplete});
+
+				TweenLite.to(settings, .6, {y: 0, ease: Expo.easeOut, onComplete: introComplete});
 			}
 
 			private function introComplete():void {

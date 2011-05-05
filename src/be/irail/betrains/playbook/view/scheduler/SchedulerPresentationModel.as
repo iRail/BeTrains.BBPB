@@ -137,8 +137,20 @@ package be.irail.betrains.playbook.view.scheduler {
 			return from != null && to != null && when != null;
 		}
 
+		public function favCurrentConnection():void {
+			if (from != null && to != null) {
+				_model.favourites.addItem(new FavouriteConnection(from, to));
+				dispatchEvent(new Event("connectionFavd"));
+			}
+		}
+
+		public function clearConnections():void {
+			_connections = new ArrayCollection();
+			dispatchEvent(new Event("connectionsChange"));
+		}
+
 		public function getSchedule(dateArrDep:String = "depart"):void {
-			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"], 7);
+			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"]);
 			_schedule.addEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
 			_schedule.addEventListener(IRailErrorEvent.IO_ERROR, onIoError);
 			_schedule.addEventListener(IRailErrorEvent.API_ERROR, onIoError);
@@ -151,13 +163,6 @@ package be.irail.betrains.playbook.view.scheduler {
 			isLoading = false;
 			_connections = new ArrayCollection();
 			dispatchEvent(new Event("connectionsChange"));
-		}
-
-		public function favCurrentConnection():void {
-			if (from != null && to != null) {
-				_model.favourites.addItem(new FavouriteConnection(from, to));
-				dispatchEvent(new Event("connectionFavd"));
-			}
 		}
 
 		private function onSchedulerResult(event:IRailResultEvent):void {
