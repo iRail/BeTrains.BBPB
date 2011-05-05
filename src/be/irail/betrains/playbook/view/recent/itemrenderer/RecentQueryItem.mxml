@@ -13,12 +13,10 @@
 	</s:states>
 	<fx:Script>
 		<![CDATA[
-			include "../../resource_wrapper.as"
-
 			import be.irail.betrains.playbook.data.SchedulerQuery;
 			import be.irail.betrains.playbook.utils.DateUtils;
 
-			import qnx.locale.LocaleManager;
+			include "../../resource_wrapper.as"
 
 			override public function set data(value:Object):void {
 				super.data = value;

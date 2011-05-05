@@ -52,9 +52,9 @@
 			override public function make():void {
 				presentationModel.refreshList();
 				if (_selectStation) {
-					setTimeout(changeSelectedStation, 50);
+					setTimeout(changeSelectedStation, 10);
 				} else {
-					stationsList.selectedItem = presentationModel.selectedStation;
+					setTimeout(stationsList.selectItemAndScrollTo, 10, presentationModel.selectedStation, .001);
 				}
 			}
 
@@ -90,7 +90,7 @@
 			}
 
 			private function changeSelectedStation():void {
-				stationsList.selectItemAndScrollTo(_selectStation);
+				stationsList.selectItemAndScrollTo(_selectStation, 1);
 			}
 
 			private function geoBtn_clickHandler(event:MouseEvent):void {

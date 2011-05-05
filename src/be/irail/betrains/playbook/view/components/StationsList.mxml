@@ -165,14 +165,14 @@
 				list.dataProvider = sectionDP;
 			}
 
-			public function selectItemAndScrollTo(item:Object):void {
+			public function selectItemAndScrollTo(item:Object, scrollTime:Number = 1):void {
 				var items:int = _listData.length;
 				while (--items > -1) {
 					var stationItem:Object = _listData[items];
 					if (stationItem.value == item) {
 						list.selectedItem = stationItem;
 
-						list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, 1);
+						list.scrollToIndexInSection(stationItem.sectIndex, stationItem.itemIndex, scrollTime);
 						setTimeout(dispatchSelectItem, 70);
 
 						break;

@@ -5,7 +5,8 @@
 				autoDrawBackground="false"
 				mouseChildren="false"
 				width="100%"
-				height="74">
+				height="74"
+				cacheAsBitmap="true">
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="selected"/>
@@ -14,8 +15,7 @@
 		<![CDATA[
 			import be.irail.api.data.scheduler.IRConnection;
 			import be.irail.betrains.playbook.utils.FormatUtil;
-
-			import qnx.locale.LocaleManager;
+			
 			import qnx.utils.TimeFormatter;
 
 			include "../../resource_wrapper.as";

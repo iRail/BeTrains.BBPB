@@ -22,6 +22,8 @@
 			import be.irail.betrains.playbook.view.components.skins.BetrainListSkin;
 			import be.irail.betrains.playbook.view.recent.itemrenderer.RecentQueryItem;
 
+			import flash.utils.setTimeout;
+
 			import qnx.locale.LocaleManager;
 
 			import spark.events.IndexChangeEvent;
@@ -39,34 +41,34 @@
 
 			public function set recents(value:RecentQueriesCollection):void {
 				if (presentationModel.recents != value) {
-					if (!value || value.length == 0) {
-						this.currentState = "none";
-					} else {
-						this.currentState = "recents";
-					}
 					presentationModel.recents = value;
+				}
+				if (!value || value.length == 0) {
+					this.currentState = "none";
+				} else {
+					this.currentState = "recents";
 				}
 			}
 
 			override public function make():void {
 				this.recents = ModelLocator.getInstance().recentSchedulerQueries;
 
-				if (!recents || recents.length == 0) {
-					this.currentState = "none";
-				} else if (presentationModel.selectedQuery) {
+				if (presentationModel.selectedQuery) {
 					recentsList.selectedItem = presentationModel.selectedQuery;
+					doSelectQuery();
 				}
 			}
 
 			override public function destroy():void {
 				if (recentsList) {
 					recentsList.selectedIndex = -1;
+					recentsList.selectedItem = null;
 				}
 			}
 
 			private function recentsList_changeHandler(event:IndexChangeEvent):void {
 				presentationModel.selectedQuery = recentsList.selectedItem as SchedulerQuery;
-				doSelectQuery();
+				setTimeout(doSelectQuery, 10);
 			}
 
 			private function doSelectQuery():void {
