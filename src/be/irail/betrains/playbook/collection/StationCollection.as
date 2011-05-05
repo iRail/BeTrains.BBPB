@@ -17,7 +17,7 @@ package be.irail.betrains.playbook.collection {
 			var numStation:int = this.length, station:IRStation;
 			while (--numStation > -1) {
 				station = getItemAt(numStation) as IRStation;
-				if (station.id == id) {
+				if (station && station.id == id) {
 					return station;
 				}
 				station = null;
