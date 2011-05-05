@@ -69,21 +69,6 @@ package be.irail.betrains.playbook.view.components {
 
 		public var previousViewIndex:int = 0;
 
-		// ----------------------------
-		// animateSelectedItemChange
-		// ----------------------------
-
-		private var _animateSelectedItemChange:Boolean = false;
-
-		public function get animateSelectedItemChange():Boolean {
-			return _animateSelectedItemChange;
-		}
-
-		public function set animateSelectedItemChange(value:Boolean):void {
-			if (value != _animateSelectedItemChange) {
-				_animateSelectedItemChange = value;
-			}
-		}
 
 		public function get numContentChildren():int {
 			if (!content) {
@@ -116,34 +101,8 @@ package be.irail.betrains.playbook.view.components {
 		protected function updateSelectedIndex(index:int):void {
 			//store old for event.
 			var oldIndex:int = _selectedIndex;
-			previousViewIndex = oldIndex;
 
-			if (animateSelectedItemChange) {
-				//4,6,1
-				//3,5,0
-				var animationFadeOutDuration:Number = 4;
-				var animationFadeInDuration:Number = 6;
-				var animationFadeOutFadeInDelay:Number = 0;
-
-				if (oldIndex > -1 && _content[oldIndex] != null) {
-					_content[oldIndex].alpha = .7;
-					TweenLite.to(_content[oldIndex], animationFadeOutDuration, {alpha: 0, useFrames: true, overwrite: true, onComplete: function():void {
-						updateIndexChangeHandler(oldIndex, index);
-						setTimeout(function():void {
-							TweenLite.to(_content[index], animationFadeInDuration, {alpha: 1, delay: animationFadeOutFadeInDelay, overwrite: false, useFrames: true});
-						}, 50);
-					}});
-
-				} else {
-					updateIndexChangeHandler(oldIndex, index);
-					setTimeout(function():void {
-						_content[index].alpha = 0;
-						TweenLite.to(_content[index], animationFadeInDuration, {alpha: 1, useFrames: true, overwrite: true});
-					}, 50);
-				}
-			} else {
-				updateIndexChangeHandler(oldIndex, index);
-			}
+			updateIndexChangeHandler(oldIndex, index);
 		}
 
 		private function updateIndexChangeHandler(oldIndex:int, newIndex:int):void {
@@ -154,34 +113,22 @@ package be.irail.betrains.playbook.view.components {
 
 			// hide old element
 			if (oldSelectedElement) {
-				oldSelectedElement.visible = false;
 				oldSelectedElement.scrollRect = new Rectangle(0, 0, 1, 1);
+				removeElement(oldSelectedElement);
 			}
 
 			// show new element if exists
 			if (selectedElement) {
-				if (animateSelectedItemChange) {
-					selectedElement.alpha = 0;
-				} else {
-					selectedElement.alpha = 1;
-				}
 				selectedElement.scrollRect = null;
-				selectedElement.visible = true;
+				addElement(selectedElement);
 			} else {
-				if (animateSelectedItemChange) {
-					_content[_selectedIndex].alpha = 0;
-				} else {
-					_content[_selectedIndex].alpha = 1;
-				}
-
 				selectedElement = _content[_selectedIndex] as UIComponent;
 
 				_arrayChildren[_selectedIndex] = selectedElement;
 
 				selectedElement.scrollRect = null;
-				selectedElement.visible = true;
+				addElement(selectedElement);
 
-				selectedElement.dispatchEvent(new FlexEvent(FlexEvent.SHOW));
 			}
 
 			selectedChild = _content[_selectedIndex];
@@ -205,7 +152,7 @@ package be.irail.betrains.playbook.view.components {
 			while (--i > -1) {
 				contentElement = _content[i] as IVisualElement;
 				if (contentElement == element) {
-					break;
+					return i;
 				}
 			}
 			return i;
@@ -234,9 +181,7 @@ package be.irail.betrains.playbook.view.components {
 					uic:UIComponent = UIComponent(element);
 
 				uic.scrollRect = new Rectangle(0, 0, 1, 1);
-				uic.setVisible(false, true);
 
-				uic.addEventListener(FlexEvent.CREATION_COMPLETE, onComponentCreationComplete);
 				addElementAt(element, i);
 			}
 
@@ -256,11 +201,6 @@ package be.irail.betrains.playbook.view.components {
 		}
 
 		public function set selectedIndex(value:int):void {
-			if (selectedChild && _selectedIndex == value) {
-				selectedChild.dispatchEvent(new FlexEvent(FlexEvent.SHOW));
-				return;
-			}
-
 			_pendingSelectedIndex = value;
 			invalidateProperties();
 		}
@@ -290,17 +230,8 @@ package be.irail.betrains.playbook.view.components {
 			_selectedChild = value;
 		}
 
-
-		private function onComponentCreationComplete(event:FlexEvent):void {
-			event.currentTarget.removeEventListener(FlexEvent.CREATION_COMPLETE, onComponentCreationComplete);
+		override public function getElementAt(index:int):IVisualElement {
+			return _arrayChildren[index];
 		}
-
-		override public function addElementAt(element:IVisualElement, index:int):IVisualElement {
-			if (element.visible) {
-				UIComponent(element).setVisible(false, true);
-			}
-			return super.addElementAt(element, index);
-		}
-
 	}
 }
