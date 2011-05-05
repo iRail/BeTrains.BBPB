@@ -6,6 +6,9 @@ package be.irail.betrains.playbook.collection {
 	import mx.collections.ArrayCollection;
 
 	public class FavouriteConnectionCollection extends ArrayCollection {
+		public function FavouriteConnectionCollection(source:Array = null) {
+			super(source);
+		}
 
 		public function containsConnection(from:IRStation, to:IRStation):Boolean {
 			if (!(from && to)) {
