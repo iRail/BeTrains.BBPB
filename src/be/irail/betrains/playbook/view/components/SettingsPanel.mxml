@@ -32,8 +32,8 @@
 
 			import com.greensock.TweenLite;
 			import com.greensock.easing.Expo;
-
-			import flash.utils.setTimeout;
+			import com.greensock.easing.Linear;
+			import com.greensock.easing.Quart;
 
 			import qnx.locale.LocaleManager;
 			import qnx.ui.data.DataProvider;
@@ -97,12 +97,11 @@
 				_isOpen = false;
 				settings.y = -settings.height;
 
-				TweenLite.to(settings, .6, {y: 0, ease: Expo.easeOut, onComplete: introComplete});
+				TweenLite.to(settings, .4, {y: 0, ease: Expo.easeOut, onComplete: introComplete});
 			}
 
 			private function introComplete():void {
 				_isOpen = true;
-				loadSettings();
 			}
 
 			private function bodyClick(e:MouseEvent):void {
@@ -170,7 +169,7 @@
 				createRecentsPicker();
 			}
 
-			private function loadSettings():void {
+			public function loadSettings():void {
 				var langPicker:Picker = langPickerContainter.getChildByName("langPicker") as Picker;
 
 				var currIdx:int;

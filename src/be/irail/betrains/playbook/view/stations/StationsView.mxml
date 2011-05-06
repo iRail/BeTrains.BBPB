@@ -8,7 +8,7 @@
 						 xmlns:controls="be.irail.betrains.playbook.view.components.controls.*"
 						 xmlns:ns="http://ns.renaun.com/mxml/2010"
 						 xmlns:text="qnx.ui.text.*"
-						 contentCreationComplete="creationCompleteHandler(event)">
+						 creationComplete="creationCompleteHandler(event)">
 	<fx:Declarations>
 		<stations:StationsViewPresentationModel id="presentationModel"/>
 	</fx:Declarations>
@@ -52,9 +52,9 @@
 			override public function make():void {
 				presentationModel.refreshList();
 				if (_selectStation) {
-					setTimeout(changeSelectedStation, 10);
+					setTimeout(changeSelectedStation, 2);
 				} else {
-					setTimeout(stationsList.selectItemAndScrollTo, 10, presentationModel.selectedStation, .001);
+					setTimeout(stationsList.selectItemAndScrollTo, 2, presentationModel.selectedStation, .001);
 				}
 			}
 

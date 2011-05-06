@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 minHeight="60"
-		 creationComplete="touchbutton1_creationCompleteHandler(event)">
+		 addedToStage="create(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -68,7 +68,8 @@
 				return _date.toDateString() + " " + _date.toTimeString();
 			}
 
-			protected function touchbutton1_creationCompleteHandler(event:FlexEvent):void {
+			private function create(event:Event):void {
+				this.removeEventListener(Event.ADDED_TO_STAGE, create);
 				createPicker();
 				createTimePicker();
 				createSwitch();

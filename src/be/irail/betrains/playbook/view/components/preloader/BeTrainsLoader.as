@@ -1,10 +1,5 @@
 package be.irail.betrains.playbook.view.components.preloader {
 
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Expo;
-	import com.greensock.plugins.AutoAlphaPlugin;
-	import com.greensock.plugins.TweenPlugin;
-
 	import flash.display.DisplayObject;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;

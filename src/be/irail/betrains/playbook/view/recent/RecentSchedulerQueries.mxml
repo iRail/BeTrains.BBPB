@@ -11,6 +11,7 @@
 	<components:states>
 		<s:State name="none"/>
 		<s:State name="recents"/>
+		<s:State name="loadingSelectedRecent"/>
 		<s:State name="recentItemSelected"/>
 	</components:states>
 
@@ -19,12 +20,7 @@
 			import be.irail.betrains.playbook.collection.RecentQueriesCollection;
 			import be.irail.betrains.playbook.controller.ModelLocator;
 			import be.irail.betrains.playbook.data.SchedulerQuery;
-			import be.irail.betrains.playbook.view.components.skins.BetrainListSkin;
 			import be.irail.betrains.playbook.view.recent.itemrenderer.RecentQueryItem;
-
-			import flash.utils.setTimeout;
-
-			import qnx.locale.LocaleManager;
 
 			import spark.events.IndexChangeEvent;
 			include "../resource_wrapper.as";
@@ -68,6 +64,11 @@
 
 			private function recentsList_changeHandler(event:IndexChangeEvent):void {
 				presentationModel.selectedQuery = recentsList.selectedItem as SchedulerQuery;
+
+				if (presentationModel.selectedQuery) {
+					currentState = "loadingSelectedRecent";
+				}
+
 				setTimeout(doSelectQuery, 10);
 			}
 
@@ -92,7 +93,7 @@
 			 right="0"
 			 top="0"
 			 bottom="0"
-			 includeIn="recents,recentItemSelected">
+			 includeIn="recents,loadingSelectedRecent,recentItemSelected">
 
 		<s:Rect left="0"
 				bottom="0"
@@ -165,8 +166,9 @@
 				 x="410"
 				 width="614"
 				 height="100%"
-				 includeIn="recents"
-				 text="{r('recent.noneSelected')}"/>
+				 includeIn="recents,loadingSelectedRecent"
+				 text.loadingSelectedRecent="{r('recent.loadingSelected')}"
+				 text.recents="{r('recent.noneSelected')}"/>
 
 	</s:Group>
 

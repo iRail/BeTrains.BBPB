@@ -61,7 +61,11 @@
 
 			public function set selectedFavourite(value:FavouriteConnection):void {
 				if (!value) {
-					this.currentState = "favourites";
+					if (!favourites || favourites.length == 0) {
+						this.currentState = "none";
+					} else {
+						this.currentState = "favourites";
+					}
 				} else {
 					this.currentState = "favouriteselect";
 				}

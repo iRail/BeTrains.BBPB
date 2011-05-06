@@ -19,15 +19,13 @@
 		<![CDATA[
 			include "../resource_wrapper.as";
 
-			import be.irail.betrains.playbook.view.components.controls.ApplicationBarButton;
 			import be.irail.betrains.playbook.controller.ModelLocator;
+			import be.irail.betrains.playbook.view.components.controls.ApplicationBarButton;
 
 			import com.greensock.TweenLite;
 			import com.greensock.easing.Expo;
 
 			import mx.core.IVisualElement;
-
-			import qnx.locale.LocaleManager;
 
 			import spark.events.IndexChangeEvent;
 

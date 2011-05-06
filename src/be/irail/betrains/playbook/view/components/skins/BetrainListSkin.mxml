@@ -50,26 +50,6 @@
 
 			  @copy spark.components.List#dropIndicator
 		-->
-		<fx:Component id="dropIndicator">
-			<s:Group minWidth="3"
-					 minHeight="3"
-					 maxWidth="3"
-					 maxHeight="3">
-				<s:Rect left="0"
-						right="0"
-						top="0"
-						bottom="0">
-					<s:fill>
-						<!--- Defines the color of the background. -->
-						<s:SolidColor color="0xBBBBBB"/>
-					</s:fill>
-					<s:stroke>
-						<s:SolidColorStroke color="0x868686"
-											weight="1"/>
-					</s:stroke>
-				</s:Rect>
-			</s:Group>
-		</fx:Component>
 	</fx:Declarations>
 
 	<!--- The Scroller component to add scroll bars to the list. -->
@@ -87,16 +67,13 @@
 					 left="0"
 					 top="0"
 					 right="0"
-					 bottom="0"
-					 itemRenderer="spark.skins.spark.DefaultItemRenderer">
+					 bottom="0">
 			<s:layout>
 				<!--- The default layout is vertical and measures at least for 5 rows.
 				When switching to a different layout, HorizontalLayout for example,
 				make sure to adjust the minWidth, minHeihgt sizes of the skin -->
 				<s:VerticalLayout gap="0"
-								  useVirtualLayout="true"
-								  horizontalAlign="contentJustify"
-								  requestedMinRowCount="5"/>
+								  useVirtualLayout="true"/>
 			</s:layout>
 		</s:DataGroup>
 	</s:Scroller>

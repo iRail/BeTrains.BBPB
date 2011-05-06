@@ -56,7 +56,6 @@ package be.irail.betrains.playbook.view.components {
 		}
 
 		public function dispose():void {
-			_stageWebView.stop();
 			_stageWebView.loadString("");
 			setTimeout(doDispose, 100)
 		}
@@ -70,6 +69,7 @@ package be.irail.betrains.playbook.view.components {
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 
 			_stageWebView = new QNXStageWebView();
+			_stageWebView.stage = stage;
 
 			var position:Point = new Point(x, y);
 			position = localToGlobal(position);
@@ -87,18 +87,12 @@ package be.irail.betrains.playbook.view.components {
 		}
 
 		protected function completeHandler(event:Event):void {
-			if (_stageWebView && !_stageWebView.stage) {
-				_stageWebView.stage = stage;
-			} else if (_stageWebView) {
-				dispatchEvent(event.clone());
-			}
+			dispatchEvent(event.clone());
 		}
 
 
 		protected function errorHandler(event:ErrorEvent):void {
-			if (_stageWebView) {
-				dispatchEvent(event.clone());
-			}
+			dispatchEvent(event.clone());
 		}
 
 	}
