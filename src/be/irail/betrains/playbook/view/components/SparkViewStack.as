@@ -1,5 +1,6 @@
 package be.irail.betrains.playbook.view.components {
 
+	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 
 	import mx.core.IVisualElement;
@@ -61,13 +62,16 @@ package be.irail.betrains.playbook.view.components {
 			_selectedIndex = index;
 
 			// remove old element
-			if (numElements > 0) {
-				removeElementAt(0);
+			if (content[oldIndex]) {
+				content[oldIndex].visible = false;
+				content[oldIndex].scrollRect = new Rectangle(0, 0, 1, 1);
 			}
+
+			content[_selectedIndex].visible = true;
+			content[_selectedIndex].scrollRect = null;
 
 			// add new element
 			selectedChild = _content[_selectedIndex];
-			addElement(_selectedChild);
 
 			// dispatch index change
 			var event:IndexChangeEvent = new IndexChangeEvent(
@@ -107,6 +111,18 @@ package be.irail.betrains.playbook.view.components {
 
 		public function set content(value:Array /*IVisualElement*/):void {
 			_content = value;
+
+			while (numElements) {
+				removeElementAt(0);
+			}
+
+			var numContentElements:int = value.length,
+				i:int = 0;
+			for (i = 0; i < numContentElements; i++) {
+				addElementAt(value[i], i);
+				value[i].visible = false;
+				value[i].scrollRect = new Rectangle(0, 0, 1, 1);
+			}
 
 			selectedIndex = _pendingSelectedIndex == -1 ? 0 : _pendingSelectedIndex;
 		}

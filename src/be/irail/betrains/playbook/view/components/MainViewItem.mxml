@@ -25,7 +25,6 @@
 
 			private function creationCompleteHandler():void {
 				created = true;
-				make();
 			}
 		]]>
 	</fx:Script>

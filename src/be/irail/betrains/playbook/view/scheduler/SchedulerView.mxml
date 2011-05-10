@@ -23,7 +23,6 @@
 			import be.irail.betrains.playbook.view.scheduler.components.ConnectionDetails;
 			import be.irail.betrains.playbook.view.scheduler.components.StationListPopUp;
 
-			import mx.collections.ArrayCollection;
 			import mx.events.CloseEvent;
 
 			import qnx.ui.buttons.IconButton;
@@ -144,12 +143,9 @@
 
 	<components:ConnectionsList id="resultList"
 								includeIn="hasConnections"
-								top="0"
-								bottom="0"
-								right="0"
-								width="615"
-								visible="{presentationModel.hasConnections}"
-								includeInLayout="{presentationModel.hasConnections}"
+								left="410"
+								width="614"
+								height="100%"
 								dataProvider="{presentationModel.connections}"
 								change="resultList_changeHandler(event)">
 	</components:ConnectionsList>

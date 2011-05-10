@@ -67,7 +67,8 @@
 					 left="0"
 					 top="0"
 					 right="0"
-					 bottom="0">
+					 bottom="0"
+					 itemRenderer="be.irail.betrains.playbook.view.components.itemrenderers.SchedulerItem">
 			<s:layout>
 				<!--- The default layout is vertical and measures at least for 5 rows.
 				When switching to a different layout, HorizontalLayout for example,

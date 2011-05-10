@@ -76,9 +76,7 @@
 				}
 
 				if (event.newIndex > -1) {
-					if (MainViewItem(vs.getElementAt(event.newIndex)).created) {
-						MainViewItem(vs.getElementAt(event.newIndex)).make();
-					}
+					MainViewItem(vs.getElementAt(event.newIndex)).make();
 				}
 
 			}

@@ -21,16 +21,8 @@
 
 			override public function set data(value:Object):void {
 				super.data = value;
-
-				if (!value) {
-					_connection = null;
-					return;
-				}
-
-				if (data is IRConnection) {
-					_connection = value as IRConnection;
-					dispatchEvent(new Event("connectionChange"));
-				}
+				_connection = value as IRConnection;
+				dispatchEvent(new Event("connectionChange"));
 			}
 
 			// ----------------------------
@@ -135,31 +127,49 @@
 
 			[Bindable(event="connectionChange")]
 			public function get duration():String {
+				if (!_connection) {
+					return "";
+				}
 				return r("scheduler.results.duration") + " " + TimeFormatter.formatSeconds(_connection.duration);
 			}
 
 			[Bindable(event="connectionChange")]
 			public function get numVias():String {
+				if (!_connection) {
+					return "";
+				}
 				return r("scheduler.results.change", _connection.vias.length);
 			}
 
 			[Bindable(event="connectionChange")]
 			public function get arrivalDelay():String {
+				if (!_connection) {
+					return "";
+				}
 				return "" + TimeFormatter.formatSeconds(_connection.arrival.delay);
 			}
 
 			[Bindable(event="connectionChange")]
 			public function get hasArrivalDelay():Boolean {
+				if (!_connection) {
+					return false;
+				}
 				return connection.arrival.delay > 0;
 			}
 
 			[Bindable(event="connectionChange")]
 			public function get departureDelay():String {
+				if (!_connection) {
+					return "";
+				}
 				return "" + TimeFormatter.formatSeconds(_connection.departure.delay);
 			}
 
 			[Bindable(event="connectionChange")]
 			public function get hasDepartureDelay():Boolean {
+				if (!_connection) {
+					return false;
+				}
 				return connection.departure.delay > 0;
 			}
 		]]>

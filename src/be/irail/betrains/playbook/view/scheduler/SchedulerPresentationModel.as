@@ -8,14 +8,10 @@ package be.irail.betrains.playbook.view.scheduler {
 	import be.irail.betrains.playbook.data.FavouriteConnection;
 	import be.irail.betrains.playbook.data.SchedulerQuery;
 
-	import com.adobe.utils.DateUtil;
-
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 
 	import mx.collections.ArrayCollection;
-
-	import org.as3commons.lang.DateUtils;
 
 	[Event(name="connectionsChange", type="flash.events.Event")]
 	public class SchedulerPresentationModel extends EventDispatcher {
@@ -126,10 +122,6 @@ package be.irail.betrains.playbook.view.scheduler {
 			return doesNotExist;
 		}
 
-		public function SchedulerPresentationModel() {
-			_schedule = new Scheduler();
-		}
-
 		[Bindable(event="toChange")]
 		[Bindable(event="fromChange")]
 		[Bindable(event="dateChange")]
@@ -150,25 +142,52 @@ package be.irail.betrains.playbook.view.scheduler {
 		}
 
 		public function getSchedule(dateArrDep:String = "depart"):void {
-			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"]);
-			_schedule.addEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
-			_schedule.addEventListener(IRailErrorEvent.IO_ERROR, onIoError);
-			_schedule.addEventListener(IRailErrorEvent.API_ERROR, onIoError);
+			_schedule = new Scheduler();
+			addSchedulerListeners();
 
+			_schedule.getRoutes(from, to, when, true, dateArrDep, ["train"]);
 			_query = new SchedulerQuery(from, to, when, dateArrDep);
+
 			isLoading = true;
 		}
 
+		private function addSchedulerListeners():void {
+			if (!_schedule) {
+				return;
+			}
+
+			_schedule.addEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
+			_schedule.addEventListener(IRailErrorEvent.IO_ERROR, onIoError);
+			_schedule.addEventListener(IRailErrorEvent.API_ERROR, onIoError);
+		}
+
+		private function removeSchedulerListeners():void {
+			if (!_schedule) {
+				return;
+			}
+
+			_schedule.removeEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
+			_schedule.removeEventListener(IRailErrorEvent.IO_ERROR, onIoError);
+			_schedule.removeEventListener(IRailErrorEvent.API_ERROR, onIoError);
+		}
+
 		private function onIoError(event:IRailErrorEvent):void {
+			removeSchedulerListeners();
+
 			isLoading = false;
 			_connections = new ArrayCollection();
+
+			_query = null;
+			_schedule = null;
+
 			dispatchEvent(new Event("connectionsChange"));
 		}
 
 		private function onSchedulerResult(event:IRailResultEvent):void {
-			_schedule.removeEventListener(IRailResultEvent.SCHEDULER_RESULT, onSchedulerResult);
+			removeSchedulerListeners();
 			isLoading = false;
 
+			_connections = null;
 			_connections = new ArrayCollection(event.result.data as Array);
 
 			if (_connections.length) {
@@ -177,6 +196,7 @@ package be.irail.betrains.playbook.view.scheduler {
 			}
 
 			_query = null;
+			_schedule = null;
 			dispatchEvent(new Event("connectionsChange"));
 		}
 

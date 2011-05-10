@@ -6,6 +6,5 @@
 						 allowMultipleSelection="false"
 						 borderVisible="false"
 						 verticalAlignContent="top"
-						 itemRenderer="be.irail.betrains.playbook.view.components.itemrenderers.SchedulerItem"
 						 skinClass="be.irail.betrains.playbook.view.components.skins.BetrainListSkin">
 </components:BeTrainsList>
