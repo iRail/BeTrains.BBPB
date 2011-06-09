@@ -21,6 +21,7 @@
 			import be.irail.api.methodgroup.Liveboards;
 			import be.irail.betrains.playbook.controller.AppSettings;
 			import be.irail.betrains.playbook.utils.PopUpUtil;
+			import be.irail.betrains.playbook.utils.RotateUtil;
 
 			import com.yahoo.maps.api.YahooMap;
 			import com.yahoo.maps.api.YahooMapEvent;
@@ -202,21 +203,18 @@
 				mapComponent.removeEventListener(YahooMapEvent.MAP_INITIALIZE, onMapInitialize);
 				mapComponent.addPanControl();
 				mapComponent.addScaleBar();
+
 				mapComponent.addZoomWidget();
 
-				mapComponent.zoomWidget.scaleX = mapComponent.zoomWidget.scaleY = 2.2;
-
+				mapComponent.zoomWidget.scaleX = mapComponent.zoomWidget.scaleY = 2.6;
+				RotateUtil.rotateAroundCenter(mapComponent.zoomWidget, 180);
+				mapComponent.zoomWidget.x = 62;
+				mapComponent.zoomWidget.y = 106;
 				_mapReady = true;
 
 				addMarker();
 			}
 
-			protected function mapComponentContainer_resizeHandler(event:ResizeEvent):void {
-				if (mapComponent) {
-					mapComponent.width = mapComponentContainer.width;
-					mapComponent.height = mapComponentContainer.height;
-				}
-			}
 		]]>
 	</fx:Script>
 
@@ -253,7 +251,7 @@
 				 text="{r('station.profile.type.station')}"/>
 
 		<stations1:StationDataButton id="liveBoardBtn"
-									 y="150"
+									 y="100"
 									 left="0"
 									 right="10"
 									 horizontalCenter="0"
@@ -262,11 +260,10 @@
 	</s:Group>
 
 	<mx:UIComponent id="mapComponentContainer"
-					top="280"
+					top="203"
 					left="0"
 					right="10"
-					height="245"
+					height="317"
 					horizontalCenter="0"
-					visible="{stationHasLocation}"
-					resize="mapComponentContainer_resizeHandler(event)"/>
+					visible="{stationHasLocation}"/>
 </s:Group>
